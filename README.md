@@ -1,4 +1,4 @@
-# Projet Artisans en Ligne ( Nom à trouver ) 
+# Projet Artisans en Ligne ( Craftify ) 
 
 - **Front-end** : Auréliane Gagliardi,  Thomas Thonnard;
 - **Back-end** : Yasmine Sanchez,  Samuel Sanchez;
