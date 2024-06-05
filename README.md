@@ -1,10 +1,7 @@
 # Projet Artisans en Ligne ( Nom à trouver ) 
 
-
-## Auréliane Gagliardi : Front -end ;
-## Yasmine Sanchez : Back-end ;
-## Thomas Thonnard : Front-end 
-## Samuel Sanchez : Back-end ;
+- **Front-end** : Auréliane Gagliardi,  Thomas Thonnard;
+- **Back-end** : Yasmine Sanchez,  Samuel Sanchez;
 
 ## Description
 
