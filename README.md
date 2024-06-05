@@ -1,4 +1,7 @@
-# Projet Artisans en Ligne ( Nom à trouver ) 
+# Projet Artisans en Ligne ( Craftify ) 
+
+- **Front-end** : Auréliane Gagliardi,  Thomas Thonnard;
+- **Back-end** : Yasmine Sanchez,  Samuel Sanchez;
 
 ## Description
 
@@ -15,7 +18,7 @@ Avec l'utilisation de technologies modernes, nous avons développé une solution
 ### Frontend
 - **React** : Bibliothèque JavaScript pour construire des interfaces utilisateur.
 - **Tailwind CSS** : Framework CSS utilitaire pour un design moderne et réactif.
-- **Next.js** : ( a décider ) .
+- **Next.js** : Framework JavaScript pour .
 
 ## Fonctionnalités
 
@@ -24,4 +27,6 @@ Avec l'utilisation de technologies modernes, nous avons développé une solution
 - **Panier d'Achat** : Gestion des articles dans le panier (ajout/suppression), possibilité d'ajouterdes produits en favori.
 - **Paiement Sécurisé** : Intégration avec des services de paiement. (Fake payement API)
 - **Tableau de Bord** : Interface pour que les artisans gèrent leur boutique et leurs profils en ligne.
-  ## Dead Ligne 1 juillet 2024 ? 16h59
+
+  
+  ## Dead Ligne 
