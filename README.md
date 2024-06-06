@@ -18,7 +18,6 @@ Avec l'utilisation de technologies modernes, nous avons développé une solution
 ### Frontend
 - **React** : Bibliothèque JavaScript pour construire des interfaces utilisateur.
 - **Tailwind CSS** : Framework CSS utilitaire pour un design moderne et réactif.
-- **Next.js** : Framework JavaScript pour .
 
 ## Fonctionnalités
 
