@@ -13,7 +13,7 @@ Avec l'utilisation de technologies modernes, nous avons développé une solution
 ### Backend
 - **Node.js** : Environnement d'exécution JavaScript côté serveur.
 - **Express** : Framework web pour Node.js.
-- **MySQL / SQL** : Base de données relationnelle pour stocker les informations.
+- **SQL** : Base de données relationnelle pour stocker les informations.
 
 ### Frontend
 - **React** : Bibliothèque JavaScript pour construire des interfaces utilisateur.
