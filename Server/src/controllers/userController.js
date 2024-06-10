@@ -1,14 +1,11 @@
-const User = require('../models/userModel');
+const { poolPromise } = require('../utils/db'); // Chemin correct pour db.js dans le dossier utils
 
-const getAllUsers = (req, res) => {
-    User.getAll((err, users) => {
-        if (err) {
-            return res.status(500).send(err);
-        }
-        res.json(users);
-    });
-};
-
-module.exports = {
-    getAllUsers
+exports.getAllUsers = async (req, res) => {
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request().query('SELECT * FROM Users');
+        res.json(result.recordset);
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
 };
