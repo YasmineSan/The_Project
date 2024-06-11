@@ -43,6 +43,8 @@
         <label for="profile_image">Profile Image:</label>
         <input type="file" id="profile_image" name="profile_image" accept=".webp, .jpeg, .jpg, .png, .svg"><br><br>
         
+        <img id="profile_image_preview" src="" alt="Profile Image" style="display:none; width: 150px; height: 150px; border-radius: 50%;"><br><br>
+        
         <button type="submit">Update</button>
     </form>
 
@@ -74,6 +76,12 @@
                 document.getElementById('city').value = user.city;
                 document.getElementById('email').value = user.email;
                 document.getElementById('paypal_address').value = user.paypal_address;
+
+                if (user.profile_image) {
+                    const profileImagePreview = document.getElementById('profile_image_preview');
+                    profileImagePreview.src = user.profile_image;
+                    profileImagePreview.style.display = 'block';
+                }
             } else {
                 alert('Failed to fetch user info');
             }
