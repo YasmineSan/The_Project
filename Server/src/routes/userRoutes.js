@@ -1,8 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const userController = require('../controllers/userController'); // Chemin correct pour userController.js dans le dossier controllers
+const userController = require('../controllers/userController');
 
-// Exemple de route pour obtenir tous les utilisateurs
+// Routes
 router.get('/', userController.getAllUsers);
+router.post('/register', userController.registerUser);
+router.post('/login', userController.loginUser);
 
 module.exports = router;
