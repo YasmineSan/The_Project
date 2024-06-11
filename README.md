@@ -1,4 +1,4 @@
-# Projet Artisans en Ligne ( Craftify ) 
+# Projet Artisans en Ligne ( Craftify )
 
 - **Front-end** : Auréliane Gagliardi,  Thomas Thonnard;
 - **Back-end** : Yasmine Sanchez,  Samuel Sanchez;
@@ -11,11 +11,13 @@ Avec l'utilisation de technologies modernes, nous avons développé une solution
 ## Technologies Utilisées
 
 ### Backend
+
 - **Node.js** : Environnement d'exécution JavaScript côté serveur.
 - **Express** : Framework web pour Node.js.
 - **SQL** : Base de données relationnelle pour stocker les informations.
 
 ### Frontend
+
 - **React** : Bibliothèque JavaScript pour construire des interfaces utilisateur.
 - **Tailwind CSS** : Framework CSS utilitaire pour un design moderne et réactif.
 
@@ -27,5 +29,4 @@ Avec l'utilisation de technologies modernes, nous avons développé une solution
 - **Paiement Sécurisé** : Intégration avec des services de paiement. (Fake payement API)
 - **Tableau de Bord** : Interface pour que les artisans gèrent leur boutique et leurs profils en ligne.
 
-  
-  ## Dead Ligne 
+## Dead Ligne
