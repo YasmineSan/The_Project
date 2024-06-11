@@ -2,6 +2,11 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { poolPromise } = require('../utils/db');
 
+const isValidFileType = (file) => {
+    const allowedTypes = ['image/webp', 'image/jpeg', 'image/jpg', 'image/png', 'image/svg+xml'];
+    return allowedTypes.includes(file.mimetype);
+};
+
 exports.getAllUsers = async (req, res) => {
     try {
         const pool = await poolPromise;
@@ -11,7 +16,7 @@ exports.getAllUsers = async (req, res) => {
         res.status(500).send({ message: err.message });
     }
 };
-// Info pour le formulaire inscription
+
 exports.registerUser = async (req, res) => {
     try {
         const {
@@ -26,9 +31,14 @@ exports.registerUser = async (req, res) => {
             city,
             password,
             email,
-            paypal_address,
-            profile_image
+            paypal_address
         } = req.body;
+
+        const profile_image = req.file;
+
+        if (profile_image && !isValidFileType(profile_image)) {
+            return res.status(400).send({ message: 'Invalid file type' });
+        }
 
         const pool = await poolPromise;
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -48,7 +58,7 @@ exports.registerUser = async (req, res) => {
             .input('email', email)
             .input('registration_date', registration_date)
             .input('paypal_address', paypal_address)
-            .input('profile_image', profile_image)
+            .input('profile_image', profile_image ? profile_image.buffer : null)
             .query(`
                 INSERT INTO Users (
                     username,
@@ -88,7 +98,7 @@ exports.registerUser = async (req, res) => {
         res.status(500).send({ message: err.message });
     }
 };
-// Pour le formulaire de login
+
 exports.loginUser = async (req, res) => {
     try {
         const { username, password } = req.body;
@@ -115,10 +125,9 @@ exports.loginUser = async (req, res) => {
     }
 };
 
-// Récupérer les informations de l'utilisateur
 exports.getUserInfo = async (req, res) => {
     try {
-        const userId = req.user.id; // Supposons que l'ID de l'utilisateur est stocké dans le jeton JWT
+        const userId = req.user.id;
 
         const pool = await poolPromise;
         const result = await pool.request()
@@ -136,10 +145,9 @@ exports.getUserInfo = async (req, res) => {
     }
 };
 
-// Mettre à jour les informations de l'utilisateur
 exports.updateUser = async (req, res) => {
     try {
-        const userId = req.user.id; // Supposons que l'ID de l'utilisateur est stocké dans le jeton JWT
+        const userId = req.user.id;
         const {
             biography,
             first_name,
@@ -150,43 +158,50 @@ exports.updateUser = async (req, res) => {
             postal_code,
             city,
             email,
-            paypal_address,
+            paypal_address
         } = req.body;
-        const profile_image = req.file ? req.file.buffer : null; // Si vous utilisez multer pour gérer les fichiers
+
+        const profile_image = req.file;
+
+        if (profile_image && !isValidFileType(profile_image)) {
+            return res.status(400).send({ message: 'Invalid file type' });
+        }
 
         const pool = await poolPromise;
-        await pool.request()
-            .input('user_id', userId)
-            .input('biography', biography)
-            .input('first_name', first_name)
-            .input('last_name', last_name)
-            .input('street', street)
-            .input('street_number', street_number)
-            .input('apartment', apartment)
-            .input('postal_code', postal_code)
-            .input('city', city)
-            .input('email', email)
-            .input('paypal_address', paypal_address)
-            .input('profile_image', profile_image)
-            .query(`
-                UPDATE Users SET
-                    biography = @biography,
-                    first_name = @first_name,
-                    last_name = @last_name,
-                    street = @street,
-                    street_number = @street_number,
-                    apartment = @apartment,
-                    postal_code = @postal_code,
-                    city = @city,
-                    email = @email,
-                    paypal_address = @paypal_address,
-                    profile_image = @profile_image
-                WHERE user_id = @user_id
-            `);
+        const request = pool.request().input('user_id', userId);
+
+        if (biography) request.input('biography', biography);
+        if (first_name) request.input('first_name', first_name);
+        if (last_name) request.input('last_name', last_name);
+        if (street) request.input('street', street);
+        if (street_number) request.input('street_number', street_number);
+        if (apartment) request.input('apartment', apartment);
+        if (postal_code) request.input('postal_code', postal_code);
+        if (city) request.input('city', city);
+        if (email) request.input('email', email);
+        if (paypal_address) request.input('paypal_address', paypal_address);
+        if (profile_image) request.input('profile_image', profile_image.buffer);
+
+        let query = 'UPDATE Users SET';
+        const fieldsToUpdate = [];
+        if (biography) fieldsToUpdate.push('biography = @biography');
+        if (first_name) fieldsToUpdate.push('first_name = @first_name');
+        if (last_name) fieldsToUpdate.push('last_name = @last_name');
+        if (street) fieldsToUpdate.push('street = @street');
+        if (street_number) fieldsToUpdate.push('street_number = @street_number');
+        if (apartment) fieldsToUpdate.push('apartment = @apartment');
+        if (postal_code) fieldsToUpdate.push('postal_code = @postal_code');
+        if (city) fieldsToUpdate.push('city = @city');
+        if (email) fieldsToUpdate.push('email = @email');
+        if (paypal_address) fieldsToUpdate.push('paypal_address = @paypal_address');
+        if (profile_image) fieldsToUpdate.push('profile_image = @profile_image');
+
+        query += ` ${fieldsToUpdate.join(', ')} WHERE user_id = @user_id`;
+
+        await request.query(query);
 
         res.send({ message: 'User updated successfully' });
     } catch (err) {
         res.status(500).send({ message: err.message });
     }
 };
-

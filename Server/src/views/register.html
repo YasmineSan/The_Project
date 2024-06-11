@@ -6,7 +6,7 @@
 </head>
 <body>
     <h1>Register</h1>
-    <form action="/api/users/register" method="POST">
+    <form id="registerForm" enctype="multipart/form-data">
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" required><br><br>
         <label for="biography">Biography:</label>
@@ -31,10 +31,29 @@
         <input type="email" id="email" name="email" required><br><br>
         <label for="paypal_address">PayPal Address:</label>
         <input type="text" id="paypal_address" name="paypal_address"><br><br>
-        <label for="profile_image">Profile Image URL:</label>
-        <input type="text" id="profile_image" name="profile_image"><br><br>
+        <label for="profile_image">Profile Image:</label>
+        <input type="file" id="profile_image" name="profile_image" accept=".webp, .jpeg, .jpg, .png, .svg" required><br><br>
         <button type="submit">Register</button>
     </form>
     <a href="/login">Already have an account? Login here</a>
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(document.getElementById('registerForm'));
+
+            const response = await fetch('/api/users/register', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                alert('User registered successfully');
+                window.location.href = '/login';
+            } else {
+                alert('Registration failed: ' + data.message);
+            }
+        });
+    </script>
 </body>
 </html>
