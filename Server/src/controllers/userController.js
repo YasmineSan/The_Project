@@ -1,6 +1,9 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { poolPromise } = require('../utils/db');
+const { BlobServiceClient } = require('@azure/storage-blob');
+const path = require('path');
+const { v4: uuidv4 } = require('uuid');
 
 const isValidFileType = (file) => {
     const allowedTypes = ['image/webp', 'image/jpeg', 'image/jpg', 'image/png', 'image/svg+xml'];
@@ -44,6 +47,17 @@ exports.registerUser = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
         const registration_date = new Date();
 
+        let profile_image_url = '';
+        if (profile_image) {
+            // Azure Blob Storage setup
+            const blobServiceClient = BlobServiceClient.fromConnectionString(process.env.AZURE_STORAGE_CONNECTION_STRING);
+            const containerClient = blobServiceClient.getContainerClient('user-images');
+            const blobName = uuidv4() + path.extname(profile_image.originalname);
+            const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+            await blockBlobClient.uploadData(profile_image.buffer);
+            profile_image_url = blockBlobClient.url;
+        }
+
         await pool.request()
             .input('username', username)
             .input('biography', biography)
@@ -58,7 +72,7 @@ exports.registerUser = async (req, res) => {
             .input('email', email)
             .input('registration_date', registration_date)
             .input('paypal_address', paypal_address)
-            .input('profile_image', profile_image ? profile_image.buffer : null)
+            .input('profile_image', profile_image_url)
             .query(`
                 INSERT INTO Users (
                     username,
@@ -180,7 +194,18 @@ exports.updateUser = async (req, res) => {
         if (city) request.input('city', city);
         if (email) request.input('email', email);
         if (paypal_address) request.input('paypal_address', paypal_address);
-        if (profile_image) request.input('profile_image', profile_image.buffer);
+
+        let profile_image_url = '';
+        if (profile_image) {
+            // Azure Blob Storage setup
+            const blobServiceClient = BlobServiceClient.fromConnectionString(process.env.AZURE_STORAGE_CONNECTION_STRING);
+            const containerClient = blobServiceClient.getContainerClient('user-images');
+            const blobName = uuidv4() + path.extname(profile_image.originalname);
+            const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+            await blockBlobClient.uploadData(profile_image.buffer);
+            profile_image_url = blockBlobClient.url;
+            request.input('profile_image', profile_image_url);
+        }
 
         let query = 'UPDATE Users SET';
         const fieldsToUpdate = [];
