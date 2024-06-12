@@ -21,22 +21,27 @@
     <a href="/dashboard">Back to Dashboard</a>
 
     <h2>Add Article</h2>
-    <form id="articleForm" enctype="multipart/form-data">
+    <form id="addArticleForm" enctype="multipart/form-data">
         <label for="article_description">Description:</label>
         <input type="text" id="article_description" name="article_description" required><br><br>
+
         <label for="article_price">Price:</label>
-        <input type="number" step="0.01" id="article_price" name="article_price" required><br><br>
+        <input type="number" id="article_price" name="article_price" required><br><br>
+
         <label for="shipping_cost">Shipping Cost:</label>
-        <input type="number" step="0.01" id="shipping_cost" name="shipping_cost" required><br><br>
+        <input type="number" id="shipping_cost" name="shipping_cost"><br><br>
+
         <label for="category_name">Category:</label>
         <input type="text" id="category_name" name="category_name" required><br><br>
+
         <label for="article_photo">Photo:</label>
         <input type="file" id="article_photo" name="article_photo" accept=".webp, .jpeg, .jpg, .png, .svg" required><br><br>
+
         <button type="submit">Add Article</button>
     </form>
 
     <h2>Articles</h2>
-    <div id="articlesList"></div>
+    <ul id="articlesList"></ul>
 
     <script>
         async function getUserProfile() {
@@ -75,40 +80,15 @@
             }
         }
 
-        async function getArticles() {
-            const token = localStorage.getItem('token');
-            const response = await fetch('/api/users/articles', {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-
-            if (response.ok) {
-                const articles = await response.json();
-                const articlesList = document.getElementById('articlesList');
-                articlesList.innerHTML = '';
-
-                articles.forEach(article => {
-                    const articleDiv = document.createElement('div');
-                    articleDiv.innerHTML = `
-                        <p><strong>Description:</strong> ${article.article_description}</p>
-                        <p><strong>Price:</strong> ${article.article_price}</p>
-                        <p><strong>Shipping Cost:</strong> ${article.shipping_cost}</p>
-                        <p><strong>Category:</strong> ${article.category_name}</p>
-                        <img src="${article.article_photo}" alt="Article Photo" style="width: 150px; height: 150px;">
-                    `;
-                    articlesList.appendChild(articleDiv);
-                });
-            } else {
-                alert('Failed to fetch articles');
-            }
-        }
-
-        document.getElementById('articleForm').addEventListener('submit', async (e) => {
+        document.getElementById('addArticleForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const token = localStorage.getItem('token');
-            const formData = new FormData(document.getElementById('articleForm'));
+            if (!token) {
+                window.location.href = '/login';
+                return;
+            }
+
+            const formData = new FormData(document.getElementById('addArticleForm'));
 
             const response = await fetch('/api/users/articles', {
                 method: 'POST',
@@ -120,16 +100,47 @@
 
             if (response.ok) {
                 alert('Article added successfully');
-                getArticles();
+                loadArticles();
             } else {
                 const data = await response.json();
                 alert('Failed to add article: ' + data.message);
             }
         });
 
+        async function loadArticles() {
+            const token = localStorage.getItem('token');
+            const response = await fetch('/api/users/articles', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            const articlesList = document.getElementById('articlesList');
+            articlesList.innerHTML = '';
+            if (response.ok) {
+                const articles = await response.json();
+                articles.forEach(article => {
+                    const li = document.createElement('li');
+                    li.textContent = `${article.article_description} - ${article.category_name} - ${article.article_price}€`;
+                    if (article.article_photo) {
+                        const img = document.createElement('img');
+                        img.src = article.article_photo;
+                        img.alt = article.article_description;
+                        img.style.width = '100px';
+                        img.style.height = '100px';
+                        li.appendChild(img);
+                    }
+                    articlesList.appendChild(li);
+                });
+            } else {
+                alert('Failed to load articles');
+            }
+        }
+
         window.onload = () => {
             getUserProfile();
-            getArticles();
+            loadArticles();
         };
     </script>
 </body>

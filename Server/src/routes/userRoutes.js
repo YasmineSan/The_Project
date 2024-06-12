@@ -25,6 +25,6 @@ router.get('/dashboard', authenticateToken, userController.getUserInfo);
 router.post('/update', authenticateToken, upload.single('profile_image'), userController.updateUser);
 
 router.post('/articles', authenticateToken, upload.single('article_photo'), articleController.addArticle);
-router.get('/articles', authenticateToken, articleController.getAllArticles);
+router.get('/articles', authenticateToken, articleController.getAllArticlesByUser);
 
 module.exports = router;

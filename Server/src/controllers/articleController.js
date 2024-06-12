@@ -12,28 +12,13 @@ exports.addArticle = async (req, res) => {
     try {
         const { article_description, article_price, shipping_cost, category_name } = req.body;
         const article_photo = req.file;
+        const userId = req.user.id;
 
         if (article_photo && !isValidFileType(article_photo)) {
             return res.status(400).send({ message: 'Invalid file type' });
         }
 
         const pool = await poolPromise;
-
-        // Vérifier si la catégorie existe déjà
-        let categoryResult = await pool.request()
-            .input('category_name', category_name)
-            .query('SELECT category_id FROM Categories WHERE category_name = @category_name');
-        
-        let category_id;
-        if (categoryResult.recordset.length > 0) {
-            category_id = categoryResult.recordset[0].category_id;
-        } else {
-            // Ajouter une nouvelle catégorie si elle n'existe pas
-            let categoryInsertResult = await pool.request()
-                .input('category_name', category_name)
-                .query('INSERT INTO Categories (category_name) OUTPUT INSERTED.category_id VALUES (@category_name)');
-            category_id = categoryInsertResult.recordset[0].category_id;
-        }
 
         // Gérer l'image
         let article_photo_url = '';
@@ -46,8 +31,25 @@ exports.addArticle = async (req, res) => {
             article_photo_url = blockBlobClient.url;
         }
 
+        // Vérifier si la catégorie existe déjà
+        const categoryResult = await pool.request()
+            .input('category_name', category_name)
+            .query('SELECT category_id FROM Categories WHERE category_name = @category_name');
+
+        let category_id;
+        if (categoryResult.recordset.length > 0) {
+            // Catégorie existante
+            category_id = categoryResult.recordset[0].category_id;
+        } else {
+            // Ajouter la nouvelle catégorie
+            const newCategoryResult = await pool.request()
+                .input('category_name', category_name)
+                .query('INSERT INTO Categories (category_name) OUTPUT INSERTED.category_id VALUES (@category_name)');
+            category_id = newCategoryResult.recordset[0].category_id;
+        }
+
         // Ajouter l'article à la base de données
-        await pool.request()
+        const articleResult = await pool.request()
             .input('article_description', article_description)
             .input('article_price', article_price)
             .input('shipping_cost', shipping_cost)
@@ -62,7 +64,7 @@ exports.addArticle = async (req, res) => {
                     category_id,
                     category_name,
                     article_photo
-                ) VALUES (
+                ) OUTPUT INSERTED.article_id VALUES (
                     @article_description,
                     @article_price,
                     @shipping_cost,
@@ -72,16 +74,32 @@ exports.addArticle = async (req, res) => {
                 )
             `);
 
+        const article_id = articleResult.recordset[0].article_id;
+
+        // Lier l'article avec l'utilisateur
+        await pool.request()
+            .input('user_id', userId)
+            .input('article_id', article_id)
+            .query('INSERT INTO User_Article (user_id, article_id) VALUES (@user_id, @article_id)');
+
         res.status(201).send({ message: 'Article added successfully' });
     } catch (err) {
         res.status(500).send({ message: err.message });
     }
 };
 
-exports.getAllArticles = async (req, res) => {
+exports.getAllArticlesByUser = async (req, res) => {
     try {
+        const userId = req.user.id;
         const pool = await poolPromise;
-        const result = await pool.request().query('SELECT * FROM Articles');
+        const result = await pool.request()
+            .input('user_id', userId)
+            .query(`
+                SELECT a.*
+                FROM Articles a
+                INNER JOIN User_Article ua ON a.article_id = ua.article_id
+                WHERE ua.user_id = @user_id
+            `);
         res.json(result.recordset);
     } catch (err) {
         res.status(500).send({ message: err.message });
