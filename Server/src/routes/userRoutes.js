@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
+const articleController = require('../controllers/articleController');
 const multer = require('multer');
 const authenticateToken = require('../middleware/authenticateToken');
 
@@ -22,5 +23,8 @@ router.post('/register', upload.single('profile_image'), userController.register
 router.post('/login', userController.loginUser);
 router.get('/dashboard', authenticateToken, userController.getUserInfo);
 router.post('/update', authenticateToken, upload.single('profile_image'), userController.updateUser);
+
+router.post('/articles', authenticateToken, upload.single('article_photo'), articleController.addArticle);
+router.get('/articles', authenticateToken, articleController.getAllArticles);
 
 module.exports = router;
