@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Profile</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+</head>
+<body>
+    <h1>Profile</h1>
+    <img id="profile_image" src="" alt="Profile Image" style="width: 150px; height: 150px; border-radius: 50%;"><br><br>
+    <p><strong>Username:</strong> <span id="username"></span></p>
+    <p><strong>Biography:</strong> <span id="biography"></span></p>
+    <p><strong>First Name:</strong> <span id="first_name"></span></p>
+    <p><strong>Last Name:</strong> <span id="last_name"></span></p>
+    <p><strong>Street:</strong> <span id="street"></span></p>
+    <p><strong>Street Number:</strong> <span id="street_number"></span></p>
+    <p><strong>Apartment:</strong> <span id="apartment"></span></p>
+    <p><strong>Postal Code:</strong> <span id="postal_code"></span></p>
+    <p><strong>City:</strong> <span id="city"></span></p>
+    <p><strong>Email:</strong> <span id="email"></span></p>
+    <p><strong>PayPal Address:</strong> <span id="paypal_address"></span></p>
+    <a href="/dashboard">Back to Dashboard</a>
+
+    <script>
+        async function getUserProfile() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = '/login';
+                return;
+            }
+
+            const response = await fetch('/api/users/dashboard', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (response.ok) {
+                const user = await response.json();
+                document.getElementById('username').textContent = user.username;
+                document.getElementById('biography').textContent = user.biography;
+                document.getElementById('first_name').textContent = user.first_name;
+                document.getElementById('last_name').textContent = user.last_name;
+                document.getElementById('street').textContent = user.street;
+                document.getElementById('street_number').textContent = user.street_number;
+                document.getElementById('apartment').textContent = user.apartment;
+                document.getElementById('postal_code').textContent = user.postal_code;
+                document.getElementById('city').textContent = user.city;
+                document.getElementById('email').textContent = user.email;
+                document.getElementById('paypal_address').textContent = user.paypal_address;
+
+                if (user.profile_image) {
+                    document.getElementById('profile_image').src = user.profile_image;
+                }
+            } else {
+                alert('Failed to fetch user profile');
+            }
+        }
+
+        window.onload = getUserProfile;
+    </script>
+</body>
+</html>

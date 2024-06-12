@@ -22,9 +22,12 @@ app.get('/dashboard', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'dashboard.html'));
 });
 
+app.get('/profile', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'profile.html'));
+});
+
 app.get('/', (req, res) => {
     res.send('<h1>Welcome</h1><a href="/login">Login</a> or <a href="/register">Register</a>');
 });
 
 module.exports = app;
-
