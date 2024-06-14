@@ -28,4 +28,13 @@ router.post('/update', authenticateToken, upload.single('profile_image'), userCo
 router.post('/articles', authenticateToken, upload.single('article_photo'), articleController.addArticle);
 router.get('/articles', authenticateToken, articleController.getAllArticlesByUser);
 
+router.put('/articles/:id', authenticateToken, upload.single('article_photo'), articleController.updateArticle);
+router.delete('/articles/:id', authenticateToken, articleController.deleteArticle);
+router.get('/articles/:id', authenticateToken, articleController.getArticleById);
+router.post('/articles/:id/evaluations', authenticateToken, articleController.addEvaluation);
+
+
+
+
+
 module.exports = router;

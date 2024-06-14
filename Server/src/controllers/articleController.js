@@ -99,3 +99,146 @@ exports.getAllArticlesByUser = async (req, res) => {
         res.status(500).send({ message: err.message });
     }
 };
+
+exports.updateArticle = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { article_description, article_price, shipping_cost, category_name } = req.body;
+        const article_photo = req.file;
+        const userId = req.user.id;
+
+        const pool = await poolPromise;
+
+        // Vérifie si l'article appartient à l'utilisateur
+        const articleResult = await pool.request()
+            .input('article_id', id)
+            .input('user_id', userId)
+            .query('SELECT * FROM Articles a INNER JOIN User_Article ua ON a.article_id = ua.article_id WHERE a.article_id = @article_id AND ua.user_id = @user_id');
+
+        if (articleResult.recordset.length === 0) {
+            return res.status(404).send({ message: 'Article not found or not owned by user' });
+        }
+
+        let article_photo_url = articleResult.recordset[0].article_photo;
+        if (article_photo) {
+            const blobServiceClient = BlobServiceClient.fromConnectionString(process.env.AZURE_STORAGE_CONNECTION_STRING);
+            const containerClient = blobServiceClient.getContainerClient('article-images');
+            const blobName = uuidv4() + path.extname(article_photo.originalname);
+            const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+            await blockBlobClient.uploadData(article_photo.buffer);
+            article_photo_url = blockBlobClient.url;
+        }
+
+        await pool.request()
+            .input('article_id', id)
+            .input('article_description', article_description)
+            .input('article_price', article_price)
+            .input('shipping_cost', shipping_cost)
+            .input('category_name', category_name)
+            .input('article_photo', article_photo_url)
+            .query(`
+                UPDATE Articles
+                SET article_description = @article_description,
+                    article_price = @article_price,
+                    shipping_cost = @shipping_cost,
+                    category_name = @category_name,
+                    article_photo = @article_photo
+                WHERE article_id = @article_id
+            `);
+
+        res.send({ message: 'Article updated successfully' });
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+};
+
+exports.deleteArticle = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const userId = req.user.id;
+
+        const pool = await poolPromise;
+
+        // Vérifie si l'article appartient à l'utilisateur
+        const articleResult = await pool.request()
+            .input('article_id', id)
+            .input('user_id', userId)
+            .query('SELECT * FROM Articles a INNER JOIN User_Article ua ON a.article_id = ua.article_id WHERE a.article_id = @article_id AND ua.user_id = @user_id');
+
+        if (articleResult.recordset.length === 0) {
+            return res.status(404).send({ message: 'Article not found or not owned by user' });
+        }
+
+        await pool.request()
+            .input('article_id', id)
+            .query('DELETE FROM Articles WHERE article_id = @article_id');
+
+        res.send({ message: 'Article deleted successfully' });
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+};
+
+exports.getArticleById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const pool = await poolPromise;
+
+        const result = await pool.request()
+            .input('article_id', id)
+            .query('SELECT * FROM Articles WHERE article_id = @article_id');
+
+        const article = result.recordset[0];
+        if (!article) {
+            return res.status(404).send({ message: 'Article not found' });
+        }
+
+        res.json(article);
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+};
+
+exports.addEvaluation = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { rating, comment } = req.body;
+        const userId = req.user.id;
+
+        const pool = await poolPromise;
+
+        await pool.request()
+            .input('article_id', id)
+            .input('user_id', userId)
+            .input('rating', rating)
+            .input('comment', comment)
+            .query(`
+                INSERT INTO Evaluations (article_id, user_id, rating, comment)
+                VALUES (@article_id, @user_id, @rating, @comment)
+            `);
+
+        res.status(201).send({ message: 'Evaluation added successfully' });
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+};
+
+exports.getEvaluations = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const pool = await poolPromise;
+
+        const result = await pool.request()
+            .input('article_id', id)
+            .query('SELECT * FROM Evaluations WHERE article_id = @article_id');
+
+        res.json(result.recordset);
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+};
+
+
+
+
+
