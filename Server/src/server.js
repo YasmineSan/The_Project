@@ -1,6 +1,6 @@
-const app = require('./app'); // Chemin correct pour app.js dans le même dossier
+const app = require('./app');
 const dotenv = require('dotenv');
-const { poolPromise } = require('./utils/db'); // Chemin mis à jour pour db.js dans le dossier utils
+const { poolPromise } = require('./utils/db');
 
 dotenv.config();
 
@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, async () => {
     try {
-        await poolPromise; // Assure-toi que la connexion à la base de données est établie avant de démarrer le serveur
+        await poolPromise;
         console.log(`Server is running on port ${PORT}`);
     } catch (err) {
         console.error('Failed to connect to the database:', err);

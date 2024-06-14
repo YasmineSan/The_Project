@@ -20,7 +20,6 @@ exports.addArticle = async (req, res) => {
 
         const pool = await poolPromise;
 
-        // Gérer l'image
         let article_photo_url = '';
         if (article_photo) {
             const blobServiceClient = BlobServiceClient.fromConnectionString(process.env.AZURE_STORAGE_CONNECTION_STRING);
@@ -31,24 +30,20 @@ exports.addArticle = async (req, res) => {
             article_photo_url = blockBlobClient.url;
         }
 
-        // Vérifier si la catégorie existe déjà
         const categoryResult = await pool.request()
             .input('category_name', category_name)
             .query('SELECT category_id FROM Categories WHERE category_name = @category_name');
 
         let category_id;
         if (categoryResult.recordset.length > 0) {
-            // Catégorie existante
             category_id = categoryResult.recordset[0].category_id;
         } else {
-            // Ajouter la nouvelle catégorie
             const newCategoryResult = await pool.request()
                 .input('category_name', category_name)
                 .query('INSERT INTO Categories (category_name) OUTPUT INSERTED.category_id VALUES (@category_name)');
             category_id = newCategoryResult.recordset[0].category_id;
         }
 
-        // Ajouter l'article à la base de données
         const articleResult = await pool.request()
             .input('article_description', article_description)
             .input('article_price', article_price)
@@ -76,7 +71,6 @@ exports.addArticle = async (req, res) => {
 
         const article_id = articleResult.recordset[0].article_id;
 
-        // Lier l'article avec l'utilisateur
         await pool.request()
             .input('user_id', userId)
             .input('article_id', article_id)
