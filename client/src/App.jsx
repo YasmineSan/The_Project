@@ -9,7 +9,8 @@ import {RouterProvider, createBrowserRouter, createMemoryRouter, Outlet} from "r
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <div><Outlet/></div>,
+    element: <Root/>,
+    errorElement: <PageError/>,
     children: [
       {
         path: 'login',
@@ -26,6 +27,16 @@ const router = createBrowserRouter([
     ]
   }
 ])
+
+function PageError() {
+  const error = useRouteError()
+  return <>
+    <h1>Une erreur est survenue</h1>
+    <p>
+      {error?.error?.toString() ?? error?.toString()}
+    </p>
+  </>
+}
 
 function Root() {
   return <>
