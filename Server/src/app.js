@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const app = express();
+const multer = require('multer');
 
 // Middleware
 app.use(express.json());
@@ -8,6 +9,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.use('/api/users', require('./routes/userRoutes'));
+app.use('/api/articles', require('./routes/articleRoutes'));
 
 // Serve HTML files
 app.get('/login', (req, res) => {

@@ -1,9 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
-const articleController = require('../controllers/articleController');
-const multer = require('multer');
 const authenticateToken = require('../middleware/authenticateToken');
+const multer = require('multer');
 
 const storage = multer.memoryStorage();
 const upload = multer({
@@ -18,13 +17,11 @@ const upload = multer({
     }
 });
 
+// Routes utilisateur
 router.get('/', userController.getAllUsers);
 router.post('/register', upload.single('profile_image'), userController.registerUser);
 router.post('/login', userController.loginUser);
 router.get('/dashboard', authenticateToken, userController.getUserInfo);
 router.post('/update', authenticateToken, upload.single('profile_image'), userController.updateUser);
-
-router.post('/articles', authenticateToken, upload.single('article_photo'), articleController.addArticle);
-router.get('/articles', authenticateToken, articleController.getAllArticlesByUser);
 
 module.exports = router;

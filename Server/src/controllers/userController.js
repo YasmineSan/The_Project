@@ -49,7 +49,6 @@ exports.registerUser = async (req, res) => {
 
         let profile_image_url = '';
         if (profile_image) {
-            // Azure Blob Storage setup
             const blobServiceClient = BlobServiceClient.fromConnectionString(process.env.AZURE_STORAGE_CONNECTION_STRING);
             const containerClient = blobServiceClient.getContainerClient('user-images');
             const blobName = uuidv4() + path.extname(profile_image.originalname);
@@ -117,6 +116,9 @@ exports.loginUser = async (req, res) => {
     try {
         const { username, password } = req.body;
 
+        console.log('Username:', username);
+        console.log('Password:', password);
+
         const pool = await poolPromise;
         const result = await pool.request()
             .input('username', username)
@@ -124,10 +126,15 @@ exports.loginUser = async (req, res) => {
 
         const user = result.recordset[0];
         if (!user) {
+            console.log('User not found');
             return res.status(400).send({ message: 'User not found' });
         }
 
+        console.log('User found:', user);
+
         const isPasswordValid = await bcrypt.compare(password, user.hashed_password);
+        console.log('Password valid:', isPasswordValid);
+        
         if (!isPasswordValid) {
             return res.status(400).send({ message: 'Invalid password' });
         }
@@ -135,6 +142,7 @@ exports.loginUser = async (req, res) => {
         const token = jwt.sign({ id: user.user_id }, process.env.JWT_SECRET, { expiresIn: '1h' });
         res.json({ token });
     } catch (err) {
+        console.error('Error:', err);
         res.status(500).send({ message: err.message });
     }
 };
@@ -197,7 +205,6 @@ exports.updateUser = async (req, res) => {
 
         let profile_image_url = '';
         if (profile_image) {
-            // Azure Blob Storage setup
             const blobServiceClient = BlobServiceClient.fromConnectionString(process.env.AZURE_STORAGE_CONNECTION_STRING);
             const containerClient = blobServiceClient.getContainerClient('user-images');
             const blobName = uuidv4() + path.extname(profile_image.originalname);
