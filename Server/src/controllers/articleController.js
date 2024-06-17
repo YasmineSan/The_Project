@@ -202,23 +202,33 @@ exports.getArticleById = async (req, res) => {
 exports.addEvaluation = async (req, res) => {
     try {
         const { id } = req.params;
-        const { rating, comment } = req.body;
+        const { evaluation_number, evaluation_description } = req.body;
         const userId = req.user.id;
 
         const pool = await poolPromise;
 
-        await pool.request()
+        console.log("Received data:", {
+            article_id: id,
+            user_id: userId,
+            evaluation_number,
+            evaluation_description
+        });
+
+        const result = await pool.request()
             .input('article_id', id)
             .input('user_id', userId)
-            .input('rating', rating)
-            .input('comment', comment)
+            .input('evaluation_number', evaluation_number)
+            .input('evaluation_description', evaluation_description)
             .query(`
-                INSERT INTO Evaluations (article_id, user_id, rating, comment)
-                VALUES (@article_id, @user_id, @rating, @comment)
+                INSERT INTO Evaluations (article_id, user_id, evaluation_number, evaluation_description)
+                VALUES (@article_id, @user_id, @evaluation_number, @evaluation_description)
             `);
+
+        console.log("Insertion result:", result);
 
         res.status(201).send({ message: 'Evaluation added successfully' });
     } catch (err) {
+        console.error("Error:", err);
         res.status(500).send({ message: err.message });
     }
 };
@@ -238,7 +248,108 @@ exports.getEvaluations = async (req, res) => {
     }
 };
 
+// Dans articleController.js
+exports.deleteArticle = async (req, res) => {
+    try {
+        const articleId = req.params.id;
+        const pool = await poolPromise;
+
+        // Supprimer les enregistrements dans User_Article qui référencent cet article
+        await pool.request()
+            .input('article_id', articleId)
+            .query('DELETE FROM User_Article WHERE article_id = @article_id');
+
+        // Ensuite, supprimer l'article lui-même
+        await pool.request()
+            .input('article_id', articleId)
+            .query('DELETE FROM Articles WHERE article_id = @article_id');
+
+        res.status(200).send({ message: 'Article deleted successfully' });
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+};
+
+// Récupérer tous les articles (public)
+exports.getAllArticles = async (req, res) => {
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request().query('SELECT * FROM Articles');
+        res.json(result.recordset);
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+};
+
+// Récupérer toutes les évaluations d'un utilisateur
+exports.getAllEvaluationsByUser = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        console.log("User ID:", userId); // Vérifiez que l'ID de l'utilisateur est correct
+
+        // Assurez-vous que userId est un entier
+        const parsedUserId = parseInt(userId, 10);
+        if (isNaN(parsedUserId)) {
+            return res.status(400).send({ message: 'Invalid user ID' });
+        }
+
+        const pool = await poolPromise;
+        const result = await pool.request()
+            .input('user_id', sql.Int, parsedUserId) // Utilisation explicite de sql.Int
+            .query('SELECT * FROM Evaluations WHERE user_id = @user_id');
+
+        res.json(result.recordset);
+    } catch (err) {
+        console.error("Error:", err);
+        res.status(500).send({ message: err.message });
+    }
+};
 
 
 
+// Mettre à jour une évaluation
+exports.updateEvaluation = async (req, res) => {
+    try {
+        const { articleId, evaluationId } = req.params;
+        const { evaluation_number, evaluation_description } = req.body;
+        const userId = req.user.id;
+
+        const pool = await poolPromise;
+        await pool.request()
+            .input('article_id', articleId)
+            .input('evaluation_id', evaluationId)
+            .input('user_id', userId)
+            .input('evaluation_number', evaluation_number)
+            .input('evaluation_description', evaluation_description)
+            .query(`
+                UPDATE Evaluations
+                SET evaluation_number = @evaluation_number,
+                    evaluation_description = @evaluation_description
+                WHERE article_id = @article_id AND evaluation_id = @evaluation_id AND user_id = @user_id
+            `);
+
+        res.send({ message: 'Évaluation mise à jour avec succès' });
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+};
+
+// Supprimer une évaluation
+exports.deleteEvaluation = async (req, res) => {
+    try {
+        const { articleId, evaluationId } = req.params;
+        const userId = req.user.id;
+
+        const pool = await poolPromise;
+        await pool.request()
+            .input('article_id', articleId)
+            .input('evaluation_id', evaluationId)
+            .input('user_id', userId)
+            .query('DELETE FROM Evaluations WHERE article_id = @article_id AND evaluation_id = @evaluation_id AND user_id = @user_id');
+
+        res.send({ message: 'Évaluation supprimée avec succès' });
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+};
 
