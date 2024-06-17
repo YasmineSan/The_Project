@@ -10,6 +10,8 @@ const isValidFileType = (file) => {
 
 exports.addArticle = async (req, res) => {
     try {
+        console.log('Request Body:', req.body); // Ajoute cette ligne pour log le corps de la requête
+        console.log('File:', req.file); // Ajoute cette ligne pour log le fichier uploadé
         const { article_description, article_price, shipping_cost, category_name } = req.body;
         const article_photo = req.file;
         const userId = req.user.id;
@@ -49,7 +51,6 @@ exports.addArticle = async (req, res) => {
             .input('article_price', article_price)
             .input('shipping_cost', shipping_cost)
             .input('category_id', category_id)
-            .input('category_name', category_name)
             .input('article_photo', article_photo_url)
             .query(`
                 INSERT INTO Articles (
@@ -57,14 +58,12 @@ exports.addArticle = async (req, res) => {
                     article_price,
                     shipping_cost,
                     category_id,
-                    category_name,
                     article_photo
                 ) OUTPUT INSERTED.article_id VALUES (
                     @article_description,
                     @article_price,
                     @shipping_cost,
                     @category_id,
-                    @category_name,
                     @article_photo
                 )
             `);
@@ -78,9 +77,13 @@ exports.addArticle = async (req, res) => {
 
         res.status(201).send({ message: 'Article added successfully' });
     } catch (err) {
+        console.error('Error:', err); // Ajoute cette ligne pour log l'erreur
         res.status(500).send({ message: err.message });
     }
 };
+
+
+
 
 exports.getAllArticlesByUser = async (req, res) => {
     try {
@@ -102,7 +105,7 @@ exports.getAllArticlesByUser = async (req, res) => {
 
 exports.updateArticle = async (req, res) => {
     try {
-        const { id } = req.params;
+        const { articleId } = req.params;
         const { article_description, article_price, shipping_cost, category_name } = req.body;
         const article_photo = req.file;
         const userId = req.user.id;
@@ -111,7 +114,7 @@ exports.updateArticle = async (req, res) => {
 
         // Vérifie si l'article appartient à l'utilisateur
         const articleResult = await pool.request()
-            .input('article_id', id)
+            .input('article_id', articleId)
             .input('user_id', userId)
             .query('SELECT * FROM Articles a INNER JOIN User_Article ua ON a.article_id = ua.article_id WHERE a.article_id = @article_id AND ua.user_id = @user_id');
 
@@ -130,7 +133,7 @@ exports.updateArticle = async (req, res) => {
         }
 
         await pool.request()
-            .input('article_id', id)
+            .input('article_id', articleId)
             .input('article_description', article_description)
             .input('article_price', article_price)
             .input('shipping_cost', shipping_cost)
@@ -151,6 +154,7 @@ exports.updateArticle = async (req, res) => {
         res.status(500).send({ message: err.message });
     }
 };
+
 
 exports.deleteArticle = async (req, res) => {
     try {
