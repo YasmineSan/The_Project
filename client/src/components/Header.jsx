@@ -2,7 +2,14 @@ import React from 'react'
 
 const Header = () => {
   return (
-    <div>Header</div>
+    <div>
+      <nav>
+        <NavLink to="/">Home</NavLink>
+        <NavLink to="/articles">Articles</NavLink>
+      </nav>
+      
+
+    </div>
   )
 }
 
