@@ -10,6 +10,7 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/articles', require('./routes/articleRoutes'));
+app.use('/api/categories', require('./routes/categoryRoutes'));  // Ajoutez cette ligne
 
 // Serve HTML files
 app.get('/login', (req, res) => {
