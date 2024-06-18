@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+const colors = require("tailwindcss/colors");
 module.exports = {
   content: [
     './index.html',
@@ -7,6 +8,7 @@ module.exports = {
   theme: {
     extend: {},
     colors: {
+      ...colors,
       'darkGrey': '#545454',
       'gold': '#AB8F45'
     }
