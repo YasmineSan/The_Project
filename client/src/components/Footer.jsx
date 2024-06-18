@@ -5,7 +5,7 @@ import { CiFacebook } from "react-icons/ci";
 
 const Footer = () => {
   return (
-    <footer className="flex justify-between items-center py-8 px-10 bg-gray-800 text-white border-t-2 border-gold">
+    <footer className="flex justify-between items-center py-8 px-10 bg-inherit text-white border-t-2 border-gold mt-500">
       <div className="footer-left">
         <p className="tracking-wider text-darkGrey font-light">CRAFTIFY</p>
       </div>
