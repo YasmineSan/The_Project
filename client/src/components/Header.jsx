@@ -29,7 +29,7 @@ const Header = () => {
 
   return (
     <header>
-      <nav className='fixed mx-auto border-b-2 border-gold top-0 left-0 right-0 bg-white bg-opacity-100'>
+      <nav className='fixed mx-auto border-b-2 border-gold top-0 left-0 right-0 bg-white bg-opacity-100 z-10'>
         <div className='flex container px-4 lg:px-10 items-center justify-between mx-auto'>
           <NavLink to="/"><img src="craftify.png" alt="logo Craftify" className='w-20' /></NavLink>
           
