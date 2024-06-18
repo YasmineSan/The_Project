@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { FaXTwitter, FaInstagram,} from "react-icons/fa6";
-import { CiFacebook } from "react-icons/ci";
+import { FaXTwitter, FaInstagram, FaFacebook} from "react-icons/fa6";
+
 
 const Footer = () => {
   return (
@@ -26,7 +26,7 @@ const Footer = () => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <CiFacebook className="text-2xl" />
+            <FaFacebook className="text-2xl" />
           </a>
         </div>
         <div className="footer-right">
