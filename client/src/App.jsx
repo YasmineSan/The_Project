@@ -1,10 +1,11 @@
 
 import React from 'react';
 import Home from './pages/Home';
-import Contact from './pages/Contact';
+// import Contact from './pages/Contact';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import {RouterProvider, createBrowserRouter, createMemoryRouter, Outlet, useRouteError} from "react-router-dom"
+import { ThemeProvider } from '@material-tailwind/react';
 
 const router = createBrowserRouter([
   {
@@ -53,11 +54,15 @@ function Root() {
 }
 
 function App() {
-  return <RouterProvider router={router}/>
+  return (
+  <ThemeProvider>
+      <RouterProvider router={router} />
+    </ThemeProvider>
+  );
 }
 
 export default App;
 
 
-
+// return <RouterProvider router={router}/>
 
