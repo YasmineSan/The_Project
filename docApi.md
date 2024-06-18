@@ -1,11 +1,11 @@
-```markdown
-Documentation de l'API pour les Frontends
+
+# Documentation de l'API pour les Frontends
 
 Pour que les développeurs front-end puissent utiliser efficacement votre API, voici une documentation détaillée des endpoints, y compris les méthodes HTTP, les URL, les descriptions, et les informations sur l'authentification.
 
-/!\Les commandes lié à "order" ( les commandes ) ne fonctionnent pas encore.../!\
+/!\ Les commandes lié à "order" ( les commandes ) ne fonctionnent pas encore... /!\
 
-Utilisateur
+## Utilisateur
 
 1. Inscription
 
@@ -74,7 +74,7 @@ Utilisateur
     - Description : Récupère les informations de l'utilisateur connecté.
     - Token : Oui
 
-Articles
+## Articles
 
 1. Ajouter un article
 
@@ -180,7 +180,7 @@ Articles
      - Description : Récupérer les articles et leurs prix dans une catégorie spécifique.
      - Token : Non
 
-Catégories
+## Catégories
 
 1. Ajouter une catégorie
 
@@ -222,7 +222,7 @@ Catégories
     - Description : Supprimer une catégorie spécifique.
     - Token : Oui
 
-Favoris
+## Favoris
 
 1. Ajouter un article aux favoris
 
@@ -251,7 +251,7 @@ Favoris
     - Description : Supprimer un article des favoris de l'utilisateur.
     - Token : Oui
 
-Panier
+## Panier
 
 1. Ajouter un article au panier
 
@@ -281,7 +281,7 @@ Panier
     - Description : Supprimer un article du panier de l'utilisateur.
     - Token : Oui
 
-Commandes
+## Commandes
 
 1. Créer une commande
 
@@ -323,7 +323,6 @@ Commandes
       ```
     - Token : Oui
 
-Conclusion
+## Conclusion
 
 Avec cette documentation, vos développeurs front-end pourront facilement comprendre comment utiliser les endpoints de votre API. Assurez-vous que toutes les routes nécessitant un token d'authentification utilisent bien le middleware authenticateToken. Si vous avez d'autres questions ou besoin de plus d'aide, n'hésitez pas à demander !
-```
