@@ -4,10 +4,11 @@ import { ShowArticlesSection } from '../components/home/ShowArticlesSection'
 
 
 const Home = () => {
-  return ( <>
+  return ( <div className='container mt-24 mx-auto px-12 py-4'>
     <CarouselBanner/>
     <ShowArticlesSection/>
-  </>
+  </div>
+    
     
   )
 }
