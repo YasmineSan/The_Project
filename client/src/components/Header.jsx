@@ -31,11 +31,11 @@ const Header = () => {
     <header>
       <nav className='fixed mx-auto border-b-2 border-gold top-0 left-0 right-0 bg-white bg-opacity-100 z-10'>
         <div className='flex container px-4 lg:px-10 items-center justify-between mx-auto'>
-          <NavLink to="/"><img src="craftify.png" alt="logo Craftify" className='w-20' /></NavLink>
+          <NavLink to="/" className='mr-5'><img src="craftify.png" alt="logo Craftify" className='w-20 mr-5' /></NavLink>
           
           <div className='flex items-center relative'>
-            <div className='flex items-center mr-4 cursor-pointer' onClick={toggleDropdown}>
-              <FiMenu className='h-5 w-5 text-darkGrey mr-1' />
+            <div className='flex items-center cursor-pointer' onClick={toggleDropdown}>
+              <FiMenu className='h-5 w-5 text-darkGrey mr-3' />
               <span className='text-darkGrey hidden sm:block'>Catégorie</span>
             </div>
             {isDropdownOpen && (
@@ -50,13 +50,13 @@ const Header = () => {
               </div>
             )}
 
-            <form onSubmit={handleSearchSubmit} className='relative max-w-sm mx-4'>
+            <form onSubmit={handleSearchSubmit} className='relative max-w-full sm:max-w-xs lg:max-w-md mr-4 sm:mx-4'>
               <input
                 type="text"
                 placeholder='Que recherchez-vous?'
                 value={searchQuery}
                 onChange={handleSearchChange}
-                className='w-full py-2 pl-4 pr-10 border border-gold rounded-full focus:outline-none'
+                className='w-full py-1 sm:py-2 pl-4 pr-10 border border-gold rounded-full focus:outline-none'
               />
               <div className='absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer'>
                 {searchQuery ? (
@@ -68,7 +68,7 @@ const Header = () => {
             </form>
           </div>
 
-          <NavLink to="/login" className="py-2 px-4 bg-gold rounded-full text-white hover:bg-white hover:text-gold hover:border hover:border-gold">
+          <NavLink to="/login" className="py-1 sm:py-2 px-4 bg-gold rounded-full text-white hover:bg-white hover:text-gold hover:border hover:border-gold">
             S'identifier
           </NavLink>
         </div>

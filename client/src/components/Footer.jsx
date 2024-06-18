@@ -6,7 +6,7 @@ import { CiFacebook } from "react-icons/ci";
 const Footer = () => {
   return (
     <footer className="bg-inherit border-t-2 border-gold mx-auto">
-      <div className="flex container justify-between gap-5 flex-wrap flex-col sm:flex-row items-center mx-auto lg:px-10 px-4 pt-10">
+      <div className="flex container justify-between gap-5 flex-wrap flex-col sm:flex-row items-center mx-auto lg:px-10 px-4 py-10">
         <div className="footer-left">
           <p className="tracking-wider text-darkGrey font-light">CRAFTIFY</p>
         </div>
@@ -32,7 +32,7 @@ const Footer = () => {
         <div className="footer-right">
           <NavLink
             to="/contact"
-            className="py-2 px-4 rounded border border-gold rounded-full text-darkGrey text-s"
+            className="py-2 px-4 rounded border border-gold rounded-full text-darkGrey"
           >
             Contactez-nous
           </NavLink>
