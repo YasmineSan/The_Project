@@ -5,7 +5,7 @@ import Home from './pages/Home';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import {RouterProvider, createBrowserRouter, createMemoryRouter, Outlet, useRouteError} from "react-router-dom"
-import { ThemeProvider } from '@material-tailwind/react';
+
 
 const router = createBrowserRouter([
   {
@@ -55,9 +55,7 @@ function Root() {
 
 function App() {
   return (
-  <ThemeProvider>
       <RouterProvider router={router} />
-    </ThemeProvider>
   );
 }
 
