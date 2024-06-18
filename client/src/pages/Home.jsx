@@ -1,5 +1,5 @@
 import React from 'react'
-import { CarouselBanner } from '../components/home/CarouselBanner'
+import CarouselBanner from '../components/home/CarouselBanner'
 import { ShowArticlesSection } from '../components/home/ShowArticlesSection'
 
 
