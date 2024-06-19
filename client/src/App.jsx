@@ -1,6 +1,7 @@
 
 import React from 'react';
 import Home from './pages/Home';
+import { LoginInscription } from './pages/LoginInscription';
 // import Contact from './pages/Contact';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -19,7 +20,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'login',
-        element: <div>login</div>
+        element: <LoginInscription/>
       },
       {
         path: 'articles',
