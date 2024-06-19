@@ -67,6 +67,12 @@ const Header = () => {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('authToken');
+    setIsAuthenticated(false);
+    setIsUserDropdownOpen(false);
+  };
+
   const categories = ['Catégorie 1', 'Catégorie 2', 'Catégorie 3']; // Exemple de catégories
 
   const categoryDropdownRef = useClickOutside(() => {
@@ -148,7 +154,12 @@ const Header = () => {
                         <li className='px-4 py-2 hover:bg-gold hover:text-white transition-all cursor-pointer'>Mon profil</li>
                         <li className='px-4 py-2 hover:bg-gold hover:text-white transition-all cursor-pointer'>Mes commandes</li>
                         <li className='px-4 py-2 hover:bg-gold hover:text-white transition-all cursor-pointer'>Mes ventes</li>
-                        <li className='px-4 py-2 hover:bg-gold hover:text-white transition-all cursor-pointer'>Déconnexion</li>
+                        <li 
+                          className='px-4 py-2 hover:bg-red-500 hover:text-white transition-all cursor-pointer text-red-500' 
+                          onClick={handleLogout}
+                        >
+                          Déconnexion
+                        </li>
                       </ul>
                     </motion.div>
                   )}
