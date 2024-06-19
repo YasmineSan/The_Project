@@ -1,10 +1,12 @@
 
 import React from 'react';
 import Home from './pages/Home';
-import Contact from './pages/Contact';
+import { LoginInscription } from './pages/LoginInscription';
+// import Contact from './pages/Contact';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import {RouterProvider, createBrowserRouter, createMemoryRouter, Outlet} from "react-router-dom"
+import {RouterProvider, createBrowserRouter, createMemoryRouter, Outlet, useRouteError} from "react-router-dom"
+
 
 const router = createBrowserRouter([
   {
@@ -13,8 +15,12 @@ const router = createBrowserRouter([
     errorElement: <PageError/>,
     children: [
       {
+        path: '',
+        element: <Home/>
+      },
+      {
         path: 'login',
-        element: <div>login</div>
+        element: <LoginInscription/>
       },
       {
         path: 'articles',
@@ -49,11 +55,13 @@ function Root() {
 }
 
 function App() {
-  return <RouterProvider router={router}/>
+  return (
+      <RouterProvider router={router} />
+  );
 }
 
 export default App;
 
 
-
+// return <RouterProvider router={router}/>
 
