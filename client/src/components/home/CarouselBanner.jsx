@@ -11,7 +11,7 @@ const CarouselBanner = () => {
     <Carousel autoPlay infiniteLoop dynamicHeight showThumbs={false} showStatus={false} swipeable showArrows={false}>
         <img
           className="w-100"
-          src="https://picsum.photos/200/100"
+          src="public/artisan-atelier.jpg"
           alt="First slide"
         />
         <img
@@ -22,5 +22,7 @@ const CarouselBanner = () => {
     </Carousel>
     );
 }
+
+export default CarouselBanner;
 
 
