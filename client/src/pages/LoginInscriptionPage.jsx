@@ -78,7 +78,7 @@ export const LoginInscriptionPage = () => {
   };
 
   return (
-    <main className="pt-24 mx-auto py-4 min-h-[820px] flex items-center justify-center bg-gray-100">
+    <main className="pt-28 mx-auto py-16 min-h-[820px] flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
         <motion.div
           initial={{ opacity: 0, y: -10 }}
