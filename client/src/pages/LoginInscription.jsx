@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 export const LoginInscription = () => {
   const [username, setUsername] = useState('');
@@ -7,41 +8,48 @@ export const LoginInscription = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    login(username, password);
-  };
-
-  const login = (username, password) => {
-    fetch('http://localhost:3000/api/users/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ username, password })
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.token) {
-        localStorage.setItem('authToken', data.token);
-        console.log('Login successful!');
-        navigate('/');
-      } else {
-        setError('Login failed: ' + (data.message || 'Invalid credentials'));
+  const login = async (e) => {
+      e.preventDefault();
+      try {
+        const response = await axios.post('http://4.233.138.141:3001/api/users/login', { username, password });
+        const token = response.data.token;
+        localStorage.setItem('token', token);
+        history.push('/');
+      } catch (error) {
+        setError('Invalid email or password');
       }
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      setError('An error occurred. Please try again.');
-    });
-  };
+    };
+
+  // const login = (username, password) => {
+  //   fetch('http://localhost:3000/api/users/login', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json'
+  //     },
+  //     body: JSON.stringify({ username, password })
+  //   })
+  //   .then(response => response.json())
+  //   .then(data => {
+  //     if (data.token) {
+  //       localStorage.setItem('authToken', data.token);
+  //       console.log('Login successful!');
+  //       navigate('/');
+  //     } else {
+  //       setError('Login failed: ' + (data.message || 'Invalid credentials'));
+  //     }
+  //   })
+  //   .catch(error => {
+  //     console.error('Error:', error);
+  //     setError('An error occurred. Please try again.');
+  //   });
+  // };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
         <h2 className="text-2xl font-semibold mb-6 text-center">Connexion</h2>
         {error && <div className="bg-red-100 text-red-700 p-2 mb-4 rounded">{error}</div>}
-        <form onSubmit={handleLogin}>
+        <form onSubmit={login}>
           <div className="mb-4">
             <label className="block text-gray-700">Nom d'utilisateur</label>
             <input
