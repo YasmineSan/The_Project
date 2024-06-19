@@ -357,3 +357,55 @@ exports.deleteEvaluation = async (req, res) => {
     }
 };
 
+// Récupérer le prix d'un article spécifique
+exports.getArticlePrice = async (req, res) => {
+    try {
+        const { articleId } = req.params;
+        const pool = await poolPromise;
+
+        console.log(`Fetching price for article: ${articleId}`); // Ajout de log
+
+        const result = await pool.request()
+            .input('article_id', articleId)
+            .query('SELECT article_price FROM Articles WHERE article_id = @article_id');
+
+        const article = result.recordset[0];
+        if (!article) {
+            return res.status(404).send({ message: 'Article not found' });
+        }
+
+        res.json({ article_id: articleId, price: article.article_price });
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+};
+
+// Récupérer les prix de tous les articles
+exports.getAllArticlePrices = async (req, res) => {
+    try {
+        const pool = await poolPromise;
+        console.log(`Fetching all article prices`); // Ajout de log
+        const result = await pool.request().query('SELECT article_id, article_price FROM Articles');
+        res.json(result.recordset);
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+};
+
+// Récupérer les articles et leurs prix dans une catégorie spécifique
+exports.getCategoryArticlePrices = async (req, res) => {
+    try {
+        const { categoryId } = req.params;
+        const pool = await poolPromise;
+
+        console.log(`Fetching articles and prices for category: ${categoryId}`); // Ajout de log
+
+        const result = await pool.request()
+            .input('category_id', categoryId)
+            .query('SELECT article_id, article_price FROM Articles WHERE category_id = @category_id');
+
+        res.json(result.recordset);
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+};

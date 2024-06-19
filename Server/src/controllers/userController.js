@@ -167,9 +167,31 @@ exports.getUserInfo = async (req, res) => {
     }
 };
 
+// Méthode pour récupérer les informations d'un utilisateur spécifique
+exports.getUserById = async (req, res) => {
+    try {
+        const { userId } = req.params;  // Utilise l'ID de l'utilisateur passé en paramètre
+
+        const pool = await poolPromise;
+        const result = await pool.request()
+            .input('user_id', userId)
+            .query('SELECT * FROM Users WHERE user_id = @user_id');
+
+        const user = result.recordset[0];
+        if (!user) {
+            return res.status(404).send({ message: 'User not found' });
+        }
+
+        res.json(user);
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+};
+
+// Méthode pour mettre à jour les informations d'un utilisateur spécifique
 exports.updateUser = async (req, res) => {
     try {
-        const userId = req.user.id;
+        const { userId } = req.params;  // Utilise l'ID de l'utilisateur passé en paramètre
         const {
             biography,
             first_name,
