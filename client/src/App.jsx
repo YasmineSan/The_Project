@@ -5,6 +5,7 @@ import { LoginInscription } from './pages/LoginInscription';
 // import Contact from './pages/Contact';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import Contact from './pages/Contact';
 import {RouterProvider, createBrowserRouter, createMemoryRouter, Outlet, useRouteError} from "react-router-dom"
 
 
@@ -28,7 +29,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'contact',
-        element: <div>contact</div>
+        element: <Contact />
       },
     ]
   }
