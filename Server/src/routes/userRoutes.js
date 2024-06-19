@@ -23,5 +23,10 @@ router.post('/register', upload.single('profile_image'), userController.register
 router.post('/login', userController.loginUser);
 router.get('/dashboard', authenticateToken, userController.getUserInfo);
 router.post('/update', authenticateToken, upload.single('profile_image'), userController.updateUser);
+// Route pour récupérer les informations d'un utilisateur
+router.get('/:userId', authenticateToken, userController.getUserById);
+// Route pour mettre à jour les informations d'un utilisateur
+router.put('/:userId', authenticateToken, userController.updateUser);
+
 
 module.exports = router;

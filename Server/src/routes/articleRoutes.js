@@ -19,13 +19,20 @@ const upload = multer({
 
 // Routes publiques
 router.get('/', articleController.getAllArticles);
+router.get('/:articleId/price', articleController.getArticlePrice);
+router.get('/prices', articleController.getAllArticlePrices);
+router.get('/categories/:categoryId/prices', (req, res, next) => {
+    console.log(`Received request for category: ${req.params.categoryId}`);
+    next();
+}, articleController.getCategoryArticlePrices);
+router.get('/test/categories/:categoryId/prices', articleController.getCategoryArticlePrices);
 
 // Routes avec authentification
 router.get('/user/evaluations', authenticateToken, articleController.getAllEvaluationsByUser);
 router.get('/user/articles', authenticateToken, articleController.getAllArticlesByUser);
 router.post('/', authenticateToken, upload.single('article_photo'), articleController.addArticle);
 router.post('/:id/evaluations', authenticateToken, articleController.addEvaluation);
-router.put('/:articleId', authenticateToken, upload.single('article_photo'), articleController.updateArticle); // Assure-toi que cette ligne est bien présente
+router.put('/:articleId', authenticateToken, upload.single('article_photo'), articleController.updateArticle);
 router.delete('/:articleId/evaluations/:evaluationId', authenticateToken, articleController.deleteEvaluation);
 
 module.exports = router;

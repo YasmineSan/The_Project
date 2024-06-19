@@ -1,11 +1,43 @@
-import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom'
-import { Button } from './Button'
-import { FiSearch, FiX, FiMenu } from 'react-icons/fi';
+import React, { useState, useEffect, useRef } from 'react';
+import { NavLink } from 'react-router-dom';
+import { FiSearch, FiX, FiMenu, FiHeart, FiUser } from 'react-icons/fi';
+import { motion, AnimatePresence } from 'framer-motion';
+
+// Pour détecter les clics à l'extérieur d'un élément
+const useClickOutside = (handler) => {
+  const domNode = useRef();
+
+  useEffect(() => {
+    const maybeHandler = (event) => {
+      if (domNode.current && !domNode.current.contains(event.target)) {
+        handler();
+      }
+    };
+
+    document.addEventListener('mousedown', maybeHandler);
+
+    return () => {
+      document.removeEventListener('mousedown', maybeHandler);
+    };
+  });
+
+  return domNode;
+};
 
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
+  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      setIsAuthenticated(true);
+    } else {
+      setIsAuthenticated(false);
+    }
+  }, []);
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
@@ -21,34 +53,70 @@ const Header = () => {
     setSearchQuery('');
   };
 
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
+  const toggleCategoryDropdown = () => {
+    setIsCategoryDropdownOpen((prev) => !prev);
+    if (isUserDropdownOpen) {
+      setIsUserDropdownOpen(false);
+    }
+  };
+
+  const toggleUserDropdown = () => {
+    setIsUserDropdownOpen((prev) => !prev);
+    if (isCategoryDropdownOpen) {
+      setIsCategoryDropdownOpen(false);
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('authToken');
+    setIsAuthenticated(false);
+    setIsUserDropdownOpen(false);
+    window.location.reload();  // Actualisation de la page
+    navigate('/')
   };
 
   const categories = ['Catégorie 1', 'Catégorie 2', 'Catégorie 3']; // Exemple de catégories
+
+  const categoryDropdownRef = useClickOutside(() => {
+    setIsCategoryDropdownOpen(false);
+  });
+
+  const userDropdownRef = useClickOutside(() => {
+    setIsUserDropdownOpen(false);
+  });
 
   return (
     <header>
       <nav className='fixed mx-auto border-b-2 border-gold top-0 left-0 right-0 bg-white bg-opacity-100 z-10'>
         <div className='flex container px-4 lg:px-10 items-center justify-between mx-auto'>
-          <NavLink to="/" className='mr-5'><img src="craftify.png" alt="logo Craftify" className='w-20 mr-5' /></NavLink>
+          <NavLink to="/" className='mr-5'>
+            <img src="craftify.png" alt="logo Craftify" className='w-20 mr-5' />
+          </NavLink>
           
           <div className='flex items-center relative'>
-            <div className='flex items-center cursor-pointer' onClick={toggleDropdown}>
+            <div className='flex items-center cursor-pointer' onClick={toggleCategoryDropdown}>
               <FiMenu className='h-5 w-5 text-darkGrey mr-3' />
               <span className='text-darkGrey hidden sm:block'>Catégorie</span>
             </div>
-            {isDropdownOpen && (
-              <div className='absolute top-full left-0 mt-2 w-48 bg-white border border-gold rounded shadow-lg z-10'>
-                <ul>
-                  {categories.map((category) => (
-                    <li key={category} className='px-4 py-2 hover:bg-gold hover:text-white'>
-                      {category}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+            <AnimatePresence>
+              {isCategoryDropdownOpen && (
+                <motion.div
+                  ref={categoryDropdownRef}
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className='absolute top-full left-0 mt-2 w-48 bg-white border border-gold rounded shadow-lg z-10 cursor-pointer'
+                >
+                  <ul>
+                    {categories.map((category) => (
+                      <li key={category} className='px-4 py-2 hover:bg-gold hover:text-white transition-all'>
+                        {category}
+                      </li>
+                    ))}
+                  </ul>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             <form onSubmit={handleSearchSubmit} className='relative max-w-full sm:max-w-xs lg:max-w-md mr-4 sm:mx-4'>
               <input
@@ -68,13 +136,47 @@ const Header = () => {
             </form>
           </div>
 
-          <NavLink to="/login" className="py-1 sm:py-2 px-4 bg-gold rounded-full text-white hover:bg-white hover:text-gold hover:border hover:border-gold">
-            S'identifier
-          </NavLink>
+          {isAuthenticated ? (
+            <div className='flex items-center space-x-4'>
+              <NavLink to="/favorites">
+                <FiHeart className='h-6 w-6 text-darkGrey' />
+              </NavLink>
+              <div className='relative'>
+                <FiUser className='h-6 w-6 text-darkGrey cursor-pointer' onClick={toggleUserDropdown} />
+                <AnimatePresence>
+                  {isUserDropdownOpen && (
+                    <motion.div
+                      ref={userDropdownRef}
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      className='absolute top-full right-0 mt-2 w-48 bg-white border border-gold rounded shadow-lg z-10'
+                    >
+                      <ul>
+                        <li className='px-4 py-2 hover:bg-gold hover:text-white transition-all cursor-pointer'>Mon profil</li>
+                        <li className='px-4 py-2 hover:bg-gold hover:text-white transition-all cursor-pointer'>Mes commandes</li>
+                        <li className='px-4 py-2 hover:bg-gold hover:text-white transition-all cursor-pointer'>Mes ventes</li>
+                        <li 
+                          className='px-4 py-2 hover:bg-red-500 hover:text-white transition-all cursor-pointer text-red-500' 
+                          onClick={handleLogout}
+                        >
+                          Déconnexion
+                        </li>
+                      </ul>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            </div>
+          ) : (
+            <NavLink to="/login" className="py-1 sm:py-2 px-4 bg-gold rounded-full text-white hover:bg-white hover:text-gold hover:border hover:border-gold transition-all">
+              S'identifier
+            </NavLink>
+          )}
         </div>
       </nav>
     </header>
-  )
+  );
 }
 
-export default Header
+export default Header;
