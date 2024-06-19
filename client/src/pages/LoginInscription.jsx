@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FiEye, FiEyeOff } from 'react-icons/fi';
 
 export const LoginInscription = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -25,7 +28,10 @@ export const LoginInscription = () => {
       if (data.token) {
         localStorage.setItem('authToken', data.token);
         console.log('Login successful!');
-        navigate('/');
+        setSuccess('Connexion réussie ! Redirection...');
+        setTimeout(() => {
+          window.location.assign('/');  // Redirection directe vers la page d'accueil
+        }, 2000);  // Délai de 2 secondes avant la redirection
       } else {
         setError('Login failed: ' + (data.message || 'Invalid credentials'));
       }
@@ -41,6 +47,7 @@ export const LoginInscription = () => {
       <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
         <h2 className="text-2xl font-semibold mb-6 text-center">Connexion</h2>
         {error && <div className="bg-red-100 text-red-700 p-2 mb-4 rounded">{error}</div>}
+        {success && <div className="bg-green-100 text-green-700 p-2 mb-4 rounded">{success}</div>}
         <form onSubmit={handleLogin}>
           <div className="mb-4">
             <label className="block text-gray-700">Nom d'utilisateur</label>
@@ -52,15 +59,23 @@ export const LoginInscription = () => {
               required
             />
           </div>
-          <div className="mb-6">
+          <div className="mb-6 relative">
             <label className="block text-gray-700">Mot de passe</label>
-            <input
-              type="password"
-              className="w-full px-3 py-2 border rounded"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+            <div className="relative flex items-center">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                className="w-full px-3 py-2 border rounded pr-10" // Ajoutez pr-10 pour donner de l'espace à l'icône
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <div
+                className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <FiEyeOff className="text-gray-700" /> : <FiEye className="text-gray-700" />}
+              </div>
+            </div>
           </div>
           <button
             type="submit"

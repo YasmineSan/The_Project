@@ -54,14 +54,14 @@ const Header = () => {
   };
 
   const toggleCategoryDropdown = () => {
-    setIsCategoryDropdownOpen(!isCategoryDropdownOpen);
+    setIsCategoryDropdownOpen((prev) => !prev);
     if (isUserDropdownOpen) {
       setIsUserDropdownOpen(false);
     }
   };
 
   const toggleUserDropdown = () => {
-    setIsUserDropdownOpen(!isUserDropdownOpen);
+    setIsUserDropdownOpen((prev) => !prev);
     if (isCategoryDropdownOpen) {
       setIsCategoryDropdownOpen(false);
     }
@@ -71,6 +71,8 @@ const Header = () => {
     localStorage.removeItem('authToken');
     setIsAuthenticated(false);
     setIsUserDropdownOpen(false);
+    window.location.reload();  // Actualisation de la page
+    navigate('/')
   };
 
   const categories = ['Catégorie 1', 'Catégorie 2', 'Catégorie 3']; // Exemple de catégories
