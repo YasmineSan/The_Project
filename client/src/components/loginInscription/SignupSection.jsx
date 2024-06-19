@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import FormField from './FormField';
-import { FiEye, FiEyeOff } from 'react-icons/fi';
 
 const SignupSection = ({
   username, setUsername, email, setEmail, password, setPassword,
@@ -25,7 +24,7 @@ const SignupSection = ({
       {success && <div className="bg-green-100 text-green-700 p-2 mb-4 rounded">{success}</div>}
       <div className="mb-6 flex items-center justify-center">
         <div
-          className={`relative w-28 h-28 rounded-full bg-gray-200 flex items-center justify-center transition duration-300 ${isHovered ? 'bg-opacity-70' : 'bg-opacity-100'}`}
+          className={`relative w-28 h-28 rounded-full bg-gray-200 flex items-center justify-center transition duration-300 transform ${isHovered ? 'scale-110' : 'scale-100'}`}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
@@ -35,7 +34,7 @@ const SignupSection = ({
               {isHovered && (
                 <button
                   type="button"
-                  className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1"
+                  className="absolute  top-0 left-24 w-8 h-8 bg-red-500 text-white rounded-full p-1 transform transition duration-300 hover:scale-110"
                   onClick={handleResetImage}
                 >
                   X
@@ -44,21 +43,16 @@ const SignupSection = ({
             </div>
           ) : (
             <>
-              <label htmlFor="photo" className="cursor-pointer block text-gray-700 text-sm text-center mb-2">
-                <span>Ajouter une photo de profil</span>
-                <input
-                  type="file"
-                  id="photo"
-                  className="sr-only"
-                  accept="image/jpeg,image/png"
-                  onChange={handleImageUpload}
-                />
+              <label htmlFor="photo" className="cursor-pointer block text-gray-700 text-sm text-center m-2">
+                <span>{isHovered ? 'Importer une photo' : 'Ajouter une photo de profil'}</span>
               </label>
-              {isHovered && (
-                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-full">
-                  <span className="text-white text-xs font-semibold">Importer une photo</span>
-                </div>
-              )}
+              <input
+                type="file"
+                id="photo"
+                className="sr-only"
+                accept="image/jpeg,image/png"
+                onChange={handleImageUpload}
+              />
             </>
           )}
         </div>
