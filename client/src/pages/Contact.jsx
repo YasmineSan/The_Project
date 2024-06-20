@@ -89,7 +89,7 @@ const Contact = () => {
               </div>
               <div className="flex items-center justify-between">
                 <button
-                  className="w-full bg-gold text-white py-2 rounded hover:bg-darkGold hover:bg-inherit hover:text-gold border border-gold hover:border hover:border-gold"
+                  className="w-full bg-gold text-white py-2 rounded hover:bg-darkGold hover:bg-inherit hover:text-gold border border-gold hover:border hover:border-gold duration-300"
                   type="submit"
                 >
                   Envoyer

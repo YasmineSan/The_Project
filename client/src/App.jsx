@@ -2,6 +2,7 @@
 import React from 'react';
 import Home from './pages/Home';
 import LoginInscriptionPage from './pages/LoginInscriptionPage';
+import ContactUser from './pages/ContactUser';
 // import Contact from './pages/Contact';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
       {
         path: 'contact',
         element: <Contact />
+      },
+      {
+        path: 'contactUser',
+        element: <ContactUser user={{ id: '1', name: 'John Doe', image: 'https://picsum.photos/id/237/150/150' }} />
       },
     ]
   }
