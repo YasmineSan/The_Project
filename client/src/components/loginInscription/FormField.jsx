@@ -1,6 +1,9 @@
 import React from 'react';
 
-const FormField = ({ label, type, value, onChange, required }) => {
+const FormField = ({ label, type, value, onChange, required, name }) => {
+  if (required) {
+    label = label + ' *'
+  }
   return (
     <div className="mb-4">
       <label className="block text-gray-700 mb-2">{label}</label>
@@ -10,6 +13,7 @@ const FormField = ({ label, type, value, onChange, required }) => {
           value={value}
           onChange={onChange}
           required={required}
+          name={name}
         />
       ) : (
         <input
@@ -18,6 +22,7 @@ const FormField = ({ label, type, value, onChange, required }) => {
           value={value}
           onChange={onChange}
           required={required}
+          name={name}
         />
       )}
     </div>

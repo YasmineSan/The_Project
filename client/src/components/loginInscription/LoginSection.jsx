@@ -44,7 +44,7 @@ const LoginSection = ({ setIsLogin }) => {
       <form onSubmit={(e) => { e.preventDefault(); handleLogin(); }}>
         <FormField label="Nom d'utilisateur" type="text" value={username} onChange={(e) => setUsername(e.target.value)} required />
         <div className="mb-6 relative">
-          <label className="block text-gray-700">Mot de passe</label>
+          <label className="block text-gray-700">Mot de passe *</label>
           <div className="relative flex items-center">
             <input
               type={showPassword ? 'text' : 'password'}

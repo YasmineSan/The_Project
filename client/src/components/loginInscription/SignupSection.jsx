@@ -1,32 +1,53 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
 import FormField from './FormField';
 
 const SignupSection = ({ setIsLogin }) => {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [fullName, setFullName] = useState('');
-  const [address, setAddress] = useState('');
-  const [paypalAddress, setPaypalAddress] = useState('');
-  const [bio, setBio] = useState('');
-  const [profileImage, setProfileImage] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [isHovered, setIsHovered] = useState(false);
+  const [profileImage, setProfileImage] = useState(null);
+
+  const formRef = useRef(null);
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    if (username && email && password && confirmPassword && password === confirmPassword) {
-      setSuccess('Inscription réussie ! Redirection...');
-      setTimeout(() => {
-        window.location.assign('/');
-      }, 2000);
+
+    const formData = new FormData(formRef.current);
+    formData.append('profile_image', profileImage); // Ajouter l'image au FormData
+    
+    // Log form data entries for debugging
+    for (let pair of formData.entries()) {
+      console.log(pair[0] + ': ' + pair[1]);
+    }
+
+    const password = formData.get('password');
+    const confirmPassword = formData.get('confirm_password');
+    
+    if (password && confirmPassword && password === confirmPassword) {
+      try {
+        const response = await fetch('http://4.233.138.141:3001/api/users/register', {
+          method: 'POST',
+          body: formData
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+          setSuccess('Inscription réussie ! Redirection vers la connexion...');
+          setTimeout(() => {
+            window.location.assign('/');
+          }, 2000);
+        } else {
+          setError(data.message || 'Une erreur est survenue, merci de réessayer.');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        setError('Une erreur est survenue, merci de réessayer.');
+      }
     } else {
-      setError('Signup failed: Please fill in all required fields and ensure passwords match');
+      setError("Échec de l'inscription : Merci de remplir tous les champs requis et de vérifier que les mots de passe correspondent.");
     }
   };
 
@@ -40,7 +61,7 @@ const SignupSection = ({ setIsLogin }) => {
       }
       const reader = new FileReader();
       reader.onloadend = () => {
-        setProfileImage(reader.result);
+        setProfileImage(file); // Stocker le fichier image
       };
       reader.readAsDataURL(file);
     }
@@ -71,7 +92,7 @@ const SignupSection = ({ setIsLogin }) => {
         >
           {profileImage ? (
             <div className="relative">
-              <img src={profileImage} alt="Profile" className="w-full h-full rounded-full object-cover" />
+              <img src={URL.createObjectURL(profileImage)} alt="Profile" className="w-full h-full rounded-full object-cover" />
               {isHovered && (
                 <button
                   type="button"
@@ -98,17 +119,16 @@ const SignupSection = ({ setIsLogin }) => {
           )}
         </div>
       </div>
-      <form onSubmit={handleSignup} className="space-y-4">
-        <FormField label="Nom d'utilisateur" type="text" value={username} onChange={(e) => setUsername(e.target.value)} required />
-        <FormField label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+      <form ref={formRef} onSubmit={handleSignup} className="space-y-4">
+        <FormField label="Nom d'utilisateur" type="text" name="username" required />
+        <FormField label="Email" type="email" name="email" required />
         <div className="mb-6 relative">
-          <label className="block text-gray-700">Mot de passe</label>
+          <label className="block text-gray-700">Mot de passe *</label>
           <div className="relative flex items-center">
             <input
               type={showPassword ? 'text' : 'password'}
+              name="password"
               className="w-full px-3 py-2 border rounded pr-10"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
               required
             />
             <div
@@ -120,13 +140,12 @@ const SignupSection = ({ setIsLogin }) => {
           </div>
         </div>
         <div className="mb-6 relative">
-          <label className="block text-gray-700">Confirmer le mot de passe</label>
+          <label className="block text-gray-700">Confirmer le mot de passe *</label>
           <div className="relative flex items-center">
             <input
               type={showConfirmPassword ? 'text' : 'password'}
+              name="confirm_password"
               className="w-full px-3 py-2 border rounded pr-10"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
               required
             />
             <div
@@ -137,10 +156,17 @@ const SignupSection = ({ setIsLogin }) => {
             </div>
           </div>
         </div>
-        <FormField label="Nom complet" type="text" value={fullName} onChange={(e) => setFullName(e.target.value)} />
-        <FormField label="Adresse" type="text" value={address} onChange={(e) => setAddress(e.target.value)} />
-        <FormField label="Adresse PayPal" type="email" value={paypalAddress} onChange={(e) => setPaypalAddress(e.target.value)} />
-        <FormField label="Bio" type="textarea" value={bio} onChange={(e) => setBio(e.target.value)} />
+        <FormField label="Nom" type="text" name="last_name" required/>
+        <FormField label="Prénom" type="text" name="first_name" required/>
+        <div className="grid grid-cols-2 gap-4">
+          <FormField label="Rue" type="text" name="street" required/>
+          <FormField label="Numéro" type="text" name="street_number" required/>
+          <FormField label="Boîte" type="text" name="apartment" />
+          <FormField label="Code Postal" type="text" name="postal_code" required/>
+          <FormField label="Ville" type="text" name="city" required/>
+        </div>
+        <FormField label="Adresse PayPal" type="email" name="paypal_address" />
+        <FormField label="Bio" type="textarea" name="bio" />
         <button type="submit" className="w-full bg-gold border border-gold text-white py-2 rounded hover:bg-white hover:text-gold">
           S'inscrire
         </button>
