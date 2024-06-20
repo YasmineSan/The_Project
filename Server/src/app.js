@@ -2,11 +2,17 @@ const express = require('express');
 const path = require('path');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const cors = require('cors'); // Ajout de l'importation du package cors
 const app = express();
 const multer = require('multer');
 
 // Middleware pour sécuriser les en-têtes HTTP
 app.use(helmet());
+
+// Middleware pour gérer les CORS
+app.use(cors({
+  origin: 'http://localhost:5173' // Remplace par l'origine de ton frontend
+}));
 
 // Middleware pour limiter le nombre de requêtes
 const limiter = rateLimit({
