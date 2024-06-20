@@ -34,7 +34,7 @@ export const LoginSection = ({ username, setUsername, password, setPassword, sho
     <div className="text-center mt-4">
       <p>
         Pas encore inscrit ?{' '}
-        <span className="text-gold cursor-pointer" onClick={() => setIsLogin(false)}>
+        <span className="text-gold cursor-pointer hover:underline" onClick={() => setIsLogin(false)}>
           Créez un compte
         </span>
       </p>

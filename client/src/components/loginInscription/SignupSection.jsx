@@ -88,7 +88,7 @@ const SignupSection = ({
       <div className="text-center mt-4">
         <p>
           Déjà inscrit ?{' '}
-          <span className="text-gold cursor-pointer" onClick={() => setIsLogin(true)}>
+          <span className="text-gold cursor-pointer hover:underline" onClick={() => setIsLogin(true)}>
             Connectez-vous
           </span>
         </p>
