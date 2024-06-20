@@ -1,10 +1,12 @@
 
 import React from 'react';
 import Home from './pages/Home';
-import { LoginInscription } from './pages/LoginInscription';
+import LoginInscriptionPage from './pages/LoginInscriptionPage';
+import ContactUser from './pages/ContactUser';
 // import Contact from './pages/Contact';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import Contact from './pages/Contact';
 import {RouterProvider, createBrowserRouter, createMemoryRouter, Outlet, useRouteError} from "react-router-dom"
 
 
@@ -20,7 +22,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'login',
-        element: <LoginInscription/>
+        element: <LoginInscriptionPage/>
       },
       {
         path: 'articles',
@@ -28,7 +30,11 @@ const router = createBrowserRouter([
       },
       {
         path: 'contact',
-        element: <div>contact</div>
+        element: <Contact />
+      },
+      {
+        path: 'contactUser',
+        element: <ContactUser user={{ id: '1', name: 'John Doe', image: 'https://picsum.photos/id/237/150/150' }} />
       },
     ]
   }

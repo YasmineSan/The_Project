@@ -1,0 +1,186 @@
+import React, { useState, useRef } from 'react';
+import { FiEye, FiEyeOff } from 'react-icons/fi';
+import FormField from './FormField';
+
+const SignupSection = ({ setIsLogin }) => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [isHovered, setIsHovered] = useState(false);
+  const [profileImage, setProfileImage] = useState(null);
+
+  const formRef = useRef(null);
+
+  const handleSignup = async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(formRef.current);
+    formData.append('profile_image', profileImage); // Ajouter l'image au FormData
+    
+    // Log form data entries for debugging
+    for (let pair of formData.entries()) {
+      console.log(pair[0] + ': ' + pair[1]);
+    }
+
+    const password = formData.get('password');
+    const confirmPassword = formData.get('confirm_password');
+    
+    if (password && confirmPassword && password === confirmPassword) {
+      try {
+        const response = await fetch('http://4.233.138.141:3001/api/users/register', {
+          method: 'POST',
+          body: formData
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+          setSuccess('Inscription réussie ! Redirection vers la connexion...');
+          setTimeout(() => {
+            window.location.assign('/');
+          }, 2000);
+        } else {
+          setError(data.message || 'Une erreur est survenue, merci de réessayer.');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        setError('Une erreur est survenue, merci de réessayer.');
+      }
+    } else {
+      setError("Échec de l'inscription : Merci de remplir tous les champs requis et de vérifier que les mots de passe correspondent.");
+    }
+  };
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const allowedTypes = ['image/jpeg', 'image/png'];
+      if (!allowedTypes.includes(file.type)) {
+        setError('Format de fichier non supporté. Veuillez sélectionner une image au format JPEG ou PNG.');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfileImage(file); // Stocker le fichier image
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleResetImage = () => {
+    setProfileImage(null);
+  };
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
+
+  return (
+    <>
+      <h2 className="text-2xl font-semibold mb-6 text-center">Inscription</h2>
+      {error && <div className="bg-red-100 text-red-700 p-2 mb-4 rounded">{error}</div>}
+      {success && <div className="bg-green-100 text-green-700 p-2 mb-4 rounded">{success}</div>}
+      <div className="mb-6 flex items-center justify-center">
+        <div
+          className={`relative w-28 h-28 rounded-full bg-gray-200 flex items-center justify-center transition duration-300 transform ${isHovered ? 'scale-110' : 'scale-100'}`}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
+          {profileImage ? (
+            <div className="relative">
+              <img src={URL.createObjectURL(profileImage)} alt="Profile" className="w-full h-full rounded-full object-cover" />
+              {isHovered && (
+                <button
+                  type="button"
+                  className="absolute top-0 left-24 w-8 h-8 bg-red-500 text-white rounded-full p-1 transform transition duration-300 hover:scale-110"
+                  onClick={handleResetImage}
+                >
+                  X
+                </button>
+              )}
+            </div>
+          ) : (
+            <>
+              <label htmlFor="photo" className="cursor-pointer block text-gray-700 text-sm text-center m-2">
+                <span>{isHovered ? 'Importer une photo' : 'Ajouter une photo de profil'}</span>
+              </label>
+              <input
+                type="file"
+                id="photo"
+                className="sr-only"
+                accept="image/jpeg,image/png"
+                onChange={handleImageUpload}
+              />
+            </>
+          )}
+        </div>
+      </div>
+      <form ref={formRef} onSubmit={handleSignup} className="space-y-4">
+        <FormField label="Nom d'utilisateur" type="text" name="username" required />
+        <FormField label="Email" type="email" name="email" required />
+        <div className="mb-6 relative">
+          <label className="block text-gray-700">Mot de passe *</label>
+          <div className="relative flex items-center">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              name="password"
+              className="w-full px-3 py-2 border rounded pr-10"
+              required
+            />
+            <div
+              className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <FiEyeOff className="text-gray-700" /> : <FiEye className="text-gray-700" />}
+            </div>
+          </div>
+        </div>
+        <div className="mb-6 relative">
+          <label className="block text-gray-700">Confirmer le mot de passe *</label>
+          <div className="relative flex items-center">
+            <input
+              type={showConfirmPassword ? 'text' : 'password'}
+              name="confirm_password"
+              className="w-full px-3 py-2 border rounded pr-10"
+              required
+            />
+            <div
+              className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            >
+              {showConfirmPassword ? <FiEyeOff className="text-gray-700" /> : <FiEye className="text-gray-700" />}
+            </div>
+          </div>
+        </div>
+        <FormField label="Nom" type="text" name="last_name" required/>
+        <FormField label="Prénom" type="text" name="first_name" required/>
+        <div className="grid grid-cols-2 gap-4">
+          <FormField label="Rue" type="text" name="street" required/>
+          <FormField label="Numéro" type="text" name="street_number" required/>
+          <FormField label="Boîte" type="text" name="apartment" />
+          <FormField label="Code Postal" type="text" name="postal_code" required/>
+          <FormField label="Ville" type="text" name="city" required/>
+        </div>
+        <FormField label="Adresse PayPal" type="email" name="paypal_address" />
+        <FormField label="Bio" type="textarea" name="bio" />
+        <button type="submit" className="w-full bg-gold border border-gold text-white py-2 rounded hover:bg-white hover:text-gold">
+          S'inscrire
+        </button>
+      </form>
+      <div className="text-center mt-4">
+        <p>
+          Déjà inscrit ?{' '}
+          <span className="text-gold cursor-pointer hover:underline" onClick={() => setIsLogin(true)}>
+            Connectez-vous
+          </span>
+        </p>
+      </div>
+    </>
+  );
+};
+
+export default SignupSection;
