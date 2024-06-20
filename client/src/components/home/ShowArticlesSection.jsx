@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import CardArticle from '../CardArticle'
+import React, { useState } from 'react';
+import { NavLink } from 'react-router-dom';
+import CardArticle from '../CardArticle';
 
 export const ShowArticlesSection = () => {
   const [articles, setArticles] = useState([
@@ -23,19 +24,22 @@ export const ShowArticlesSection = () => {
     }
   ]);
 
+  
+
   return (
     <section className="container mx-auto py-20 px-12">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-8 lg:gap-10"> {/* Augmentation de l'espace entre les colonnes */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-8 lg:gap-10">
         <div className="flex flex-col justify-center items-start p-4 rounded-lg shadow-lg">
           <h2 className="text-2xl lg:text-3xl font-semibold mb-4">Découvrez nos articles</h2>
           <p className="mb-4 text-base">Parcourez notre sélection d'articles et trouvez ceux qui vous plaisent.</p>
-          <button className="py-2 px-5 hover:bg-gold hover:text-white rounded-full bg-white text-gold border border-gold">
+          <NavLink to="/articles" className="py-2 px-5 hover:bg-gold hover:text-white rounded-full bg-white text-gold border border-gold">
             Voir plus
-          </button>
+          </NavLink>
         </div>
         {articles.map(article => (
           <CardArticle
             key={article.id}
+            id={article.id}
             image={article.image}
             title={article.title}
             price={article.price}
@@ -43,5 +47,7 @@ export const ShowArticlesSection = () => {
         ))}
       </div>
     </section>
-  )
-}
+  );
+};
+
+export default ShowArticlesSection;
