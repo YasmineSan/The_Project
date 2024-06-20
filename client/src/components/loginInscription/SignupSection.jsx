@@ -35,7 +35,26 @@ const SignupSection = ({ setIsLogin }) => {
 
         const data = await response.json();
         if (response.ok) {
-          setSuccess('Inscription réussie ! Redirection vers la connexion...');
+          setSuccess("Inscription réussie ! Redirection vers la page d'accueil");
+          fetch('http://4.233.138.141:3001/api/users/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, password })
+          })
+            .then(response => response.json())
+            .then(data => {
+              if (data.token) {
+                localStorage.setItem('authToken', data.token);
+              } else {
+                setError('Login failed: ' + (data.message || 'Invalid credentials'));
+              }
+            })
+            .catch(error => {
+              console.error('Error:', error);
+              setError('An error occurred. Please try again.');
+            });
           setTimeout(() => {
             window.location.assign('/');
           }, 2000);
