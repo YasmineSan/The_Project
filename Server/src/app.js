@@ -4,7 +4,7 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const cors = require('cors'); // Ajout de l'importation du package cors
 const app = express();
-const multer = require('multer');
+const upload = require('./middleware/uploadImage'); // Importer le middleware d'upload
 
 // Middleware pour sécuriser les en-têtes HTTP
 app.use(helmet());
@@ -23,8 +23,8 @@ const limiter = rateLimit({
 app.use(limiter);
 
 // Middleware pour parser les requêtes JSON et URL-encoded
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 // Routes
 app.use('/api/users', require('./routes/userRoutes'));
