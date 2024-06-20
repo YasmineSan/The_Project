@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { FiEye, FiEyeOff } from 'react-icons/fi';
 import FormField from './FormField';
 
 const SignupSection = ({ setIsLogin }) => {
@@ -12,6 +13,7 @@ const SignupSection = ({ setIsLogin }) => {
   const [bio, setBio] = useState('');
   const [profileImage, setProfileImage] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [isHovered, setIsHovered] = useState(false);
@@ -99,23 +101,41 @@ const SignupSection = ({ setIsLogin }) => {
       <form onSubmit={handleSignup} className="space-y-4">
         <FormField label="Nom d'utilisateur" type="text" value={username} onChange={(e) => setUsername(e.target.value)} required />
         <FormField label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        <div className="flex flex-wrap">
-          <div className="w-full">
-            <FormField label="Mot de passe" type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} required />
-          </div>
-          <div className="w-full">
-            <FormField label="Confirmer mot de passe" type={showPassword ? 'text' : 'password'} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
+        <div className="mb-6 relative">
+          <label className="block text-gray-700">Mot de passe</label>
+          <div className="relative flex items-center">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              className="w-full px-3 py-2 border rounded pr-10"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <div
+              className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <FiEyeOff className="text-gray-700" /> : <FiEye className="text-gray-700" />}
+            </div>
           </div>
         </div>
-        <div className="flex items-center mb-6">
-          <input
-            type="checkbox"
-            id="showPassword"
-            className="mr-2"
-            checked={showPassword}
-            onChange={() => setShowPassword(!showPassword)}
-          />
-          <label htmlFor="showPassword" className="text-sm text-gray-700">Afficher le mot de passe</label>
+        <div className="mb-6 relative">
+          <label className="block text-gray-700">Confirmer le mot de passe</label>
+          <div className="relative flex items-center">
+            <input
+              type={showConfirmPassword ? 'text' : 'password'}
+              className="w-full px-3 py-2 border rounded pr-10"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
+            <div
+              className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            >
+              {showConfirmPassword ? <FiEyeOff className="text-gray-700" /> : <FiEye className="text-gray-700" />}
+            </div>
+          </div>
         </div>
         <FormField label="Nom complet" type="text" value={fullName} onChange={(e) => setFullName(e.target.value)} />
         <FormField label="Adresse" type="text" value={address} onChange={(e) => setAddress(e.target.value)} />
