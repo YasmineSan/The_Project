@@ -1,13 +1,54 @@
 import React, { useState } from 'react';
+import { FiEye, FiEyeOff } from 'react-icons/fi';
 import FormField from './FormField';
 
-const SignupSection = ({
-  username, setUsername, email, setEmail, password, setPassword,
-  confirmPassword, setConfirmPassword, fullName, setFullName, address, setAddress,
-  paypalAddress, setPaypalAddress, bio, setBio, profileImage, handleImageUpload,
-  handleResetImage, showPassword, setShowPassword, handleSignup, error, success, setIsLogin
-}) => {
+const SignupSection = ({ setIsLogin }) => {
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [address, setAddress] = useState('');
+  const [paypalAddress, setPaypalAddress] = useState('');
+  const [bio, setBio] = useState('');
+  const [profileImage, setProfileImage] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [isHovered, setIsHovered] = useState(false);
+
+  const handleSignup = async (e) => {
+    e.preventDefault();
+    if (username && email && password && confirmPassword && password === confirmPassword) {
+      setSuccess('Inscription réussie ! Redirection...');
+      setTimeout(() => {
+        window.location.assign('/');
+      }, 2000);
+    } else {
+      setError('Signup failed: Please fill in all required fields and ensure passwords match');
+    }
+  };
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const allowedTypes = ['image/jpeg', 'image/png'];
+      if (!allowedTypes.includes(file.type)) {
+        setError('Format de fichier non supporté. Veuillez sélectionner une image au format JPEG ou PNG.');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfileImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleResetImage = () => {
+    setProfileImage(null);
+  };
 
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -34,7 +75,7 @@ const SignupSection = ({
               {isHovered && (
                 <button
                   type="button"
-                  className="absolute  top-0 left-24 w-8 h-8 bg-red-500 text-white rounded-full p-1 transform transition duration-300 hover:scale-110"
+                  className="absolute top-0 left-24 w-8 h-8 bg-red-500 text-white rounded-full p-1 transform transition duration-300 hover:scale-110"
                   onClick={handleResetImage}
                 >
                   X
@@ -57,33 +98,52 @@ const SignupSection = ({
           )}
         </div>
       </div>
-      <form onSubmit={(e) => { e.preventDefault(); handleSignup(e); }} className="space-y-4">
+      <form onSubmit={handleSignup} className="space-y-4">
         <FormField label="Nom d'utilisateur" type="text" value={username} onChange={(e) => setUsername(e.target.value)} required />
         <FormField label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        <div className="flex flex-wrap">
-          <div className="w-full">
-            <FormField label="Mot de passe" type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} required />
+        <div className="mb-6 relative">
+          <label className="block text-gray-700">Mot de passe</label>
+          <div className="relative flex items-center">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              className="w-full px-3 py-2 border rounded pr-10"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <div
+              className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <FiEyeOff className="text-gray-700" /> : <FiEye className="text-gray-700" />}
+            </div>
           </div>
-          <div className="w-full">
-            <FormField label="Confirmez le mot de passe" type={showPassword ? 'text' : 'password'} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
+        </div>
+        <div className="mb-6 relative">
+          <label className="block text-gray-700">Confirmer le mot de passe</label>
+          <div className="relative flex items-center">
+            <input
+              type={showConfirmPassword ? 'text' : 'password'}
+              className="w-full px-3 py-2 border rounded pr-10"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
+            <div
+              className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            >
+              {showConfirmPassword ? <FiEyeOff className="text-gray-700" /> : <FiEye className="text-gray-700" />}
+            </div>
           </div>
         </div>
         <FormField label="Nom complet" type="text" value={fullName} onChange={(e) => setFullName(e.target.value)} />
-        <FormField label="Adresse" type="text" value={address} onChange={(e) => setAddress(e.target.value)} required />
-        <FormField label="Adresse PayPal" type="text" value={paypalAddress} onChange={(e) => setPaypalAddress(e.target.value)} />
-        <div className="mb-4">
-          <label className="block text-gray-700">Bio</label>
-          <textarea
-            className="w-full px-3 py-2 border rounded"
-            value={bio}
-            onChange={(e) => setBio(e.target.value)}
-          />
-        </div>
-        <div className="flex justify-center">
-          <button type="submit" className="w-full md:w-auto bg-gold text-white py-2 px-6 rounded border border-gold hover:bg-white hover:text-gold hover:border hover:border-gold">
-            S'inscrire
-          </button>
-        </div>
+        <FormField label="Adresse" type="text" value={address} onChange={(e) => setAddress(e.target.value)} />
+        <FormField label="Adresse PayPal" type="email" value={paypalAddress} onChange={(e) => setPaypalAddress(e.target.value)} />
+        <FormField label="Bio" type="textarea" value={bio} onChange={(e) => setBio(e.target.value)} />
+        <button type="submit" className="w-full bg-gold border border-gold text-white py-2 rounded hover:bg-white hover:text-gold">
+          S'inscrire
+        </button>
       </form>
       <div className="text-center mt-4">
         <p>
