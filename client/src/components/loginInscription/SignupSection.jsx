@@ -41,7 +41,7 @@ const SignupSection = ({ setIsLogin }) => {
             headers: {
               'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ username, password })
+            body: JSON.stringify(formData.username, formData.password)
           })
             .then(response => response.json())
             .then(data => {
