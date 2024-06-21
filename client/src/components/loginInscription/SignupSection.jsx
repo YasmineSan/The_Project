@@ -18,14 +18,14 @@ const SignupSection = ({ setIsLogin }) => {
     const formData = new FormData(formRef.current);
     formData.append('profile_image', profileImage); // Ajouter l'image au FormData
     
-    // Log form data entries for debugging
-    for (let pair of formData.entries()) {
-      console.log(pair[0] + ': ' + pair[1]);
-    }
+    // // Log form data entries for debugging
+    // for (let pair of formData.entries()) {
+    //   console.log(pair[0] + ': ' + pair[1]);
+    // }
 
     const password = formData.get('password');
     const confirmPassword = formData.get('confirm_password');
-    
+
     if (password && confirmPassword && password === confirmPassword) {
       try {
         const response = await fetch('http://4.233.138.141:3001/api/users/register', {
@@ -35,13 +35,16 @@ const SignupSection = ({ setIsLogin }) => {
 
         const data = await response.json();
         if (response.ok) {
+          let username = formData.get('username');
+          let password = formData.get('password');
+
           setSuccess("Inscription réussie ! Redirection vers la page d'accueil");
           fetch('http://4.233.138.141:3001/api/users/login', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
             },
-            body: JSON.stringify(formData.username, formData.password)
+            body: JSON.stringify({username, password})
           })
             .then(response => response.json())
             .then(data => {
