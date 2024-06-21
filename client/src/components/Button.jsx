@@ -3,8 +3,8 @@ import { NavLink } from 'react-router-dom'
 
 export const Button = ({content, path, style}) => {
   return (
-    <button>
-        <NavLink to={path} className={style}>
+    <button className={style}>
+        <NavLink to={path}>
             {content}
         </NavLink>
     </button>
