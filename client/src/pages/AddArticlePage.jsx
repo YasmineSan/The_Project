@@ -16,16 +16,27 @@ const AddArticlePage = () => {
     }
   };
 
+  const handleDrop = (e) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    if (file) {
+      setImage(file);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setImage(null);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission, e.g., sending data to an API
+    // Gérer la soumission du formulaire, par exemple en envoyant des données à une API
   };
 
   return (
-    <div className="container mx-auto p-4 md:p-8 mt-16">
+    <div className="container mx-auto p-4 md:p-8 mt-16 bg-gray-100">
       <div className="flex flex-col items-center mb-8">
-        <h1 className="md:text-3xl font-bold ">Mis en vente d'un article</h1>
-        <a href="/profile" className="text-gold-500 underline mt-2">Retour au profil</a>
+        <h1 className="text-3xl font-semibold text-center py-6">Mis en vente d'un article</h1>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <form onSubmit={handleSubmit} className="space-y-4 md:order-2">
@@ -98,21 +109,25 @@ const AddArticlePage = () => {
           </button>
         </form>
         <div className="md:order-1">
-          <div className="border-dashed border-4 border-gray-300 p-4 flex justify-center items-center h-full">
+          <div 
+            className="border-dashed border-4 border-gray-300 p-4 flex justify-center items-center h-full relative"
+            onDrop={handleDrop}
+            onDragOver={(e) => e.preventDefault()}
+          >
             {image ? (
-              <img src={URL.createObjectURL(image)} alt="Article" className="max-w-full max-h-full object-cover" />
+              <div className="relative w-full h-full flex justify-center items-center">
+                <img src={URL.createObjectURL(image)} alt="Article" className="max-w-full max-h-full object-cover" />
+                <button
+                  onClick={handleRemoveImage}
+                  className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center"
+                >
+                  &times;
+                </button>
+              </div>
             ) : (
               <label
                 htmlFor="image-upload"
-                className="cursor-pointer text-center text-gray-500"
-                onDrop={(e) => {
-                  e.preventDefault();
-                  const file = e.dataTransfer.files[0];
-                  if (file) {
-                    setImage(file);
-                  }
-                }}
-                onDragOver={(e) => e.preventDefault()}
+                className="cursor-pointer text-center text-gray-500 w-full h-full flex items-center justify-center"
               >
                 <span>Glissez et déposez une image ici ou cliquez pour télécharger</span>
                 <input type="file" id="image-upload" className="hidden" onChange={handleImageUpload} />
@@ -120,6 +135,9 @@ const AddArticlePage = () => {
             )}
           </div>
         </div>
+      </div>
+      <div className="flex justify-end mt-6">
+        <a href="/profile" className="text-gold hover:underline">Retour au profil</a>
       </div>
     </div>
   );
