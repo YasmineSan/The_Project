@@ -32,7 +32,7 @@ const Contact = () => {
           <div className="w-full md:w-1/2 p-4">
             <form className="bg-white p-6 rounded-lg shadow-lg" onSubmit={handleSubmit}>
               <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="email">
+                <label className="block text-gray-700  font-semibold mb-2" htmlFor="email">
                   Email
                 </label>
                 <input
@@ -46,7 +46,7 @@ const Contact = () => {
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-gray-700 text-sm mb-2 font-semibold" htmlFor="nom">
+                <label className="block text-gray-700 mb-2 font-semibold" htmlFor="nom">
                   Nom
                 </label>
                 <input
@@ -60,7 +60,7 @@ const Contact = () => {
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="prenom">
+                <label className="block text-gray-700 font-semibold mb-2" htmlFor="prenom">
                   Prénom
                 </label>
                 <input
@@ -74,7 +74,7 @@ const Contact = () => {
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="message">
+                <label className="block text-gray-700 font-semibold mb-2" htmlFor="message">
                   Votre message
                 </label>
                 <textarea
