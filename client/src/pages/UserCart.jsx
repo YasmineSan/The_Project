@@ -97,7 +97,11 @@ export const UserCart = () => {
   const total = subtotal + totalShipping + totalCommission;
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-64 w-64"></div>
+      </div>
+    );
   }
 
   return (
@@ -105,9 +109,9 @@ export const UserCart = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="col-span-2">
           {cart.map((item) => (
-            <div key={item.id} className="border rounded-lg p-6 mb-4 relative">
+            <div key={item.id} className="border rounded-lg p-6 mb-4 relative transition-transform duration-300 hover:scale-105">
               <div className="flex items-start mb-4">
-                <img src={item.image} alt={item.title} className="w-32 h-32 object-cover mr-8" />
+                <img src={item.image} alt={item.title} className="w-32 h-32 object-cover mr-8 transition-transform duration-300 hover:scale-110" />
                 <div className="flex-1">
                   <div className="text-xl mb-2 font-medium">{item.price}€</div>
                   <h2 className="text-lg font-semibold">{item.title}</h2>
@@ -129,7 +133,7 @@ export const UserCart = () => {
                     <select
                       value={item.quantity}
                       onChange={(e) => handleQuantityChange(item.id, parseInt(e.target.value))}
-                      className="border rounded px-2 py-1"
+                      className="border rounded px-2 py-1 transition duration-300 hover:bg-gray-200"
                     >
                       {[...Array(10).keys()].map(x => (
                         <option key={x + 1} value={x + 1}>{x + 1}</option>
@@ -138,8 +142,8 @@ export const UserCart = () => {
                   </div>
                 </div>
               </div>
-              <button onClick={() => handleRemoveItem(item.id)} className="absolute top-4 right-4 mt-2 mr-2 lg:ml-4">
-                <FiX className="text-red-600" />
+              <button onClick={() => handleRemoveItem(item.id)} className="absolute top-4 right-4 mt-2 mr-2 lg:ml-4 transition-transform duration-300 hover:scale-125">
+                <FiX className="text-red-600 w-6 h-6" /> {/* Taille ajustée */}
               </button>
             </div>
           ))}
@@ -170,7 +174,7 @@ export const UserCart = () => {
               <span>Total TTC:</span>
               <span>{total.toFixed(2)}€</span>
             </div>
-            <button className="mt-4 w-full bg-gold text-white py-2 rounded hover:bg-white hover:text-gold hover:border hover:border-gold transition-all">
+            <button className="mt-4 w-full bg-gold text-white py-2 rounded hover:bg-white hover:text-gold hover:border hover:border-gold transition-colors duration-300">
               Paiement
             </button>
           </div>
