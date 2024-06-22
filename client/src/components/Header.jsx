@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { NavLink } from 'react-router-dom';
-import { FiSearch, FiX, FiMenu, FiHeart, FiUser } from 'react-icons/fi';
+import { FiSearch, FiX, FiMenu, FiHeart, FiUser, FiShoppingCart } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // Pour détecter les clics à l'extérieur d'un élément
@@ -72,7 +72,6 @@ const Header = () => {
     setIsAuthenticated(false);
     setIsUserDropdownOpen(false);
     window.location.reload();  // Actualisation de la page
-    navigate('/')
   };
 
   const categories = ['Catégorie 1', 'Catégorie 2', 'Catégorie 3']; // Exemple de catégories
@@ -95,8 +94,8 @@ const Header = () => {
           
           <div className='flex items-center relative'>
             <div className='flex items-center cursor-pointer' onClick={toggleCategoryDropdown}>
-              <FiMenu className='h-5 w-5 text-darkGrey mr-3' />
-              <span className='text-darkGrey hidden sm:block'>Catégorie</span>
+              <FiMenu className='h-5 w-5 text-darkGrey mr-3 hover:text-gold transition-colors duration-300' />
+              <span className='text-darkGrey hidden sm:block hover:text-gold transition-colors duration-300'>Catégorie</span>
             </div>
             <AnimatePresence>
               {isCategoryDropdownOpen && (
@@ -128,9 +127,9 @@ const Header = () => {
               />
               <div className='absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer'>
                 {searchQuery ? (
-                  <FiX className='h-5 text-darkGrey' onClick={clearSearch} />
+                  <FiX className='h-5 text-darkGrey hover:text-gold transition-colors duration-300' onClick={clearSearch} />
                 ) : (
-                  <FiSearch className='h-5 text-darkGrey' />
+                  <FiSearch className='h-5 text-darkGrey hover:text-gold transition-colors duration-300' />
                 )}
               </div>
             </form>
@@ -139,10 +138,13 @@ const Header = () => {
           {isAuthenticated ? (
             <div className='flex items-center space-x-4'>
               <NavLink to="/favorites">
-                <FiHeart className='h-6 w-6 text-darkGrey' />
+                <FiHeart className='h-6 w-6 text-darkGrey hover:text-gold transition-colors duration-300' />
+              </NavLink>
+              <NavLink to="/cart">
+                <FiShoppingCart className='h-6 w-6 text-darkGrey hover:text-gold transition-colors duration-300' />
               </NavLink>
               <div className='relative'>
-                <FiUser className='h-6 w-6 text-darkGrey cursor-pointer' onClick={toggleUserDropdown} />
+                <FiUser className='h-6 w-6 text-darkGrey cursor-pointer hover:text-gold transition-colors duration-300' onClick={toggleUserDropdown} />
                 <AnimatePresence>
                   {isUserDropdownOpen && (
                     <motion.div

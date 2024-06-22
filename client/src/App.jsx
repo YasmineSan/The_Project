@@ -7,6 +7,7 @@ import ContactUser from './pages/ContactUser';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Contact from './pages/Contact';
+import { UserCart } from './pages/UserCart';
 import AddArticlePage from './pages/AddArticlePage'; 
 import {RouterProvider, createBrowserRouter, createMemoryRouter, Outlet, useRouteError} from "react-router-dom"
 
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
       {
         path: 'addArticle',
         element: <AddArticlePage />
+      },
+      {
+        path: 'cart',
+        element: <UserCart />
       },
     ]
   }
