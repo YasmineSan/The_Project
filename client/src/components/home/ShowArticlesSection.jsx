@@ -8,20 +8,21 @@ export const ShowArticlesSection = () => {
       id: 1,
       image: 'https://picsum.photos/200/100?random=1',
       title: 'Article 1',
-      price: '20€'
+      price: '20'
     },
     {
       id: 2,
       image: 'https://picsum.photos/200/100?random=2',
       title: 'Article 2',
-      price: '30€'
+      price: '30'
     },
     {
       id: 3,
       image: 'https://picsum.photos/200/100?random=3',
       title: 'Article 3',
-      price: '40€'
-    }
+      price: '40'
+    },
+    
   ]);
 
   

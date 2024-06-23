@@ -37,7 +37,7 @@ const CardArticle = ({ id, image, title, price}) => {
           <img src={image} alt={title} className="w-full h-48 object-cover" />
           <div className="pt-3 flex flex-col items-center">
             <h3 className="text-lg font-medium">{title}</h3>
-            <p className="text-base text-gray-700">{price}</p>
+            <p className="text-base text-gray-700">{price} €</p>
           </div>
         </NavLink>
         <div className="flex items-center justify-center mt-2">
