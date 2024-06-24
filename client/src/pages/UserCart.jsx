@@ -6,34 +6,7 @@ export const UserCart = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simuler une réponse de l'API avec des données fictives
-    const fakeCart = [
-      {
-        id: 1,
-        image: 'https://picsum.photos/200/300',
-        title: 'Article 1',
-        description: 'Description de l\'article 1 qui est assez longue pour être coupée...',
-        price: 20.0,
-        shipping: 5.0,
-        sellerCity: 'Paris',
-        quantity: 2
-      },
-      {
-        id: 2,
-        image: 'https://picsum.photos/200/300',
-        title: 'Article 2',
-        description: 'Description de l\'article 2.',
-        price: 15.0,
-        shipping: 3.0,
-        sellerCity: 'Lyon',
-        quantity: 1
-      }
-    ];
-    setCart(fakeCart);
-    setLoading(false);
-
-    // Commenter l'appel réel à l'API
-    /*
+    // Appel réel à l'API pour récupérer le panier
     const fetchCart = async () => {
       try {
         const response = await fetch('http://4.233.138.141:3001/api/cart/user', {
@@ -58,15 +31,9 @@ export const UserCart = () => {
     };
 
     fetchCart();
-    */
   }, []);
 
-  const handleRemoveItem = (id) => {
-    // Simuler la suppression locale sans appel API
-    setCart(cart.filter(item => item.id !== id));
-
-    // Commenter l'appel réel à l'API
-    /*
+  const handleRemoveItem = async (id) => {
     try {
       const response = await fetch(`http://4.233.138.141:3001/api/cart/${id}`, {
         method: 'DELETE',
@@ -84,11 +51,27 @@ export const UserCart = () => {
     } catch (error) {
       console.error('Error:', error);
     }
-    */
   };
 
-  const handleQuantityChange = (id, quantity) => {
-    setCart(cart.map(item => item.id === id ? { ...item, quantity: quantity } : item));
+  const handleQuantityChange = async (id, quantity) => {
+    try {
+      const response = await fetch(`http://4.233.138.141:3001/api/cart/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+        },
+        body: JSON.stringify({ quantity })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update quantity');
+      }
+
+      setCart(cart.map(item => item.id === id ? { ...item, quantity } : item));
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
   const subtotal = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
