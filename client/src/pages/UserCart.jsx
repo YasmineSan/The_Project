@@ -111,7 +111,7 @@ export const UserCart = () => {
           {cart.map((item) => (
             <div key={item.id} className="border rounded-lg p-6 mb-4 relative transition-transform duration-300 hover:scale-105">
               <div className="flex items-start mb-4">
-                <img src={item.image} alt={item.title} className="w-32 h-32 object-cover mr-8 transition-transform duration-300 hover:scale-110" />
+                <img src={item.image} alt={item.title} className="w-32 h-32 object-cover mr-8 " />
                 <div className="flex-1">
                   <div className="text-xl mb-2 font-medium">{item.price}€</div>
                   <h2 className="text-lg font-semibold">{item.title}</h2>

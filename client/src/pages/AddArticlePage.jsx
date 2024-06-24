@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import FormField from '../components/loginInscription/FormField';
 
 const AddArticlePage = () => {
@@ -8,6 +8,10 @@ const AddArticlePage = () => {
   const [category, setCategory] = useState('');
   const [price, setPrice] = useState('');
   const [shippingCost, setShippingCost] = useState('');
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+
+  const formRef = useRef(null);
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -28,9 +32,41 @@ const AddArticlePage = () => {
     setImage(null);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Gérer la soumission du formulaire, par exemple en envoyant des données à une API
+
+    const formData = new FormData(formRef.current);
+    formData.append('article_photo', image); // Ajouter l'image au FormData
+    const token = localStorage.getItem('token');
+
+    try {
+      const response = await fetch('http://4.233.138.141:3001/api/articles', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}` // Ajouter le token dans les en-têtes de la requête
+        },
+        body: formData
+      });
+      
+      const data = await response.json();
+      if (response.ok) {
+        setError(''); // Clear any previous error
+        setSuccess("Article ajouté! Redirection vers votre profil...");
+        window.scrollTo(0, 0); // Scroll to top
+        setTimeout(() => {
+          window.location.assign('/');
+        }, 2000);
+      } else {
+        setSuccess(''); // Clear any previous success message
+        setError(data.message || 'Une erreur est survenue, merci de réessayer.');
+        window.scrollTo(0, 0); // Scroll to top
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      setSuccess(''); // Clear any previous success message
+      setError('Une erreur est survenue, merci de réessayer.');
+      window.scrollTo(0, 0); // Scroll to top
+    }
   };
 
   return (
@@ -39,8 +75,20 @@ const AddArticlePage = () => {
         <div className="flex flex-col items-center mb-8">
           <h1 className="text-3xl font-semibold text-center py-6">Mis en vente d'un article</h1>
         </div>
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+            <strong className="font-bold">Erreur: </strong>
+            <span className="block sm:inline">{error}</span>
+          </div>
+        )}
+        {success && (
+          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4">
+            <strong className="font-bold">Succès: </strong>
+            <span className="block sm:inline">{success}</span>
+          </div>
+        )}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <form onSubmit={handleSubmit} className="space-y-4 md:order-2">
+          <form ref={formRef} onSubmit={handleSubmit} className="space-y-4 md:order-2">
             <FormField
               label="Titre de l'article"
               type="text"
@@ -67,7 +115,7 @@ const AddArticlePage = () => {
                 required
                 name="category"
               >
-                <option value="">Sélectionner une catégorie</option>
+                <option value="" disabled>Sélectionner une catégorie</option>
                 <option value="Artisan">Artisan</option>
                 <option value="Ebeniste">Ebeniste</option>
                 <option value="Forgeron">Forgeron</option>
@@ -79,7 +127,7 @@ const AddArticlePage = () => {
               </select>
             </div>
             <div className="flex md:space-x-4 flex-col md:flex-row">
-              <div className="md:w-1/2">
+              <div className="md:w-1/2 relative">
                 <FormField
                   label="Prix de vente (€)"
                   type="number"
@@ -90,14 +138,14 @@ const AddArticlePage = () => {
                 />
                 <span className="absolute right-2 top-2 text-gray-500">€</span>
               </div>
-              <div className="w-full md:w-1/2 mt-4 md:mt-0">
+              <div className="w-full md:w-1/2 relative mt-4 md:mt-0">
                 <FormField
                   label="Frais de livraison (€)"
                   type="number"
                   value={shippingCost}
                   onChange={(e) => setShippingCost(e.target.value)}
                   required
-                  name="shippingCost"
+                  name="shipping_cost"
                 />
                 <span className="absolute right-2 top-2 text-gray-500">€</span>
               </div>
@@ -131,7 +179,7 @@ const AddArticlePage = () => {
                   className="cursor-pointer text-center text-gray-500 w-full h-full flex items-center justify-center"
                 >
                   <span>Glissez et déposez une image ici ou cliquez pour télécharger</span>
-                  <input type="file" id="image-upload" className="hidden" onChange={handleImageUpload} />
+                  <input type="file" id="image-upload" name="article_photo" className="hidden" onChange={handleImageUpload} />
                 </label>
               )}
             </div>
@@ -141,7 +189,6 @@ const AddArticlePage = () => {
           <a href="/profile" className="text-gold hover:underline">Retour au profil</a>
         </div>
       </div>
-      
     </main>
   );
 };
