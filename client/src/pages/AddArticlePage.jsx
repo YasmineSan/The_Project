@@ -32,13 +32,23 @@ const AddArticlePage = () => {
     setImage(null);
   };
 
+   const debugFormData = (formData) => {
+    for (let [key, value] of formData.entries()) {
+      console.log(`${key}: ${value}`);
+    }
+  };
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const formData = new FormData(formRef.current);
     formData.append('article_photo', image); // Ajouter l'image au FormData
     const token = localStorage.getItem('token');
-
+    
+    // Déboguer le contenu de FormData
+    console.log("Contenu de FormData:");
+    debugFormData(formData);
+    
     try {
       const response = await fetch('http://4.233.138.141:3001/api/articles', {
         method: 'POST',
@@ -47,7 +57,7 @@ const AddArticlePage = () => {
         },
         body: formData
       });
-      
+
       const data = await response.json();
       if (response.ok) {
         setError(''); // Clear any previous error
@@ -129,7 +139,7 @@ const AddArticlePage = () => {
             <div className="flex md:space-x-4 flex-col md:flex-row">
               <div className="md:w-1/2 relative">
                 <FormField
-                  label="Prix de vente (€)"
+                  label="Prix de vente"
                   type="number"
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}
@@ -140,7 +150,7 @@ const AddArticlePage = () => {
               </div>
               <div className="w-full md:w-1/2 relative mt-4 md:mt-0">
                 <FormField
-                  label="Frais de livraison (€)"
+                  label="Frais de livraison"
                   type="number"
                   value={shippingCost}
                   onChange={(e) => setShippingCost(e.target.value)}
@@ -179,7 +189,7 @@ const AddArticlePage = () => {
                   className="cursor-pointer text-center text-gray-500 w-full h-full flex items-center justify-center"
                 >
                   <span>Glissez et déposez une image ici ou cliquez pour télécharger</span>
-                  <input type="file" id="image-upload" name="article_photo" className="hidden" onChange={handleImageUpload} />
+                  <input type="file" id="image-upload" className="hidden" onChange={handleImageUpload} />
                 </label>
               )}
             </div>
