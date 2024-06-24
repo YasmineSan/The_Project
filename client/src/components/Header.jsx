@@ -155,7 +155,7 @@ const Header = () => {
                       className='absolute top-full right-0 mt-2 w-48 bg-white border border-gold rounded shadow-lg z-10'
                     >
                       <ul>
-                        <li className='px-4 py-2 hover:bg-gold hover:text-white transition-all cursor-pointer'>Mon profil</li>
+                        <NavLink to="/userProfile"><li className='px-4 py-2 hover:bg-gold hover:text-white transition-all cursor-pointer'>Mon profil</li></NavLink>
                         <li className='px-4 py-2 hover:bg-gold hover:text-white transition-all cursor-pointer'>Mes commandes</li>
                         <li className='px-4 py-2 hover:bg-gold hover:text-white transition-all cursor-pointer'>Mes ventes</li>
                         <li 
