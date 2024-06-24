@@ -8,13 +8,13 @@ const CarouselBanner = () => {
     <section className='container mx-auto px-12'>
       <Carousel autoPlay infiniteLoop dynamicHeight showThumbs={false} showStatus={false} swipeable showArrows={false} className="rounded-xl overflow-hidden max-h-[550px]">
         <div className='relative'>
-          <div className="absolute inset-0 bg-black opacity-50 "></div>
+          <div className="absolute inset-0 bg-black opacity-20 "></div>
           <img
           className="w-full h-full object-cover max-h-[550px]"
           src="artisan-atelier.jpg"
           alt="First slide"
           />
-          <h1 className='absolute left-22 lg:left-8 md:top-60 sm:top-10 top-5 text-1xl sm:text-2xl lg:text-3xl md:text-3xl xl:text-5xl font-medium text-white leading-loose text-center'>Craftify est une plateforme dédiée à l'artisanat </h1>
+          <h1 className='absolute left-22 lg:left-8 md:top-60 sm:top-10 top-5 text-1xl sm:text-2xl lg:text-3xl md:text-3xl xl:text-5xl font-medium text-stone-50 leading-loose text-center'>Craftify est une plateforme dédiée à l'artisanat </h1>
         </div>
         
         <div className='relative'>
