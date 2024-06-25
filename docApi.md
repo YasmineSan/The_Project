@@ -83,13 +83,14 @@ Pour que les développeurs front-end puissent utiliser efficacement votre API, v
     - Description : Permet d'ajouter un nouvel article.
     - Body :
       ```json
-      {
-         "title": "string",
-         "description": "string",
-         "price": "number",
-         "category": "string",
-         "article_photo": "file"
+
       }
+        "article_photo":"file",
+        "article_description":"string",
+        "article_price":"number",
+        "shipping_cost":"number",
+        "category_name":"string"
+        }
       ```
     - Token : Oui
 
