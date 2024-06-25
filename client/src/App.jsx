@@ -12,6 +12,7 @@ import AddArticlePage from './pages/AddArticlePage';
 import UserProfile from './pages/UserProfile';
 import CommentPage from './pages/CommentPage';
 import FavoritePage from './pages/FavoritePage';
+// import SingleArticlePage from './pages/SingleArticlePage';
 import {RouterProvider, createBrowserRouter, createMemoryRouter, Outlet, useRouteError} from "react-router-dom"
 
 
