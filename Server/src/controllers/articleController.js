@@ -278,12 +278,19 @@ exports.deleteArticle = async (req, res) => {
 exports.getAllArticles = async (req, res) => {
     try {
         const pool = await poolPromise;
-        const result = await pool.request().query('SELECT * FROM Articles');
+        const query = `
+            SELECT a.*, ua.user_id
+            FROM Articles a
+            LEFT JOIN User_Article ua ON a.article_id = ua.article_id
+        `;
+        const result = await pool.request().query(query);
         res.json(result.recordset);
     } catch (err) {
         res.status(500).send({ message: err.message });
     }
 };
+
+
 
 // Récupérer toutes les évaluations d'un utilisateur
 exports.getAllEvaluationsByUser = async (req, res) => {
