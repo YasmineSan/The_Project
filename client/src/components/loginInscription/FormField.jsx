@@ -9,7 +9,7 @@ const FormField = ({ label, type, value, onChange, required, name }) => {
       <label className="block text-gray-700 mb-2">{label}</label>
       {type === 'textarea' ? (
         <textarea
-          className="w-full px-3 py-2 border rounded"
+          className="w-full px-3 py-2 border rounded resize-none"
           value={value}
           onChange={onChange}
           required={required}

@@ -25,9 +25,9 @@ const ContactUser = ({ user = { id: '', name: 'Utilisateur Anonyme', image: 'htt
   };
 
   return (
-    <div className="w-full bg-gray-100 pt-28">
+    <main className="w-full min-h-[820px] bg-gray-100 pt-28">
       <div className="max-w-2xl mx-auto p-4">
-        <h1 className="text-3xl font-bold mb-4 text-center">Contacter un Utilisateur</h1>
+        <h1 className="text-3xl font-semibold mb-4 text-center">Contacter un utilisateur</h1>
         <p className="mb-6 text-center">
           Pour contacter cet utilisateur, que ce soit pour une commande, une réclamation ou autre, utilisez le formulaire ci-dessous. Votre message lui sera transmis par mail.
         </p>
@@ -45,7 +45,7 @@ const ContactUser = ({ user = { id: '', name: 'Utilisateur Anonyme', image: 'htt
 
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="subject">
+            <label className="block text-gray-700 font-semibold mb-2" htmlFor="subject">
               Sujet
             </label>
             <input
@@ -60,7 +60,7 @@ const ContactUser = ({ user = { id: '', name: 'Utilisateur Anonyme', image: 'htt
           </div>
 
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="message">
+            <label className="block text-gray-700 font-semibold mb-2" htmlFor="message">
               Votre message
             </label>
             <textarea
@@ -88,16 +88,16 @@ const ContactUser = ({ user = { id: '', name: 'Utilisateur Anonyme', image: 'htt
           </div>
         )}
 
-        <div className="mt-4 text-center">
+        <div className="mt-8 text-center">
           <a
             href={`/profile/${user.id}`}
             className="text-gold hover:underline"
           >
-            Voir le profil de l'utilisateur
+            Retour au profil de l'utilisateur
           </a>
         </div>
       </div>
-    </div>
+    </main>
   );
 };
 

@@ -17,15 +17,10 @@ const SignupSection = ({ setIsLogin }) => {
 
     const formData = new FormData(formRef.current);
     formData.append('profile_image', profileImage); // Ajouter l'image au FormData
-    
-    // Log form data entries for debugging
-    for (let pair of formData.entries()) {
-      console.log(pair[0] + ': ' + pair[1]);
-    }
 
     const password = formData.get('password');
     const confirmPassword = formData.get('confirm_password');
-    
+
     if (password && confirmPassword && password === confirmPassword) {
       try {
         const response = await fetch('http://4.233.138.141:3001/api/users/register', {
@@ -35,19 +30,55 @@ const SignupSection = ({ setIsLogin }) => {
 
         const data = await response.json();
         if (response.ok) {
-          setSuccess('Inscription réussie ! Redirection vers la connexion...');
+          let username = formData.get('username');
+          let password = formData.get('password');
+
+          setError(''); // Clear any previous error
+          setSuccess("Inscription réussie ! Redirection vers la page d'accueil");
+          window.scrollTo(0, 0); // Scroll to top
+
+          fetch('http://4.233.138.141:3001/api/users/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({username, password})
+          })
+            .then(response => response.json())
+            .then(data => {
+              if (data.token) {
+                localStorage.setItem('authToken', data.token);
+              } else {
+                setSuccess(''); // Clear any previous success message
+                setError('Login failed: ' + (data.message || 'Invalid credentials'));
+                window.scrollTo(0, 0); // Scroll to top
+              }
+            })
+            .catch(error => {
+              console.error('Error:', error);
+              setSuccess(''); // Clear any previous success message
+              setError('An error occurred. Please try again.');
+              window.scrollTo(0, 0); // Scroll to top
+            });
+
           setTimeout(() => {
             window.location.assign('/');
           }, 2000);
         } else {
+          setSuccess(''); // Clear any previous success message
           setError(data.message || 'Une erreur est survenue, merci de réessayer.');
+          window.scrollTo(0, 0); // Scroll to top
         }
       } catch (error) {
         console.error('Error:', error);
+        setSuccess(''); // Clear any previous success message
         setError('Une erreur est survenue, merci de réessayer.');
+        window.scrollTo(0, 0); // Scroll to top
       }
     } else {
+      setSuccess(''); // Clear any previous success message
       setError("Échec de l'inscription : Merci de remplir tous les champs requis et de vérifier que les mots de passe correspondent.");
+      window.scrollTo(0, 0); // Scroll to top
     }
   };
 
@@ -57,6 +88,7 @@ const SignupSection = ({ setIsLogin }) => {
       const allowedTypes = ['image/jpeg', 'image/png'];
       if (!allowedTypes.includes(file.type)) {
         setError('Format de fichier non supporté. Veuillez sélectionner une image au format JPEG ou PNG.');
+        setSuccess(''); // Clear any previous success message
         return;
       }
       const reader = new FileReader();
@@ -156,14 +188,14 @@ const SignupSection = ({ setIsLogin }) => {
             </div>
           </div>
         </div>
-        <FormField label="Nom" type="text" name="last_name" required/>
-        <FormField label="Prénom" type="text" name="first_name" required/>
+        <FormField label="Nom" type="text" name="last_name" required />
+        <FormField label="Prénom" type="text" name="first_name" required />
         <div className="grid grid-cols-2 gap-4">
-          <FormField label="Rue" type="text" name="street" required/>
-          <FormField label="Numéro" type="text" name="street_number" required/>
+          <FormField label="Rue" type="text" name="street" required />
+          <FormField label="Numéro" type="text" name="street_number" required />
           <FormField label="Boîte" type="text" name="apartment" />
-          <FormField label="Code Postal" type="text" name="postal_code" required/>
-          <FormField label="Ville" type="text" name="city" required/>
+          <FormField label="Code Postal" type="text" name="postal_code" required />
+          <FormField label="Ville" type="text" name="city" required />
         </div>
         <FormField label="Adresse PayPal" type="email" name="paypal_address" />
         <FormField label="Bio" type="textarea" name="bio" />

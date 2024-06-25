@@ -32,7 +32,7 @@ const Contact = () => {
           <div className="w-full md:w-1/2 p-4">
             <form className="bg-white p-6 rounded-lg shadow-lg" onSubmit={handleSubmit}>
               <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="email">
+                <label className="block text-gray-700  font-semibold mb-2" htmlFor="email">
                   Email
                 </label>
                 <input
@@ -46,7 +46,7 @@ const Contact = () => {
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-gray-700 text-sm mb-2 font-semibold" htmlFor="nom">
+                <label className="block text-gray-700 mb-2 font-semibold" htmlFor="nom">
                   Nom
                 </label>
                 <input
@@ -60,7 +60,7 @@ const Contact = () => {
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="prenom">
+                <label className="block text-gray-700 font-semibold mb-2" htmlFor="prenom">
                   Prénom
                 </label>
                 <input
@@ -74,7 +74,7 @@ const Contact = () => {
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="message">
+                <label className="block text-gray-700 font-semibold mb-2" htmlFor="message">
                   Votre message
                 </label>
                 <textarea
@@ -105,7 +105,7 @@ const Contact = () => {
           <div className="w-full md:w-1/2 p-4">
             <div className="bg-white p-6 rounded-lg shadow-lg h-full">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3151.835434509244!2d144.95373631590415!3d-37.81720974202174!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6ad642af0f11fd81%3A0xf57722f10c94f2e0!2sEnvato!5e0!3m2!1sen!2sau!4v1487205673475"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2530.7008091451194!2d5.580715596789548!3d50.63267459999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47c0f0abbfc177c7%3A0xf2c9f9204e1bb92b!2zUMO0bGUgaW1hZ2UgZGUgTGnDqGdl!5e0!3m2!1sfr!2sbe!4v1719091330792!5m2!1sfr!2sbe"
                 width="100%"
                 height="400"
                 frameBorder="0"

@@ -10,6 +10,7 @@ const LoginSection = ({ setIsLogin }) => {
   const [success, setSuccess] = useState('');
 
   const handleLogin = () => {
+    console.log({username,password})
     fetch('http://4.233.138.141:3001/api/users/login', {
       method: 'POST',
       headers: {

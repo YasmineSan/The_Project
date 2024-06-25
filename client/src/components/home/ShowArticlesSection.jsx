@@ -1,30 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import CardArticle from '../CardArticle';
 
 export const ShowArticlesSection = () => {
-  const [articles, setArticles] = useState([
-    {
-      id: 1,
-      image: 'https://picsum.photos/200/100?random=1',
-      title: 'Article 1',
-      price: '20€'
-    },
-    {
-      id: 2,
-      image: 'https://picsum.photos/200/100?random=2',
-      title: 'Article 2',
-      price: '30€'
-    },
-    {
-      id: 3,
-      image: 'https://picsum.photos/200/100?random=3',
-      title: 'Article 3',
-      price: '40€'
-    }
-  ]);
+  const [articles, setArticles] = useState([]);
 
-  
+  useEffect(() => {
+    const fetchArticles = async () => {
+      try {
+        const response = await fetch('http://4.233.138.141:3001/api/articles', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        setArticles(data);
+      } catch (error) {
+        console.error('Error fetching articles:', error);
+      }
+    };
+
+    fetchArticles();
+  }, []);
 
   return (
     <section className="container mx-auto py-20 px-12">
@@ -41,7 +44,7 @@ export const ShowArticlesSection = () => {
             key={article.id}
             id={article.id}
             image={article.image}
-            title={article.title}
+            // title={article.title}
             price={article.price}
           />
         ))}

@@ -8,7 +8,7 @@ const Footer = () => {
     <footer className="bg-inherit border-t-2 border-gold mx-auto">
       <div className="flex container justify-between gap-5 flex-wrap flex-col sm:flex-row items-center mx-auto lg:px-10 px-4 py-10">
         <div className="footer-left">
-          <p className="tracking-wider text-darkGrey font-light">CRAFTIFY</p>
+          <p className="tracking-wider text-darkGrey font-light">© CRAFTIFY 2024</p>
         </div>
         <div className="footer-center flex gap-4">
           <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
