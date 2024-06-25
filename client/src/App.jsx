@@ -51,8 +51,14 @@ const router = createBrowserRouter([
         element: <UserCart />
       },
       {
-        path: 'user',
+        path: 'userProfile',
         element: <UserProfile />
+
+      },
+      {
+        path: 'userProfile/:userId',
+        element: <UserProfile />
+
       },
       {
         path: 'comment',

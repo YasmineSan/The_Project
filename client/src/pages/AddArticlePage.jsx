@@ -48,7 +48,7 @@ const AddArticlePage = () => {
     // Déboguer le contenu de FormData
     console.log("Contenu de FormData:");
     debugFormData(formData);
-    
+
     try {
       const response = await fetch('http://4.233.138.141:3001/api/articles', {
         method: 'POST',
@@ -57,7 +57,7 @@ const AddArticlePage = () => {
         },
         body: formData
       });
-
+      console.log(response)
       const data = await response.json();
       if (response.ok) {
         setError(''); // Clear any previous error
@@ -99,21 +99,21 @@ const AddArticlePage = () => {
         )}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <form ref={formRef} onSubmit={handleSubmit} className="space-y-4 md:order-2">
-            <FormField
+            {/* <FormField
               label="Titre de l'article"
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
               name="title"
-            />
+            /> */}
             <FormField
               label="Description de l'article"
               type="textarea"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               required
-              name="description"
+              name="article_description"
             />
             <div>
               <label htmlFor="category" className="block text-gray-700 mb-2">Catégorie de l'article *</label>
@@ -123,11 +123,11 @@ const AddArticlePage = () => {
                 onChange={(e) => setCategory(e.target.value)}
                 className="w-full px-3 py-2 border rounded"
                 required
-                name="category"
+                name="category_name"
               >
                 <option value="" disabled>Sélectionner une catégorie</option>
                 <option value="Artisan">Artisan</option>
-                <option value="Ebeniste">Ebeniste</option>
+                <option value="Ebeniste">Bois</option>
                 <option value="Forgeron">Forgeron</option>
                 <option value="Sculpteur">Sculpteur</option>
                 <option value="Métallier">Métallier</option>
@@ -144,7 +144,7 @@ const AddArticlePage = () => {
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}
                   required
-                  name="price"
+                  name="article_price"
                 />
                 <span className="absolute right-2 top-2 text-gray-500">€</span>
               </div>
