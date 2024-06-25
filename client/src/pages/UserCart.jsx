@@ -75,9 +75,9 @@ export const UserCart = () => {
     }
   };
 
-  const subtotal = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
-  const totalShipping = cart.reduce((acc, item) => acc + item.shipping * item.quantity, 0);
-  const totalCommission = cart.reduce((acc, item) => acc + (item.price * 0.1 * item.quantity), 0);
+  const subtotal = cart.reduce((acc, item) => acc + item.article_price * item.quantity, 0);
+  const totalShipping = cart.reduce((acc, item) => acc + item.shipping_cost * item.quantity, 0);
+  const totalCommission = cart.reduce((acc, item) => acc + (item.article_price * 0.1 * item.quantity), 0);
   const total = subtotal + totalShipping + totalCommission;
 
   if (loading) {
@@ -99,7 +99,7 @@ export const UserCart = () => {
                 <div className="flex-1">
                   <div className="text-xl mb-2 font-medium">{item.article_price}€</div>
                   <h2 className="text-lg font-semibold">{item.article_title}</h2>
-                  {/* <p className="text-gray-600">{item.description.length > 100 ? item.description.slice(0, 100) + '...' : item.description}</p> */}
+                  <p className="text-gray-600">{item.article_description.length > 100 ? item.description.slice(0, 100) + '...' : item.article_description}</p>
                   <div className="mt-2">
                     <span className="text-gray-500">Frais de livraison: </span>
                     <span className="font-medium">{item.shipping_cost}€</span>

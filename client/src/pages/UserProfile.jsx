@@ -1,155 +1,46 @@
 import React, { useState, useEffect } from 'react';
 import { FiMail, FiMapPin } from 'react-icons/fi';
 import CardArticle from '../components/CardArticle';
+import { useParams } from 'react-router-dom';
+import { IoConstructOutline } from 'react-icons/io5';
 
-export const UserProfile = (id) => {
+export const UserProfile = () => {
+  const { userId } = useParams();
   const [user, setUser] = useState({});
   const [articles, setArticles] = useState([]);
+ 
 
   useEffect(() => {
-  //   // Simuler une réponse de l'API avec des données fictives
-  //   // const fakeUser = {
-  //   //   username: 'john_doe',
-  //   //   bio: 'Bonjour à toutes et à tous Je privilégie les envois par Mondial Relay. Les colis sont préparés, emballés avec soins et déposés rapidement 😉',
-  //   //   location: 'Liège',
-  //   //   profileImage: 'https://picsum.photos/100?random=1',
-  //   //   rating: 4.5,
-  //   //   reviewsLink: '#'
-  //   // };
+    
+    if (userId) {// Si c'est un autre utilisateur
 
-  //   // const fakeArticles = [
-  //   //   {
-  //   //     id: 1,
-  //   //     image: 'https://picsum.photos/200/300?random=2',
-  //   //     title: 'Article 1',
-  //   //     description: 'Description de l\'article 1 qui est assez longue pour être coupée...',
-  //   //     price: 20.0,
-  //   //     shipping: 5.0,
-  //   //     sellerCity: 'Paris',
-  //   //     quantity: 2
-  //   //   },
-  //   //   {
-  //   //     id: 2,
-  //   //     image: 'https://picsum.photos/200/300?random=3',
-  //   //     title: 'Article 2',
-  //   //     description: 'Description de l\'article 2.',
-  //   //     price: 15.0,
-  //   //     shipping: 3.0,
-  //   //     sellerCity: 'Lyon',
-  //   //     quantity: 1
-  //   //   }, {
-  //   //     id: 1,
-  //   //     image: 'https://picsum.photos/200/300?random=4',
-  //   //     title: 'Article 1',
-  //   //     description: 'Description de l\'article 1 qui est assez longue pour être coupée...',
-  //   //     price: 20.0,
-  //   //     shipping: 5.0,
-  //   //     sellerCity: 'Paris',
-  //   //     quantity: 2
-  //   //   },
-  //   //   {
-  //   //     id: 2,
-  //   //     image: 'https://picsum.photos/200/300?random=5',
-  //   //     title: 'Article 2',
-  //   //     description: 'Description de l\'article 2.',
-  //   //     price: 15.0,
-  //   //     shipping: 3.0,
-  //   //     sellerCity: 'Lyon',
-  //   //     quantity: 1
-  //   //   },
-  //   //   {
-  //   //     id: 1,
-  //   //     image: 'https://picsum.photos/200/300?random=6',
-  //   //     title: 'Article 1',
-  //   //     description: 'Description de l\'article 1 qui est assez longue pour être coupée...',
-  //   //     price: 20.0,
-  //   //     shipping: 5.0,
-  //   //     sellerCity: 'Paris',
-  //   //     quantity: 2
-  //   //   },
-  //   //   {
-  //   //     id: 2,
-  //   //     image: 'https://picsum.photos/200/300?random=7',
-  //   //     title: 'Article 2',
-  //   //     description: 'Description de l\'article 2.',
-  //   //     price: 15.0,
-  //   //     shipping: 3.0,
-  //   //     sellerCity: 'Lyon',
-  //   //     quantity: 1
-  //   //   },
-  //   //   {
-  //   //     id: 1,
-  //   //     image: 'https://picsum.photos/200/300?random=8',
-  //   //     title: 'Article 1',
-  //   //     description: 'Description de l\'article 1 qui est assez longue pour être coupée...',
-  //   //     price: 20.0,
-  //   //     shipping: 5.0,
-  //   //     sellerCity: 'Paris',
-  //   //     quantity: 2
-  //   //   },
-  //   //   {
-  //   //     id: 2,
-  //   //     image: 'https://picsum.photos/200/300?random=9',
-  //   //     title: 'Article 2',
-  //   //     description: 'Description de l\'article 2.',
-  //   //     price: 15.0,
-  //   //     shipping: 3.0,
-  //   //     sellerCity: 'Lyon',
-  //   //     quantity: 1
-  //   //   },{
-  //   //     id: 1,
-  //   //     image: 'https://picsum.photos/200/300?random=10',
-  //   //     title: 'Article 1',
-  //   //     description: 'Description de l\'article 1 qui est assez longue pour être coupée...',
-  //   //     price: 20.0,
-  //   //     shipping: 5.0,
-  //   //     sellerCity: 'Paris',
-  //   //     quantity: 2
-  //   //   },
-  //   //   {
-  //   //     id: 2,
-  //   //     image: 'https://picsum.photos/200/300?random=11',
-  //   //     title: 'Article 2',
-  //   //     description: 'Description de l\'article 2.',
-  //   //     price: 15.0,
-  //   //     shipping: 3.0,
-  //   //     sellerCity: 'Lyon',
-  //   //     quantity: 1
-  //   //   }
-  //   // ];
+      const id = userId[1]
 
-  //   // setUser(fakeUser);
-  //   // setArticles(fakeArticles);
-  //   // setLoading(false);
-  //   if (id) {
+      const fetchOtherUserProfile = async () => {//Récupérer le profil de l'autre utilisateur
+        try {
+          const response = await fetch(`https://4.233.138.141:3001/api/users/${id}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+            }
+          });
 
-  //     // const fetchUserProfile = async () => {
-  //     //   try {
-  //     //     const response = await fetch(`https://4.233.138.141:3001/api/users/:${id}`, {
-  //     //       method: 'GET',
-  //     //       headers: {
-  //     //         'Content-Type': 'application/json',
-  //     //         'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-  //     //       }
-  //     //     });
+          if (!response.ok) {
+            throw new Error('Failed to fetch user profile');
+          } else {
+            setUser(await response.json());
+          }
+;
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      };
 
-  //     //     if (!response.ok) {
-  //     //       throw new Error('Failed to fetch user profile');
-  //     //     } else {
-  //     //       setUser(await response.json());
-  //     //     }
+      fetchOtherUserProfile();
+    } else {// Si c'est l'utilisateur en cours
 
-  //     //     setLoading(false);
-  //     //   } catch (error) {
-  //     //     console.error('Error:', error);
-  //     //     setLoading(false);
-  //     //   }
-  //     // };
-
-  //     // fetchUserProfile();
-    // } else {
-
-      const fetchUser = async () => {
+      const fetchCurrentUser = async () => {//Récupérer le profil de l'utilisateur en cours
         try {
         const response = await fetch(`https://4.233.138.141:3001/api/users/dashboard`, {
           method: 'GET',
@@ -161,7 +52,7 @@ export const UserProfile = (id) => {
         console.log(response)
         if (response.ok) {
             setUser(await response.json());
-            console.log(user)
+
         } else {
             alert('Failed to fetch user profile');
         }
@@ -169,9 +60,30 @@ export const UserProfile = (id) => {
         console.error('Error:', error);
       }}
 
-      fetchUser();
+      fetchCurrentUser();
+
+      const fetchUserArticles = async() => {//Récupérer les articles de l'utilisateur en cours
+        try {
+          const response = await fetch(`https://4.233.138.141:3001/api/users/dashboard`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+            }})
+          
+          console.log(response)
+          if (response.ok) {
+              setUser(await response.json());
+  
+          } else {
+              alert('Failed to fetch user profile');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      }
       
-    
+    }
   }, []);
 
   return (
