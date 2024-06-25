@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { NavLink } from 'react-router-dom';
 import { FiShoppingCart } from 'react-icons/fi';
 
-const CardArticle = ({ id, image, title, price, isFav}) => {
+const CardArticle = ({ id, image, title, price}) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {

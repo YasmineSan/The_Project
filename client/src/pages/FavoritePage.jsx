@@ -45,20 +45,22 @@ const FavoritePage = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 pt-4 pb-16 bg-slate-100">
-      <h2 className="text-2xl font-semibold mb-4 text-center sm:pt-28 pt-20">Favoris</h2>
+    <div className="min-h-screen pb-16 bg-slate-100 pt-14 sm:pt-20">
+      <div className='container mx-auto px-4 py-8'>
+        <h2 className="text-2xl sm:text-3xl font-semibold text-center mb-8 mt-2">Favoris</h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {favoriteArticles.map(article => (
-          <FavoriteCard
-            key={article.id}
-            id={article.id}
-            image={article.image}
-            title={article.title}
-            price={article.price}
-            onRemoveFromFavorites={removeFromFavorites}
-          />
-        ))}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {favoriteArticles.map(article => (
+            <FavoriteCard
+              key={article.id}
+              id={article.id}
+              image={article.image}
+              title={article.title}
+              price={article.price}
+              onRemoveFromFavorites={removeFromFavorites}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );

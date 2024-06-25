@@ -43,7 +43,7 @@ const AddArticlePage = () => {
 
     const formData = new FormData(formRef.current);
     formData.append('article_photo', image); // Ajouter l'image au FormData
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('authToken');
     
     // Déboguer le contenu de FormData
     console.log("Contenu de FormData:");
@@ -57,6 +57,7 @@ const AddArticlePage = () => {
         },
         body: formData
       });
+
       console.log(response)
       const data = await response.json();
       if (response.ok) {
@@ -83,7 +84,7 @@ const AddArticlePage = () => {
     <main className="container mx-auto px-10 sm:px-12 py-28">
       <div className='bg-white shadow-lg rounded-lg p-8 mb-12'>
         <div className="flex flex-col items-center mb-8">
-          <h1 className="text-3xl font-semibold text-center py-6">Mis en vente d'un article</h1>
+          <h1 className="text-3xl font-semibold text-center py-6">Mise en vente d'un article</h1>
         </div>
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
@@ -189,7 +190,7 @@ const AddArticlePage = () => {
                   className="cursor-pointer text-center text-gray-500 w-full h-full flex items-center justify-center"
                 >
                   <span>Glissez et déposez une image ici ou cliquez pour télécharger</span>
-                  <input type="file" id="image-upload" className="hidden" onChange={handleImageUpload} />
+                  <input type="file" id="image-upload" className="hidden" onChange={handleImageUpload} required/>
                 </label>
               )}
             </div>

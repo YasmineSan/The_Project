@@ -71,7 +71,7 @@ const router = createBrowserRouter([
         element: <CommentPage />
       },
       {
-        path: 'favorite',
+        path: 'favorites',
         element: <FavoritePage /> 
       },
       {
