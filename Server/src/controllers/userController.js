@@ -39,6 +39,13 @@ exports.registerUser = async (req, res) => {
 
         const profile_image = req.file;
 
+        console.log('Received data:', req.body);
+        if (profile_image) {
+            console.log('Received file:', profile_image.originalname);
+        } else {
+            console.log('No file received');
+        }
+
         if (profile_image && !isValidFileType(profile_image)) {
             return res.status(400).send({ message: 'Invalid file type' });
         }
@@ -49,12 +56,14 @@ exports.registerUser = async (req, res) => {
 
         let profile_image_url = '';
         if (profile_image) {
+            console.log('Uploading image to Azure Blob Storage');
             const blobServiceClient = BlobServiceClient.fromConnectionString(process.env.AZURE_STORAGE_CONNECTION_STRING);
             const containerClient = blobServiceClient.getContainerClient('user-images');
             const blobName = uuidv4() + path.extname(profile_image.originalname);
             const blockBlobClient = containerClient.getBlockBlobClient(blobName);
             await blockBlobClient.uploadData(profile_image.buffer);
             profile_image_url = blockBlobClient.url;
+            console.log('Image uploaded. URL:', profile_image_url);
         }
 
         await pool.request()
@@ -106,8 +115,10 @@ exports.registerUser = async (req, res) => {
                 )
             `);
 
+        console.log('User registered successfully');
         res.status(201).send({ message: 'User registered successfully' });
     } catch (err) {
+        console.error('Error:', err);
         res.status(500).send({ message: err.message });
     }
 };

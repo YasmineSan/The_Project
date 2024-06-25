@@ -7,6 +7,7 @@ const multer = require('multer');
 const storage = multer.memoryStorage();
 const upload = multer({
     storage: storage,
+    limits: { fileSize: 50 * 1024 * 1024 }, // Limite de 50MB
     fileFilter: (req, file, cb) => {
         const allowedTypes = ['image/webp', 'image/jpeg', 'image/jpg', 'image/png', 'image/svg+xml'];
         if (allowedTypes.includes(file.mimetype)) {
@@ -23,10 +24,7 @@ router.post('/register', upload.single('profile_image'), userController.register
 router.post('/login', userController.loginUser);
 router.get('/dashboard', authenticateToken, userController.getUserInfo);
 router.post('/update', authenticateToken, upload.single('profile_image'), userController.updateUser);
-// Route pour récupérer les informations d'un utilisateur
 router.get('/:userId', authenticateToken, userController.getUserById);
-// Route pour mettre à jour les informations d'un utilisateur
-router.put('/:userId', authenticateToken, userController.updateUser);
-
+router.put('/:userId', authenticateToken, upload.single('profile_image'), userController.updateUser);
 
 module.exports = router;

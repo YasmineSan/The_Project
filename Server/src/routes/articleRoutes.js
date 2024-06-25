@@ -30,6 +30,7 @@ router.get('/test/categories/:categoryId/prices', articleController.getCategoryA
 // Routes avec authentification
 router.get('/user/evaluations', authenticateToken, articleController.getAllEvaluationsByUser);
 router.get('/user/articles', authenticateToken, articleController.getAllArticlesByUser);
+router.get('/user', authenticateToken, articleController.getAllArticlesByUser);
 router.post('/', authenticateToken, upload.single('article_photo'), articleController.addArticle);
 router.post('/:id/evaluations', authenticateToken, articleController.addEvaluation);
 router.put('/:articleId', authenticateToken, upload.single('article_photo'), articleController.updateArticle);
