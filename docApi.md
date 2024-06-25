@@ -84,7 +84,7 @@ Pour que les développeurs front-end puissent utiliser efficacement votre API, v
     - Body :
       ```json
 
-      }
+      {
         "article_photo":"file",
         "article_description":"string",
         "article_price":"number",
