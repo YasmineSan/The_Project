@@ -23,7 +23,7 @@ const SignupSection = ({ setIsLogin }) => {
 
     if (password && confirmPassword && password === confirmPassword) {
       try {
-        const response = await fetch('http://4.233.138.141:3001/api/users/register', {
+        const response = await fetch('https://4.233.138.141:3001/api/users/register', {
           method: 'POST',
           body: formData
         });
@@ -37,7 +37,7 @@ const SignupSection = ({ setIsLogin }) => {
           setSuccess("Inscription réussie ! Redirection vers la page d'accueil");
           window.scrollTo(0, 0); // Scroll to top
 
-          fetch('http://4.233.138.141:3001/api/users/login', {
+          fetch('https://4.233.138.141:3001/api/users/login', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
