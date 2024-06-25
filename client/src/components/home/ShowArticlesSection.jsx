@@ -45,7 +45,7 @@ export const ShowArticlesSection = () => {
             key={i}
             id={article.article_id}
             image={article.article_photo}
-            // title={article.title}
+            title={article.title}
             price={article.article_price}
           />
         ))}
