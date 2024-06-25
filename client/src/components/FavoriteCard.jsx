@@ -10,9 +10,9 @@ const FavoriteCard = ({ id, image, title, price, onRemoveFromFavorites }) => {
   };
 
   return (
-    <div className="transform transition duration-300 hover:scale-105">
+    <div className="transform transition duration-300 hover:scale-105 bg-white">
       <div className="border rounded-lg overflow-hidden shadow-lg h-70 flex flex-col justify-center items-center text-center px-4 py-4">
-        <NavLink to={`/article/${id}`} className="w-full h-full flex flex-col justify-center items-center">
+        <NavLink to={`/article/${id}`} className="w-full h-full flex flex-col justify-center items-center"> 
           <img src={image} alt={title} className="w-full h-48 object-cover" />
           <div className="pt-3 flex flex-col items-center">
             <h3 className="text-lg font-medium">{title}</h3>
