@@ -13,6 +13,7 @@ import UserProfile from './pages/UserProfile';
 import CommentPage from './pages/CommentPage';
 import FavoritePage from './pages/FavoritePage';
 import {RouterProvider, createBrowserRouter, createMemoryRouter, Outlet, useRouteError} from "react-router-dom"
+import { DetailedArticle } from './pages/DetailedArticle';
 
 
 
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
       {
         path: 'articles',
         element: <div>articles</div>
+      },
+      {
+        path: 'article', //'userProfile/:userId'
+        element: <DetailedArticle />
       },
       {
         path: 'contact',
