@@ -24,13 +24,20 @@ exports.getUserCart = async (req, res) => {
 
         const result = await pool.request()
             .input('user_id', userId)
-            .query('SELECT * FROM Cart WHERE user_id = @user_id');
+            .query(`
+                SELECT c.cart_id, c.quantity, c.added_at, 
+                       a.article_id, a.article_photo, a.article_description, a.article_price, a.shipping_cost, a.category_name
+                FROM Cart c
+                JOIN Articles a ON c.article_id = a.article_id
+                WHERE c.user_id = @user_id
+            `);
 
         res.json(result.recordset);
     } catch (err) {
         res.status(500).send({ message: err.message });
     }
 };
+
 
 exports.removeFromCart = async (req, res) => {
     try {
