@@ -37,10 +37,6 @@ const router = createBrowserRouter([
         element: <div>articles</div>
       },
       {
-        path: 'article',
-        element: <DetailedArticle />
-      },
-      {
         path: 'contact',
         element: <Contact />
       },
@@ -75,7 +71,7 @@ const router = createBrowserRouter([
         element: <FavoritePage /> 
       },
       {
-        path: 'articlepage',
+        path: 'articles/:articleId',
         element: <SingleArticlePage /> 
       },
     ]
