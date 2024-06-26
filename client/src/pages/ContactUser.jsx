@@ -1,9 +1,15 @@
 import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
 
-const ContactUser = ({ user = { id: '', name: 'Utilisateur Anonyme', image: 'https://via.placeholder.com/150' } }) => {
+const ContactUser = () => {
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [user, setUser] = useState({});
+  const { userId } = useParams();
+
+
+  const id = userId[1];
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -22,6 +28,30 @@ const ContactUser = ({ user = { id: '', name: 'Utilisateur Anonyme', image: 'htt
     } else {
       alert('Veuillez remplir tous les champs.');
     }
+
+    const fetchOtherUserProfile = async () => {//Récupérer le profil de l'autre utilisateur
+        try {
+          const response = await fetch(`https://4.233.138.141:3001/api/users/${id}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+            }
+          });
+
+          if (!response.ok) {
+            throw new Error('Failed to fetch user profile');
+          } else {
+            setUser(await response.json());
+          }
+;
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      };
+
+      fetchOtherUserProfile();
+
   };
 
   return (
@@ -35,11 +65,11 @@ const ContactUser = ({ user = { id: '', name: 'Utilisateur Anonyme', image: 'htt
         <div className="flex flex-col items-center mb-6 sm:flex-row sm:justify-center">
           <img
             className="w-16 h-16 rounded-full mr-0 mb-4 sm:mr-4 sm:mb-0"
-            src={user.image}
-            alt={user.name}
+            src={user.profile_image}
+            alt={user.username}
           />
           <div className="text-center sm:text-left">
-            <h2 className="text-xl font-semibold">{user.name}</h2>
+            <h2 className="text-xl font-semibold">{user.username}</h2>
           </div>
         </div>
 
@@ -89,12 +119,10 @@ const ContactUser = ({ user = { id: '', name: 'Utilisateur Anonyme', image: 'htt
         )}
 
         <div className="mt-8 text-center">
-          <a
-            href={`/profile/${user.id}`}
-            className="text-gold hover:underline"
-          >
-            Retour au profil de l'utilisateur
-          </a>
+          <NavLink to={`/profile/:${user.user_id}`} className="text-gold hover:underline">
+              Retour au profil de l'utilisateur
+          </NavLink>
+          
         </div>
       </div>
     </main>

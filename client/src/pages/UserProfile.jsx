@@ -109,10 +109,12 @@ export const UserProfile = () => {
             </div>
             
             <p className="text-gray-700 mb-8">{user.biography}</p>
+
             <button className="bg-gold text-white py-2 px-4 rounded-full shadow-md border border-gold hover:bg-white hover:text-gold hover:border hover:border-gold transition-all duration-300 flex items-center">
               Contacter
               <FiMail className="ml-2" />
             </button>
+            
           </div>
         </div>
       </div>

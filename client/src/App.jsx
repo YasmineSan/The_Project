@@ -37,8 +37,8 @@ const router = createBrowserRouter([
         element: <Contact />
       },
       {
-        path: 'contactUser',
-        element: <ContactUser user={{ id: '1', name: 'John Doe', image: 'https://picsum.photos/id/237/150/150' }} />
+        path: 'contactUser/:userId',
+        element: <ContactUser />
       },
       {
         path: 'addArticle',
