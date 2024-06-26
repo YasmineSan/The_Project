@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import CardArticle from '../components/CardArticle';
-import { NavLink } from 'react-router-dom';
 import { FiMenu } from 'react-icons/fi';
 
 const categories = ['Toutes', 'Bijoux', 'Céramique', 'Textiles', 'Peinture'];
@@ -19,7 +18,7 @@ const AllArticles = () => {
 
   const handleCategoryClick = (category) => {
     setSelectedCategory(category);
-    setMenuOpen(false); // Close menu on category select
+    setMenuOpen(false); // Ferme le menu lors de la sélection d'une catégorie
   };
 
   const toggleMenu = () => {
@@ -33,16 +32,16 @@ const AllArticles = () => {
   return (
     <div className="min-h-screen bg-slate-100 pt-10 pb-10">
       <div className="w-full max-w-[90%] mx-auto bg-white p-6 rounded-lg shadow-md mt-24 mb-10">
-        <div className="flex justify-between items-center md:hidden mb-4">
+        <div className="md:hidden mb-4 flex justify-between items-center">
           <h2 className="text-2xl font-bold">Catégories</h2>
           <button onClick={toggleMenu} className="text-xl">
             <FiMenu />
           </button>
         </div>
-        <div className="flex">
-          <div className={`w-full md:w-1/4 bg-gray-200 p-4 rounded-lg ${menuOpen ? 'block' : 'hidden'} md:block`}>
+        <div className="md:flex">
+          <div className={`md:w-1/4 bg-gray-200 p-4 rounded-lg ${menuOpen ? 'block' : 'hidden'} md:block`}>
             <h2 className="text-xl font-bold mb-4 hidden md:block">Catégories</h2>
-            <ul>
+            <ul className="space-y-2 md:space-y-0 md:block">
               {categories.map((category) => (
                 <li 
                   key={category}
@@ -54,7 +53,7 @@ const AllArticles = () => {
               ))}
             </ul>
           </div>
-          <div className="w-full md:w-3/4 p-4">
+          <div className="md:w-3/4 p-4">
             <h2 className="text-2xl font-bold mb-4">Articles</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredArticles.length > 0 ? (
@@ -79,12 +78,6 @@ const AllArticles = () => {
 };
 
 export default AllArticles;
-
-
-
-
-
-
 
 
 
