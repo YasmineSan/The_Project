@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { NavLink, useParams } from 'react-router-dom';
 import { FiHeart } from "react-icons/fi";
 import { MdAddShoppingCart } from "react-icons/md";
-import CardArticle from '../components/CardArticle'; // Assurez-vous que le chemin est correct
+import CardArticle from '../components/CardArticle';
 
 const SingleArticlePage = () => {
   const [article, setArticle] = useState({});
@@ -115,6 +115,31 @@ const SingleArticlePage = () => {
     }
   };
 
+  const handleAddToFavorites = async () => {
+    try {
+      const response = await fetch('https://4.233.138.141:3001/api/favorites', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+        },
+        body: JSON.stringify({ articleId })
+      });
+
+      if (response.ok) {
+        setNotificationMessage('Article ajouté aux favoris !');
+        setShowNotification(true);
+        setTimeout(() => {
+          setShowNotification(false);
+        }, 2000); // Notification visible pendant 2 secondes
+      } else {
+        console.error('Erreur lors de l\'ajout aux favoris', response.statusText);
+      }
+    } catch (error) {
+      console.error('Erreur réseau lors de l\'ajout aux favoris', error);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-slate-100 pt-10 pb-10">
       <div className="max-w-[80%] mx-auto bg-white p-6 rounded-lg shadow-md mt-24 mb-10">
@@ -126,12 +151,16 @@ const SingleArticlePage = () => {
           />
           <div className="lg:ml-6 flex-grow">
             <div className="flex items-center mb-4">
-              <img 
-                src={user.profile_image} 
-                alt="Utilisateur" 
-                className="w-12 h-12 rounded-full mr-4" 
-              />
-              <span className="font-bold">{user.username}</span>
+              <NavLink to={`/userProfile/:${user.user_id}`}>
+                <img 
+                  src={user.profile_image} 
+                  alt="Utilisateur" 
+                  className="w-12 h-12 rounded-full mr-4" 
+                />
+              </NavLink>
+              <NavLink to={`/userProfile/:${user.user_id}`}>
+                <span className="font-bold">{user.username}</span>
+              </NavLink>
             </div>
             <h1 className="text-2xl font-bold mb-2">{article.article_title}</h1>
             <p className="text-xl text-gold mb-4">{article.article_price}</p>
@@ -139,7 +168,10 @@ const SingleArticlePage = () => {
               {article.article_description}
             </p>
             <div className="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4 mb-4">
-              <button className="bg-white border border-gold text-gold py-2 px-4 rounded flex items-center justify-center hover:bg-gold hover:text-white transition-colors duration-300">
+              <button 
+                onClick={handleAddToFavorites} 
+                className="bg-white border border-gold text-gold py-2 px-4 rounded flex items-center justify-center hover:bg-gold hover:text-white transition-colors duration-300"
+              >
                 <span className="mr-2"><FiHeart /></span> Ajouter aux favoris
               </button>
               <button 
