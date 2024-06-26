@@ -40,7 +40,7 @@ export const ShowArticlesSection = () => {
             Voir plus
           </NavLink>
         </div>
-        {articles.slice(-3).map((article, i) => (
+        {articles.slice(-7).map((article, i) => (
           <CardArticle
             key={i}
             id={article.article_id}
