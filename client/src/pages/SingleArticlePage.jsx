@@ -3,13 +3,47 @@ import { FiHeart } from "react-icons/fi";
 import { MdAddShoppingCart } from "react-icons/md";
 
 const SingleArticlePage = () => {
+  const [article, setArticle] = useState([]);
+  const [user, setUser] = useState({});
+  const { articleId } = useParams();
+
+  const id = articleId[1]
+
+  useEffect(() => {
+
+    const fetchArticle = async () => {// fetch pour récupérer l'article avec l'id correspondant (récupéré dans l'url)
+      try {
+        const response = await fetch(`https://4.233.138.141:3001/api/articles/${id}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        console.log(response)
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        setArticle(data);
+        
+      } catch (error) {
+        console.error('Error fetching articles:', error);
+      }
+    };
+
+    fetchArticle();
+
+    
+  }, []);
+
   return (
     <div className="min-h-screen bg-slate-100 pt-10 pb-10">
       <div className="max-w-[80%] mx-auto bg-white p-6 rounded-lg shadow-md mt-24 mb-10">
         <div className="flex flex-col lg:flex-row">
           <img 
-            src="katana.jpg" 
-            alt="Article" 
+            src={article.article_photo}
+            alt={article.article_title}
             className="w-full lg:w-1/2 rounded-lg mb-4 lg:mb-0 object-cover"
           />
           <div className="lg:ml-6 flex-grow">
@@ -21,12 +55,10 @@ const SingleArticlePage = () => {
               />
               <span className="font-bold">Jean</span>
             </div>
-            <h1 className="text-2xl font-bold mb-2">Katana</h1>
-            <p className="text-xl text-gold mb-4">599€</p>
+            <h1 className="text-2xl font-bold mb-2">{article.article_title}</h1>
+            <p className="text-xl text-gold mb-4">{article.article_price}</p>
             <p className="mb-6">
-              Acier à haute teneur en manganèse 65, avec ou sans bohi. Nakago bien formé Traitement thermique :
-              équipement moderne et professionnel pour un chauffage globalement uniforme et une trempe à l'huile spéciale,
-              revenu précis à température électronique contrôlée.
+              {article.article_description}
             </p>
             <div className="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4 mb-4">
               <button className="bg-white border border-gold text-gold py-2 px-4 rounded flex items-center justify-center hover:bg-gold hover:text-white transition-colors duration-300">
@@ -38,12 +70,12 @@ const SingleArticlePage = () => {
             </div>
             <div className="text-sm text-gray-500 flex flex-col lg:flex-row justify-between">
               <span>Expédié depuis : Liège</span>
-              <span>Date d'ajout : 10/06/24</span>
+               <span>Date d'ajout : 10/06/24</span> {/*Ajouter la variable pour date d'ajout */}
             </div>
           </div>
         </div>
         <div className="flex justify-end mt-6">
-          <a href="/profile" className="text-gold hover:underline">Retour au profil</a>
+          <a href="/article" className="text-gold hover:underline">Retour aux articles</a>
         </div>
       </div>
     </div>
