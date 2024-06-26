@@ -13,6 +13,7 @@ import UserProfile from './pages/UserProfile';
 import CommentPage from './pages/CommentPage';
 import FavoritePage from './pages/FavoritePage';
 import SingleArticlePage from './pages/SingleArticlePage';
+import AllArticles from './pages/AllArticles';
 import {RouterProvider, createBrowserRouter, createMemoryRouter, Outlet, useRouteError} from "react-router-dom"
 import { DetailedArticle } from './pages/DetailedArticle';
 
@@ -73,6 +74,10 @@ const router = createBrowserRouter([
       {
         path: 'articles/:articleId',
         element: <SingleArticlePage /> 
+      },
+      {
+        path: 'allarticles',
+        element: <AllArticles /> 
       },
     ]
   }
