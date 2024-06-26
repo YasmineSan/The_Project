@@ -22,6 +22,7 @@ export const UserCart = () => {
         }
 
         const data = await response.json();
+        console.log(data)
         setCart(data);
         setLoading(false);
       } catch (error) {
@@ -47,7 +48,7 @@ export const UserCart = () => {
         throw new Error('Failed to delete item');
       }
 
-      setCart(cart.filter(item => item.id !== id));
+      setCart(await response.json());
     } catch (error) {
       console.error('Error:', error);
     }
@@ -74,9 +75,9 @@ export const UserCart = () => {
     }
   };
 
-  const subtotal = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
-  const totalShipping = cart.reduce((acc, item) => acc + item.shipping * item.quantity, 0);
-  const totalCommission = cart.reduce((acc, item) => acc + (item.price * 0.1 * item.quantity), 0);
+  const subtotal = cart.reduce((acc, item) => acc + item.article_price * item.quantity, 0);
+  const totalShipping = cart.reduce((acc, item) => acc + item.shipping_cost * item.quantity, 0);
+  const totalCommission = cart.reduce((acc, item) => acc + (item.article_price * 0.1 * item.quantity), 0);
   const total = subtotal + totalShipping + totalCommission;
 
   if (loading) {
@@ -92,24 +93,20 @@ export const UserCart = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="col-span-2">
           {cart.map((item) => (
-            <div key={item.id} className="border rounded-lg p-6 mb-4 relative transition-transform duration-300 hover:scale-105">
+            <div key={item.article_id} className="border rounded-lg p-6 mb-4 relative transition-transform duration-300 hover:scale-105">
               <div className="flex items-start mb-4">
-                <img src={item.image} alt={item.title} className="w-32 h-32 object-cover mr-8 " />
+                <img src={item.article_image} alt={item.article_title} className="w-32 h-32 object-cover mr-8 " />
                 <div className="flex-1">
-                  <div className="text-xl mb-2 font-medium">{item.price}€</div>
-                  <h2 className="text-lg font-semibold">{item.title}</h2>
-                  <p className="text-gray-600">{item.description.length > 100 ? item.description.slice(0, 100) + '...' : item.description}</p>
+                  <div className="text-xl mb-2 font-medium">{item.article_price}€</div>
+                  <h2 className="text-lg font-semibold">{item.article_title}</h2>
+                  <p className="text-gray-600">{item.article_description.length > 100 ? item.description.slice(0, 100) + '...' : item.article_description}</p>
                   <div className="mt-2">
                     <span className="text-gray-500">Frais de livraison: </span>
-                    <span className="font-medium">{item.shipping}€</span>
+                    <span className="font-medium">{item.shipping_cost}€</span>
                   </div>
                   <div>
                     <span className="text-gray-500">Commission: </span>
-                    <span className="font-medium">{(item.price * 0.1).toFixed(2)}€ (10%)</span>
-                  </div>
-                  <div>
-                    <span className="text-gray-500">Expédié depuis: </span>
-                    <span className="font-medium">{item.sellerCity}</span>
+                    <span className="font-medium">{(item.article_price * 0.1).toFixed(2)}€ (10%)</span> 
                   </div>
                   <div className="flex items-center mt-4">
                     <label className="mr-2">Quantité:</label>

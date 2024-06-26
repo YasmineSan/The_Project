@@ -100,14 +100,14 @@ const AddArticlePage = () => {
         )}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <form ref={formRef} onSubmit={handleSubmit} className="space-y-4 md:order-2">
-            {/* <FormField
+            <FormField
               label="Titre de l'article"
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
               name="title"
-            /> */}
+            />
             <FormField
               label="Description de l'article"
               type="textarea"
