@@ -15,7 +15,7 @@ exports.addArticle = async (req, res) => {
         console.log('Request Body:', req.body); // Log le corps de la requête
         console.log('File:', req.file); // Log le fichier uploadé
 
-        const { article_description, article_price, shipping_cost, category_name } = req.body;
+        const { title, article_description, article_price, shipping_cost, category_name } = req.body;
         const article_photo = req.file;
         const userId = req.user.id;
 
@@ -54,6 +54,7 @@ exports.addArticle = async (req, res) => {
 
         // Insère l'article dans la base de données
         const articleResult = await pool.request()
+            .input('title', title)
             .input('article_description', article_description)
             .input('article_price', article_price)
             .input('shipping_cost', shipping_cost)
@@ -61,12 +62,14 @@ exports.addArticle = async (req, res) => {
             .input('article_photo', article_photo_url)
             .query(`
                 INSERT INTO Articles (
+                    title,
                     article_description,
                     article_price,
                     shipping_cost,
                     category_id,
                     article_photo
                 ) OUTPUT INSERTED.article_id VALUES (
+                    @title,
                     @article_description,
                     @article_price,
                     @shipping_cost,
@@ -113,7 +116,7 @@ exports.getAllArticlesByUser = async (req, res) => {
 exports.updateArticle = async (req, res) => {
     try {
         const { articleId } = req.params;
-        const { article_description, article_price, shipping_cost, category_name } = req.body;
+        const { title, article_description, article_price, shipping_cost, category_name } = req.body;
         const article_photo = req.file;
         const userId = req.user.id;
 
@@ -141,6 +144,7 @@ exports.updateArticle = async (req, res) => {
 
         await pool.request()
             .input('article_id', articleId)
+            .input('title', title)
             .input('article_description', article_description)
             .input('article_price', article_price)
             .input('shipping_cost', shipping_cost)
@@ -148,7 +152,8 @@ exports.updateArticle = async (req, res) => {
             .input('article_photo', article_photo_url)
             .query(`
                 UPDATE Articles
-                SET article_description = @article_description,
+                SET title = @title,
+                    article_description = @article_description,
                     article_price = @article_price,
                     shipping_cost = @shipping_cost,
                     category_name = @category_name,
