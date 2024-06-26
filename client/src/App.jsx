@@ -15,7 +15,6 @@ import FavoritePage from './pages/FavoritePage';
 import SingleArticlePage from './pages/SingleArticlePage';
 import AllArticles from './pages/AllArticles';
 import {RouterProvider, createBrowserRouter, createMemoryRouter, Outlet, useRouteError} from "react-router-dom"
-import { DetailedArticle } from './pages/DetailedArticle';
 
 
 
@@ -32,10 +31,6 @@ const router = createBrowserRouter([
       {
         path: 'login',
         element: <LoginInscriptionPage/>
-      },
-      {
-        path: 'articles',
-        element: <div>articles</div>
       },
       {
         path: 'contact',
@@ -76,7 +71,7 @@ const router = createBrowserRouter([
         element: <SingleArticlePage /> 
       },
       {
-        path: 'allarticles',
+        path: 'articles',
         element: <AllArticles /> 
       },
     ]

@@ -4,6 +4,7 @@ import { MdAddShoppingCart } from "react-icons/md";
 
 const SingleArticlePage = () => {
   const [article, setArticle] = useState([]);
+  const [ otherArticles, setOtherArticles ] = useState([])
   const [user, setUser] = useState({});
   const { articleId } = useParams();
 
@@ -11,7 +12,7 @@ const SingleArticlePage = () => {
 
   useEffect(() => {
 
-    const fetchArticle = async () => {// fetch pour récupérer l'article avec l'id correspondant (récupéré dans l'url)
+    const fetchOneArticle = async () => {// fetch pour récupérer l'article avec l'id correspondant (récupéré dans l'url)
       try {
         const response = await fetch(`https://4.233.138.141:3001/api/articles/${id}`, {
           method: 'GET',
@@ -32,7 +33,30 @@ const SingleArticlePage = () => {
       }
     };
 
-    fetchArticle();
+    fetchOneArticle();
+
+    const fetchArticles = async () => {// fetch pour récupérer d'autres articles de cet utilisateur
+      try {
+        const response = await fetch(`https://4.233.138.141:3001/api/articles/${article.user_id}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        console.log(response)
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        setOtherArticles(data);
+        
+      } catch (error) {
+        console.error('Error fetching articles:', error);
+      }
+    };
+
+    fetchArticles();
 
     
   }, []);
@@ -76,6 +100,25 @@ const SingleArticlePage = () => {
         </div>
         <div className="flex justify-end mt-6">
           <a href="/article" className="text-gold hover:underline">Retour aux articles</a>
+        </div>
+      </div>
+
+      <div>
+        <h2 className="text-2xl font-medium mb-6">Autres articles de cette boutique</h2>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 lg:gap-10">
+          {otherArticles.length > 0 ? (
+            otherArticles.map(article => (
+              <CardArticle
+                key={article.id}
+                id={article.id}
+                image={article.image}
+                title={article.title}
+                price={article.price}
+              />
+            ))
+          ) : (
+            <p className="text-gray-500">Pas d'articles à afficher</p>
+          )}
         </div>
       </div>
     </div>

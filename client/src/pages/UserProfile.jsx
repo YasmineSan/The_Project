@@ -116,6 +116,7 @@ export const UserProfile = () => {
           </div>
         </div>
       </div>
+      
       <div>
         <h2 className="text-2xl font-medium mb-6">{articles.length} articles</h2>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 lg:gap-10">
