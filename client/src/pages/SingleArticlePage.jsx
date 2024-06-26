@@ -1,26 +1,27 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { NavLink, useParams } from 'react-router-dom';
 import { FiHeart } from "react-icons/fi";
 import { MdAddShoppingCart } from "react-icons/md";
+import CardArticle from '../components/CardArticle'; // Assurez-vous que le chemin est correct
 
 const SingleArticlePage = () => {
-  const [article, setArticle] = useState([]);
-  const [ otherArticles, setOtherArticles ] = useState([])
+  const [article, setArticle] = useState({});
+  const [otherArticles, setOtherArticles] = useState([]);
   const [user, setUser] = useState({});
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState('');
   const { articleId } = useParams();
 
-  const id = articleId[1]
-
   useEffect(() => {
-
-    const fetchOneArticle = async () => {// fetch pour récupérer l'article avec l'id correspondant (récupéré dans l'url)
+    const fetchOneArticle = async () => {
       try {
-        const response = await fetch(`https://4.233.138.141:3001/api/articles/${id}`, {
+        const response = await fetch(`https://4.233.138.141:3001/api/articles/${articleId}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json'
           }
         });
-        console.log(response)
+
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -28,38 +29,91 @@ const SingleArticlePage = () => {
         const data = await response.json();
         setArticle(data);
         
+        // Fetch other articles by the same user
+        fetchArticles(data.user_id);
+        // Fetch user info
+        fetchUser(data.user_id);
       } catch (error) {
         console.error('Error fetching articles:', error);
       }
     };
 
-    fetchOneArticle();
-
-    const fetchArticles = async () => {// fetch pour récupérer d'autres articles de cet utilisateur
+    const fetchArticles = async (userId) => {
       try {
-        const response = await fetch(`https://4.233.138.141:3001/api/articles/${article.user_id}`, {
+        const response = await fetch(`https://4.233.138.141:3001/api/articles/user/${userId}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json'
           }
         });
-        console.log(response)
+
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
 
         const data = await response.json();
         setOtherArticles(data);
-        
       } catch (error) {
         console.error('Error fetching articles:', error);
       }
     };
 
-    fetchArticles();
+    const fetchUser = async (userId) => {
+      try {
+        const response = await fetch(`https://4.233.138.141:3001/api/users/${userId}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+          }
+        });
 
-    
-  }, []);
+        if (!response.ok) {
+          throw new Error('Failed to fetch user profile');
+        }
+
+        const data = await response.json();
+        setUser(data);
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+
+    fetchOneArticle();
+  }, [articleId]);
+
+  const handleAddToCart = async () => {
+    const number = 1;
+    const isAuthenticated = !!localStorage.getItem('authToken');
+
+    if (isAuthenticated) {
+      try {
+        const response = await fetch('https://4.233.138.141:3001/api/cart', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+          },
+          body: JSON.stringify({ id: articleId, number })
+        });
+
+        if (response.ok) {
+          setNotificationMessage('Article ajouté au panier !');
+          setShowNotification(true);
+          setTimeout(() => {
+            setShowNotification(false);
+            window.location.href = '/cart';
+          }, 2000); // Redirection après 2 secondes
+        } else {
+          console.error('Erreur lors de l\'ajout au panier', response.statusText);
+        }
+      } catch (error) {
+        console.error('Erreur réseau lors de l\'ajout au panier', error);
+      }
+    } else {
+      window.location.href = '/login';
+    }
+  };
 
   return (
     <div className="min-h-screen bg-slate-100 pt-10 pb-10">
@@ -73,11 +127,11 @@ const SingleArticlePage = () => {
           <div className="lg:ml-6 flex-grow">
             <div className="flex items-center mb-4">
               <img 
-                src="https://picsum.photos/200/300?grayscale" 
+                src={user.profile_image} 
                 alt="Utilisateur" 
                 className="w-12 h-12 rounded-full mr-4" 
               />
-              <span className="font-bold">Jean</span>
+              <span className="font-bold">{user.username}</span>
             </div>
             <h1 className="text-2xl font-bold mb-2">{article.article_title}</h1>
             <p className="text-xl text-gold mb-4">{article.article_price}</p>
@@ -88,18 +142,21 @@ const SingleArticlePage = () => {
               <button className="bg-white border border-gold text-gold py-2 px-4 rounded flex items-center justify-center hover:bg-gold hover:text-white transition-colors duration-300">
                 <span className="mr-2"><FiHeart /></span> Ajouter aux favoris
               </button>
-              <button className="bg-white border border-gold text-gold py-2 px-4 rounded flex items-center justify-center hover:bg-gold hover:text-white transition-colors duration-300">
+              <button 
+                onClick={handleAddToCart} 
+                className="bg-white border border-gold text-gold py-2 px-4 rounded flex items-center justify-center hover:bg-gold hover:text-white transition-colors duration-300"
+              >
                 <span className="mr-2"><MdAddShoppingCart /></span> Ajouter au panier
               </button>
             </div>
             <div className="text-sm text-gray-500 flex flex-col lg:flex-row justify-between">
-              <span>Expédié depuis : Liège</span>
-               <span>Date d'ajout : 10/06/24</span> {/*Ajouter la variable pour date d'ajout */}
+              <span>Expédié depuis : {user.city}</span>
+              <span>Date d'ajout : {new Date(article.created_at).toLocaleDateString()}</span>
             </div>
           </div>
         </div>
         <div className="flex justify-end mt-6">
-          <a href="/article" className="text-gold hover:underline">Retour aux articles</a>
+          <NavLink to="/articles" className="text-gold hover:underline">Retour aux articles</NavLink>
         </div>
       </div>
 
@@ -111,9 +168,9 @@ const SingleArticlePage = () => {
               <CardArticle
                 key={article.id}
                 id={article.id}
-                image={article.image}
-                title={article.title}
-                price={article.price}
+                image={article.article_photo}
+                title={article.article_title}
+                price={article.article_price}
               />
             ))
           ) : (
@@ -121,6 +178,12 @@ const SingleArticlePage = () => {
           )}
         </div>
       </div>
+
+      {showNotification && (
+        <div className="fixed bottom-4 right-4 bg-green-500 text-white py-2 px-4 rounded">
+          {notificationMessage}
+        </div>
+      )}
     </div>
   );
 };
