@@ -112,6 +112,29 @@ exports.getAllArticlesByUser = async (req, res) => {
     }
 };
 
+// Récupère un article spécifique d'un utilisateur
+exports.getArticleByUser = async (req, res) => {
+    try {
+        const { articleId } = req.params;
+        const pool = await poolPromise;
+        const result = await pool.request()
+            .input('article_id', articleId)
+            .query(`
+                SELECT a.*
+                FROM Articles a
+                INNER JOIN User_Article ua ON a.article_id = ua.article_id
+                WHERE a.article_id = @article_id
+            `);
+        const article = result.recordset[0];
+        if (!article) {
+            return res.status(404).send({ message: 'Article not found' });
+        }
+        res.json(article);
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+};
+
 // Met à jour un article
 exports.updateArticle = async (req, res) => {
     try {
