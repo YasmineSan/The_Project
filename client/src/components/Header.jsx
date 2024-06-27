@@ -89,7 +89,7 @@ const Header = () => {
       <nav className='fixed mx-auto border-b-2 border-gold top-0 left-0 right-0 bg-white bg-opacity-100 z-10'>
         <div className='flex container px-4 lg:px-10 items-center justify-between mx-auto'>
           <NavLink to="/" className='mr-5'>
-            <img src="craftify.png" alt="logo Craftify" className='w-20 mr-5' />
+            <img src="/craftify.png" alt="logo Craftify" className='w-20 mr-5' />
           </NavLink>
           
           <div className='flex items-center relative'>
