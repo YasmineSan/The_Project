@@ -227,15 +227,19 @@ exports.getArticleById = async (req, res) => {
         const { id } = req.params;
         const pool = await poolPromise;
 
+        console.log(`Fetching article with ID: ${id}`); // Ajout de log pour l'ID de l'article
+
         const result = await pool.request()
             .input('article_id', id)
             .query(`
-                SELECT a.*, u.photo as user_photo
+                SELECT a.*, u.profile_image as user_photo
                 FROM Articles a
                 INNER JOIN User_Article ua ON a.article_id = ua.article_id
                 INNER JOIN Users u ON ua.user_id = u.user_id
                 WHERE a.article_id = @article_id
             `);
+
+        console.log(`Query result: ${JSON.stringify(result.recordset)}`); // Ajout de log pour les résultats de la requête
 
         const article = result.recordset[0];
         if (!article) {
@@ -244,9 +248,12 @@ exports.getArticleById = async (req, res) => {
 
         res.json(article);
     } catch (err) {
+        console.error('Error fetching article:', err); // Log de l'erreur
         res.status(500).send({ message: err.message });
     }
 };
+
+
 
 // Ajoute une évaluation à un article
 exports.addEvaluation = async (req, res) => {
