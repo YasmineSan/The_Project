@@ -13,93 +13,102 @@ import {
 } from 'react-icons/fi';
 
 const SettingsPage = () => {
-  const [user, setUser] = useState({});
-  const [formData, setFormData] = useState({});
-  const [editingField, setEditingField] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchCurrentUser = async () => {
-      try {
-        // Mocked user data (replace with actual API request)
-        const mockUser = {
-          profilePhoto: 'https://via.placeholder.com/150',
-          username: 'john_doe',
-          firstName: 'John',
-          lastName: 'Doe',
-          biography: 'Software developer interested in web technologies.',
-          email: 'john.doe@example.com',
-          paypalAddress: 'john.doe.paypal@example.com',
-          registrationDate: '2024-06-27T10:30:00Z',
-          address: {
-            street: '123 Avenue Street',
-            number: '10',
-            box: 'A',
-            city: 'Paris',
-            postalCode: '75001',
-            country: 'France',
-          },
-          password: '************',
-        };
-        setUser(mockUser);
-        setFormData({ ...mockUser });
-        setLoading(false);
-      } catch (error) {
-        console.error('Error:', error);
-        setLoading(false);
+    const [user, setUser] = useState({});
+    const [formData, setFormData] = useState({});
+    const [editingField, setEditingField] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null); // State for error message
+  
+    useEffect(() => {
+      const fetchCurrentUser = async () => {
+        try {
+          // Mocked user data (replace with actual API request)
+          const mockUser = {
+            profilePhoto: 'https://via.placeholder.com/150',
+            username: 'john_doe',
+            firstName: 'John',
+            lastName: 'Doe',
+            biography: 'Software developer interested in web technologies.',
+            email: 'john.doe@example.com',
+            paypalAddress: 'john.doe.paypal@example.com',
+            registrationDate: '2024-06-27T10:30:00Z',
+            address: {
+              street: '123 Avenue Street',
+              number: '10',
+              box: 'A',
+              city: 'Paris',
+              postalCode: '75001',
+              country: 'France',
+            },
+            password: '************',
+          };
+          setUser(mockUser);
+          setFormData({ ...mockUser });
+          setLoading(false);
+        } catch (error) {
+          console.error('Error:', error);
+          setLoading(false);
+        }
+      };
+  
+      fetchCurrentUser();
+    }, []);
+  
+    const handleEditField = (fieldName) => {
+      setEditingField(fieldName);
+    };
+  
+    const handleCancelEdit = () => {
+      setFormData({ ...user }); // Reset formData to original user data
+      setEditingField(null); // Reset editingField state to hide input fields
+    };
+  
+    const handleSaveChanges = () => {
+      setUser({ ...formData }); // Update user data with formData
+      setEditingField(null); // Reset editingField state to hide input fields
+      // Here you would normally send formData to your backend API
+      console.log('Saving changes:', formData);
+    };
+  
+    const handleChange = (e) => {
+      const { name, value } = e.target;
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    };
+  
+    const handleProfilePhotoChange = (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        // Vérifier le type d'image
+        if (file.type === 'image/png' || file.type === 'image/jpeg') {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            setFormData({ ...formData, profilePhoto: reader.result });
+            setEditingField('profilePhoto'); // Activer l'édition de la photo de profil
+            setError(null); // Effacer l'erreur précédente si elle existe
+          };
+          reader.readAsDataURL(file);
+        } else {
+          // Afficher un message d'erreur pour informer l'utilisateur
+          setError('Le type de fichier n\'est pas supporté. Veuillez sélectionner un fichier PNG ou JPEG.');
+          // Réinitialiser l'input file pour effacer la sélection non valide
+          e.target.value = null;
+        }
       }
     };
-
-    fetchCurrentUser();
-  }, []);
-
-  const handleEditField = (fieldName) => {
-    setEditingField(fieldName);
-  };
-
-  const handleCancelEdit = () => {
-    setFormData({ ...user }); // Reset formData to original user data
-    setEditingField(null); // Reset editingField state to hide input fields
-  };
-
-  const handleSaveChanges = () => {
-    setUser({ ...formData }); // Update user data with formData
-    setEditingField(null); // Reset editingField state to hide input fields
-    // Here you would normally send formData to your backend API
-    console.log('Saving changes:', formData);
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
-
-  const handleProfilePhotoChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFormData({ ...formData, profilePhoto: reader.result });
-        setEditingField('profilePhoto'); // Active l'édition de la photo de profil
-      };
-      reader.readAsDataURL(file);
-    }
-  };
   
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-64 w-64"></div>
-      </div>
-    );
-  }
+    if (loading) {
+      return (
+        <div className="flex justify-center items-center h-screen">
+          <div className="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-64 w-64"></div>
+        </div>
+      );
+    }
 
   return (
-    <main className="container mx-auto px-4 sm:px-6 py-32">
+    <main className="container mx-auto px-4 sm:px-6 pt-36 pb-20">
       <div className="bg-white shadow-lg rounded-lg p-8">
         <h1 className="text-3xl font-medium mb-6">Paramètres du compte</h1>
 
@@ -121,11 +130,14 @@ const SettingsPage = () => {
               <input
                 id="profilePhotoInput"
                 type="file"
-                accept="image/*"
+                accept="image/png, image/jpeg"
                 onChange={handleProfilePhotoChange}
                 className="hidden"
               />
             </div>
+            {error && (
+              <p className="text-red-500 text-sm mt-2">{error}</p>
+            )}
           </div>
 
           {/* Username */}
@@ -401,16 +413,6 @@ const SettingsPage = () => {
                       type="text"
                       name="city"
                       value={formData.address.city}
-                      onChange={handleChange}
-                      className="border border-gray-300 focus:outline-none focus:border-gold rounded-md px-4 py-2 w-full transition-all duration-300 ease-in-out transform focus:scale-105"
-                    />
-                  </div>
-                  <div className="flex flex-col md:col-span-2">
-                    <label className="text-gray-500 font-medium mb-2">Pays</label>
-                    <input
-                      type="text"
-                      name="country"
-                      value={formData.address.country}
                       onChange={handleChange}
                       className="border border-gray-300 focus:outline-none focus:border-gold rounded-md px-4 py-2 w-full transition-all duration-300 ease-in-out transform focus:scale-105"
                     />
