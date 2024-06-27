@@ -42,7 +42,7 @@ const SingleArticlePage = () => {
 
     const fetchArticles = async (userId) => {
       try {
-        const response = await fetch(`http://4.233.138.141:3001/api/articles/user/${userId}`, {
+        const response = await fetch(`http://4.233.138.141:3001/api/articles/user/${userId}/articles`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json'
@@ -203,12 +203,12 @@ const SingleArticlePage = () => {
         <h2 className="text-2xl font-medium mb-6">Autres articles de cette boutique</h2>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 lg:gap-10">
           {otherArticles.length > 0 ? (
-            otherArticles.map(article => (
+            otherArticles.map((article, i) => (
               <CardArticle
-                key={article.id}
-                id={article.id}
+                key={i}
+                id={article.article_id}
                 image={article.article_photo}
-                title={article.article_title}
+                title={article.title}
                 price={article.article_price}
               />
             ))

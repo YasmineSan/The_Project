@@ -40,9 +40,9 @@ export const UserProfile = () => {
       fetchOtherUserProfile();
 
       const fetchOtherUserArticles = async() => {//Récupérer les articles d'un autre utilisateur'
-        const idUser = userId[1]
+        const id = userId[1]
         try {
-          const response = await fetch(`http://4.233.138.141:3001/api/articles/user/${idUser}`, {
+          const response = await fetch(`http://4.233.138.141:3001/api/articles/user/${id}/articles`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -89,7 +89,7 @@ export const UserProfile = () => {
 
       const fetchUserArticles = async() => {//Récupérer les articles de l'utilisateur en cours
         try {
-          const response = await fetch(`http://4.233.138.141:3001/api/articles/user`, {
+          const response = await fetch(`http://4.233.138.141:3001/api/users/${userId}`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',

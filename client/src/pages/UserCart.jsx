@@ -96,12 +96,12 @@ export const UserCart = () => {
             <div key={item.article_id} className="border rounded-lg p-6 mb-4 relative transition-transform duration-300 hover:scale-105">
               <div className="flex items-start mb-4">
                 <NavLink to={`/articles/:${item.article_id}`} className="mr-8">
-                  <img src={item.article_photo} alt={item.article_title} className="w-32 h-32 object-cover" />
+                  <img src={item.article_photo} alt={item.title} className="w-32 h-32 object-cover" />
                 </NavLink>
                 <div className="flex-1">
                   <div className="text-xl mb-2 font-medium">{item.article_price}€</div>
                   <NavLink to={`/articles/:${item.article_id}`}>
-                    <h2 className="text-lg font-semibold">{item.article_title}</h2>
+                    <h2 className="text-lg font-semibold">{item.title}</h2>
                   </NavLink>
                   <p className="text-gray-600">{item.article_description.length > 100 ? item.article_description.slice(0, 100) + '...' : item.article_description}</p>
                   <div className="mt-2">
