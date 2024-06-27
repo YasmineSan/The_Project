@@ -1,12 +1,27 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { FiHeart, FiTrash } from 'react-icons/fi';
 import { IoHeartDislikeOutline } from 'react-icons/io5';
 
 const FavoriteCard = ({ id, image, title, price, onRemoveFromFavorites }) => {
 
-  const handleRemoveClick = () => {
-    onRemoveFromFavorites(id);
+  const handleRemoveClick = async () => {
+    try {
+      const response = await fetch(`https://4.233.138.141:3001/api/favorites/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      onRemoveFromFavorites(id);
+    } catch (error) {
+      console.error('Error removing favorite article:', error);
+    }
   };
 
   return (

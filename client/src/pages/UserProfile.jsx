@@ -109,13 +109,16 @@ export const UserProfile = () => {
             </div>
             
             <p className="text-gray-700 mb-8">{user.biography}</p>
+
             <button className="bg-gold text-white py-2 px-4 rounded-full shadow-md border border-gold hover:bg-white hover:text-gold hover:border hover:border-gold transition-all duration-300 flex items-center">
               Contacter
               <FiMail className="ml-2" />
             </button>
+            
           </div>
         </div>
       </div>
+      
       <div>
         <h2 className="text-2xl font-medium mb-6">{articles.length} articles</h2>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 lg:gap-10">

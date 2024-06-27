@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { FiX } from 'react-icons/fi';
+import { NavLink } from 'react-router-dom';
 
 export const UserCart = () => {
   const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Appel réel à l'API pour récupérer le panier
     const fetchCart = async () => {
       try {
         const response = await fetch('https://4.233.138.141:3001/api/cart/user', {
@@ -22,7 +22,7 @@ export const UserCart = () => {
         }
 
         const data = await response.json();
-        console.log(data)
+        console.log(data);
         setCart(data);
         setLoading(false);
       } catch (error) {
@@ -95,11 +95,15 @@ export const UserCart = () => {
           {cart.map((item) => (
             <div key={item.article_id} className="border rounded-lg p-6 mb-4 relative transition-transform duration-300 hover:scale-105">
               <div className="flex items-start mb-4">
-                <img src={item.article_image} alt={item.article_title} className="w-32 h-32 object-cover mr-8 " />
+                <NavLink to={`/articles/:${item.article_id}`} className="mr-8">
+                  <img src={item.article_image} alt={item.article_title} className="w-32 h-32 object-cover" />
+                </NavLink>
                 <div className="flex-1">
                   <div className="text-xl mb-2 font-medium">{item.article_price}€</div>
-                  <h2 className="text-lg font-semibold">{item.article_title}</h2>
-                  <p className="text-gray-600">{item.article_description.length > 100 ? item.description.slice(0, 100) + '...' : item.article_description}</p>
+                  <NavLink to={`/articles/:${item.article_id}`}>
+                    <h2 className="text-lg font-semibold">{item.article_title}</h2>
+                  </NavLink>
+                  <p className="text-gray-600">{item.article_description.length > 100 ? item.article_description.slice(0, 100) + '...' : item.article_description}</p>
                   <div className="mt-2">
                     <span className="text-gray-500">Frais de livraison: </span>
                     <span className="font-medium">{item.shipping_cost}€</span>
@@ -123,7 +127,7 @@ export const UserCart = () => {
                 </div>
               </div>
               <button onClick={() => handleRemoveItem(item.id)} className="absolute top-4 right-4 mt-2 mr-2 lg:ml-4 transition-transform duration-300 hover:scale-125">
-                <FiX className="text-red-600 w-6 h-6" /> {/* Taille ajustée */}
+                <FiX className="text-red-600 w-6 h-6" />
               </button>
             </div>
           ))}
