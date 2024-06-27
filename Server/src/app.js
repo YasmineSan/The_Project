@@ -20,7 +20,7 @@ app.use(cors({
 //   max: 100 // Limite chaque IP à 100 requêtes par fenêtre de 15 minutes
 // });
 
-app.use(limiter);
+// app.use(limiter);
 
 // Middleware pour parser les requêtes JSON et URL-encoded
 app.use(express.json({ limit: '50mb' }));
