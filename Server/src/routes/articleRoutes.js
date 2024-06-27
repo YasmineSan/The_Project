@@ -20,7 +20,7 @@ const upload = multer({
 // Routes publiques
 router.get('/public/articles', articleController.getAllArticles);
 router.get('/:articleId/price', articleController.getArticlePrice);
-router.get('/articles/:articleId', articleController.getArticleByUser);
+router.get('/articles/:id', articleController.getArticleById);
 router.get('/prices', articleController.getAllArticlePrices);
 router.get('/categories/:categoryId/prices', (req, res, next) => {
     console.log(`Received request for category: ${req.params.categoryId}`);
