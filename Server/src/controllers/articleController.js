@@ -226,7 +226,13 @@ exports.getArticleById = async (req, res) => {
 
         const result = await pool.request()
             .input('article_id', id)
-            .query('SELECT * FROM Articles WHERE article_id = @article_id');
+            .query(`
+                SELECT a.*, u.photo as user_photo
+                FROM Articles a
+                INNER JOIN User_Article ua ON a.article_id = ua.article_id
+                INNER JOIN Users u ON ua.user_id = u.user_id
+                WHERE a.article_id = @article_id
+            `);
 
         const article = result.recordset[0];
         if (!article) {
