@@ -224,6 +224,8 @@ exports.getArticleById = async (req, res) => {
         const { id } = req.params;
         const pool = await poolPromise;
 
+        console.log(`Fetching article with ID: ${id}`); // Ajout de log pour l'ID de l'article
+
         const result = await pool.request()
             .input('article_id', id)
             .query(`
@@ -234,6 +236,8 @@ exports.getArticleById = async (req, res) => {
                 WHERE a.article_id = @article_id
             `);
 
+        console.log(`Query result: ${JSON.stringify(result.recordset)}`); // Ajout de log pour les résultats de la requête
+
         const article = result.recordset[0];
         if (!article) {
             return res.status(404).send({ message: 'Article not found' });
@@ -241,9 +245,11 @@ exports.getArticleById = async (req, res) => {
 
         res.json(article);
     } catch (err) {
+        console.error('Error fetching article:', err); // Log de l'erreur
         res.status(500).send({ message: err.message });
     }
 };
+
 
 
 // Ajoute une évaluation à un article
