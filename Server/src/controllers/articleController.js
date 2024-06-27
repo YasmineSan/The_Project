@@ -227,7 +227,7 @@ exports.getArticleById = async (req, res) => {
         const result = await pool.request()
             .input('article_id', id)
             .query(`
-                SELECT a.*, u.photo as user_photo
+                SELECT a.*, u.profile_image as user_photo
                 FROM Articles a
                 INNER JOIN User_Article ua ON a.article_id = ua.article_id
                 INNER JOIN Users u ON ua.user_id = u.user_id
@@ -244,6 +244,7 @@ exports.getArticleById = async (req, res) => {
         res.status(500).send({ message: err.message });
     }
 };
+
 
 // Ajoute une évaluation à un article
 exports.addEvaluation = async (req, res) => {
