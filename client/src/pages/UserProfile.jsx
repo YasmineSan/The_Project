@@ -142,7 +142,7 @@ export const UserProfile = () => {
                 <FiMail className="ml-2" />
               </button>
             ) : (
-              <NavLink to="/settings" className="bg-gold text-white py-2 px-4 rounded-full shadow-md border border-gold hover:bg-white hover:text-gold hover:border hover:border-gold transition-all duration-300 flex items-center">
+              <NavLink to="/usersettings" className="bg-gold text-white py-2 px-4 rounded-full shadow-md border border-gold hover:bg-white hover:text-gold hover:border hover:border-gold transition-all duration-300 flex items-center">
                 Paramètres
                 <FiSettings className="ml-2" />
               </NavLink>
