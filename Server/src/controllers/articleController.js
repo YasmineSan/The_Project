@@ -253,7 +253,32 @@ exports.getArticleById = async (req, res) => {
     }
 };
 
+// Récupère tous les articles d'un utilisateur par user_id (public)
+exports.getArticlesByUserId = async (req, res) => {
+    try {
+        const { userId } = req.params; // Récupère le user_id des paramètres de la requête
+        const pool = await poolPromise;
 
+        const result = await pool.request()
+            .input('user_id', userId)
+            .query(`
+                SELECT a.*, u.profile_image as user_photo, u.user_id
+                FROM Articles a
+                INNER JOIN User_Article ua ON a.article_id = ua.article_id
+                INNER JOIN Users u ON ua.user_id = u.user_id
+                WHERE ua.user_id = @user_id
+            `);
+
+        if (result.recordset.length === 0) {
+            return res.status(404).send({ message: 'No articles found for this user' });
+        }
+
+        res.json(result.recordset);
+    } catch (err) {
+        console.error('Error fetching articles:', err); // Log de l'erreur
+        res.status(500).send({ message: err.message });
+    }
+};
 
 
 // Ajoute une évaluation à un article
