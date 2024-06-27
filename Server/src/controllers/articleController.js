@@ -60,6 +60,7 @@ exports.addArticle = async (req, res) => {
             .input('shipping_cost', shipping_cost)
             .input('category_id', category_id)
             .input('article_photo', article_photo_url)
+            .input('date_added', new Date()) // Ajoute la date actuelle
             .query(`
                 INSERT INTO Articles (
                     title,
@@ -67,14 +68,16 @@ exports.addArticle = async (req, res) => {
                     article_price,
                     shipping_cost,
                     category_id,
-                    article_photo
+                    article_photo,
+                    date_added
                 ) OUTPUT INSERTED.article_id VALUES (
                     @title,
                     @article_description,
                     @article_price,
                     @shipping_cost,
                     @category_id,
-                    @article_photo
+                    @article_photo,
+                    @date_added
                 )
             `);
 

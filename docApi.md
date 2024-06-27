@@ -86,10 +86,12 @@ Pour que les développeurs front-end puissent utiliser efficacement votre API, v
 
       {
         "article_photo":"file",
+        "title": "string",
         "article_description":"string",
         "article_price":"number",
         "shipping_cost":"number",
-        "category_name":"string"
+        "category_name":"string",
+        "date_added":"string"
         }
       ```
     - Token : Oui
