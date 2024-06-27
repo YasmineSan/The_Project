@@ -38,6 +38,31 @@ export const UserProfile = () => {
       };
 
       fetchOtherUserProfile();
+
+      const fetchOtherUserArticles = async() => {//Récupérer les articles d'un autre utilisateur'
+        const idUser = userId[1]
+        try {
+          const response = await fetch(`http://4.233.138.141:3001/api/articles/user/${idUser}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+            }
+          });
+  
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+  
+          const data = await response.json();
+          setArticles(data);
+        } catch (error) {
+          console.error('Error fetching articles:', error);
+        }
+      }
+
+      fetchOtherUserArticles();
+
     } else {// Si c'est l'utilisateur en cours
 
       const fetchCurrentUser = async () => {//Récupérer le profil de l'utilisateur en cours
@@ -130,7 +155,7 @@ export const UserProfile = () => {
                 key={article.article_id}
                 id={article.article_id}
                 image={article.article_photo}
-                title={article.article_title}
+                title={article.title}
                 price={article.article_price}
               />
             ))

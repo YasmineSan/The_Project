@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { IoHeartDislikeOutline } from 'react-icons/io5';
 
 const FavoriteCard = ({ id, image, title, price, onRemoveFromFavorites }) => {
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState('');
 
   const handleRemoveClick = async () => {
     try {
@@ -18,7 +20,12 @@ const FavoriteCard = ({ id, image, title, price, onRemoveFromFavorites }) => {
         throw new Error('Network response was not ok');
       }
 
-      onRemoveFromFavorites(id);
+      setNotificationMessage('Article retiré des favoris !');
+      setShowNotification(true);
+      setTimeout(() => {
+        setShowNotification(false);
+        onRemoveFromFavorites(id);
+      }, 2000);  // Message pendant 2 secondes
     } catch (error) {
       console.error('Error removing favorite article:', error);
     }
@@ -44,6 +51,11 @@ const FavoriteCard = ({ id, image, title, price, onRemoveFromFavorites }) => {
           </button>
         </div>
       </div>
+      {showNotification && (
+        <div className="fixed bottom-4 right-4 bg-red-500 text-white py-2 px-4 rounded">
+          {notificationMessage}
+        </div>
+      )}
     </div>
   );
 };
