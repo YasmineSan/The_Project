@@ -38,6 +38,31 @@ export const UserProfile = () => {
       };
 
       fetchOtherUserProfile();
+
+      const fetchOtherUserArticles = async() => {//Récupérer les articles d'un autre utilisateur'
+        const id = userId[1]
+        try {
+          const response = await fetch(`http://4.233.138.141:3001/api/articles/user/${id}/articles`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+            }
+          });
+  
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+  
+          const data = await response.json();
+          setArticles(data);
+        } catch (error) {
+          console.error('Error fetching articles:', error);
+        }
+      }
+
+      fetchOtherUserArticles();
+
     } else {// Si c'est l'utilisateur en cours
 
       const fetchCurrentUser = async () => {//Récupérer le profil de l'utilisateur en cours
@@ -49,12 +74,12 @@ export const UserProfile = () => {
             'Authorization': `Bearer ${localStorage.getItem('authToken')}`
           }})
         
-        console.log(response)
         if (response.ok) {
+          
             setUser(await response.json());
-
+            
         } else {
-            alert('Failed to fetch user profile');
+            console.log('Failed to fetch user profile');
         }
       } catch (error) {
         console.error('Error:', error);
@@ -64,24 +89,26 @@ export const UserProfile = () => {
 
       const fetchUserArticles = async() => {//Récupérer les articles de l'utilisateur en cours
         try {
-          const response = await fetch(`http://4.233.138.141:3001/api/users/dashboard`, {
+          const response = await fetch(`http://4.233.138.141:3001/api/users/${userId}`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
               'Authorization': `Bearer ${localStorage.getItem('authToken')}`
             }})
           
-          console.log(response)
           if (response.ok) {
-              setUser(await response.json());
+            const data = await response.json()
+            setArticles(data);
   
           } else {
-              alert('Failed to fetch user profile');
+            console.log('Failed to fetch user articles');
           }
         } catch (error) {
           console.error('Error:', error);
         }
       }
+
+      fetchUserArticles();
       
     }
   }, []);
@@ -125,11 +152,11 @@ export const UserProfile = () => {
           {articles.length > 0 ? (
             articles.map(article => (
               <CardArticle
-                key={article.id}
-                id={article.id}
-                image={article.image}
+                key={article.article_id}
+                id={article.article_id}
+                image={article.article_photo}
                 title={article.title}
-                price={article.price}
+                price={article.article_price}
               />
             ))
           ) : (
