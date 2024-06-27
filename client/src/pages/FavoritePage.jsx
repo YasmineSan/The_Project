@@ -7,7 +7,7 @@ const FavoritePage = () => {
   useEffect(() => {
     const fetchFavoriteArticles = async () => {
       try {
-        const response = await fetch('https://4.233.138.141:3001/api/favorites', {
+        const response = await fetch('http://4.233.138.141:3001/api/favorites', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

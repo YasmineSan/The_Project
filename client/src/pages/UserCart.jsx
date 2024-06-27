@@ -9,7 +9,7 @@ export const UserCart = () => {
   useEffect(() => {
     const fetchCart = async () => {
       try {
-        const response = await fetch('https://4.233.138.141:3001/api/cart/user', {
+        const response = await fetch('http://4.233.138.141:3001/api/cart/user', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -36,7 +36,7 @@ export const UserCart = () => {
 
   const handleRemoveItem = async (id) => {
     try {
-      const response = await fetch(`https://4.233.138.141:3001/api/cart/${id}`, {
+      const response = await fetch(`http://4.233.138.141:3001/api/cart/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

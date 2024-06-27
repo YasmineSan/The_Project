@@ -17,7 +17,7 @@ const CardArticle = ({ id, image, title, price }) => {
     const number = 1;
     if (isAuthenticated) {
       try {
-        const response = await fetch('https://4.233.138.141:3001/api/cart', {
+        const response = await fetch('http://4.233.138.141:3001/api/cart', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

@@ -15,7 +15,7 @@ const SingleArticlePage = () => {
   useEffect(() => {
     const fetchOneArticle = async () => {
       try {
-        const response = await fetch(`https://4.233.138.141:3001/api/articles/${articleId}`, {
+        const response = await fetch(`http://4.233.138.141:3001/api/articles/${articleId}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json'
@@ -40,7 +40,7 @@ const SingleArticlePage = () => {
 
     const fetchArticles = async (userId) => {
       try {
-        const response = await fetch(`https://4.233.138.141:3001/api/articles/user/${userId}`, {
+        const response = await fetch(`http://4.233.138.141:3001/api/articles/user/${userId}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json'
@@ -60,7 +60,7 @@ const SingleArticlePage = () => {
 
     const fetchUser = async (userId) => {
       try {
-        const response = await fetch(`https://4.233.138.141:3001/api/users/${userId}`, {
+        const response = await fetch(`http://4.233.138.141:3001/api/users/${userId}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

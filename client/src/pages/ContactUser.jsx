@@ -31,7 +31,7 @@ const ContactUser = () => {
 
     const fetchOtherUserProfile = async () => {//Récupérer le profil de l'autre utilisateur
         try {
-          const response = await fetch(`https://4.233.138.141:3001/api/users/${id}`, {
+          const response = await fetch(`http://4.233.138.141:3001/api/users/${id}`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
