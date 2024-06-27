@@ -8,7 +8,7 @@ const CarouselBanner = () => {
     <section className='container mx-auto px-12'>
       <Carousel autoPlay infiniteLoop dynamicHeight showThumbs={false} showStatus={false} swipeable showArrows={false} className="rounded-xl overflow-hidden max-h-[550px]">
         <div className='relative'>
-          <div className="absolute inset-0 bg-black opacity-20 "></div>
+          <div className="absolute inset-0 bg-black opacity-50 "></div>
           <img
           className="w-full h-full object-cover max-h-[550px]"
           src="artisan-atelier.jpg"

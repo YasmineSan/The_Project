@@ -32,7 +32,7 @@ const Footer = () => {
         <div className="footer-right">
           <NavLink
             to="/contact"
-            className="py-2 px-4 border border-gold rounded-full text-darkGrey hover:bg-gold hover:text-white"
+            className="py-2 px-4 border border-gold rounded-full text-darkGrey hover:bg-gold hover:text-white duration-300"
           >
             Contactez-nous
           </NavLink>

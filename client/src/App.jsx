@@ -10,7 +10,12 @@ import Contact from './pages/Contact';
 import { UserCart } from './pages/UserCart';
 import AddArticlePage from './pages/AddArticlePage';
 import UserProfile from './pages/UserProfile';
+import CommentPage from './pages/CommentPage';
+import FavoritePage from './pages/FavoritePage';
+// import SingleArticlePage from './pages/SingleArticlePage';
 import {RouterProvider, createBrowserRouter, createMemoryRouter, Outlet, useRouteError} from "react-router-dom"
+import { DetailedArticle } from './pages/DetailedArticle';
+
 
 
 const router = createBrowserRouter([
@@ -30,6 +35,10 @@ const router = createBrowserRouter([
       {
         path: 'articles',
         element: <div>articles</div>
+      },
+      {
+        path: 'article', //'userProfile/:userId'
+        element: <DetailedArticle />
       },
       {
         path: 'contact',
@@ -56,6 +65,14 @@ const router = createBrowserRouter([
         path: 'userProfile/:userId',
         element: <UserProfile />
 
+      },
+      {
+        path: 'comment',
+        element: <CommentPage />
+      },
+      {
+        path: 'favorite',
+        element: <FavoritePage /> 
       },
     ]
   }

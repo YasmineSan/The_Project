@@ -126,7 +126,7 @@ export const UserProfile = (id) => {
 
       const fetchUserProfile = async () => {
         try {
-          const response = await fetch(`http://4.233.138.141:3001/api/users/:${id}`, {
+          const response = await fetch(`https://4.233.138.141:3001/api/users/:${id}`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -152,7 +152,7 @@ export const UserProfile = (id) => {
 
       const fetchUser = async () => {
         try {
-        const response = await fetch(`http://4.233.138.141:3001/api/users/dashboard`, {
+        const response = await fetch(`https://4.233.138.141:3001/api/users/dashboard`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
