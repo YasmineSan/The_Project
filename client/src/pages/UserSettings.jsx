@@ -108,7 +108,7 @@ const SettingsPage = () => {
     }
 
   return (
-    <main className="container mx-auto px-4 sm:px-6 pt-36 pb-20">
+    <main className="container mx-auto px-4 sm:px-20 pt-36 pb-20 bg-slate-100">
       <div className="bg-white shadow-lg rounded-lg p-8">
         <h1 className="text-3xl font-medium mb-6">Paramètres du compte</h1>
 
@@ -144,7 +144,7 @@ const SettingsPage = () => {
           <div className="flex flex-col mb-4">
             <h4 className="text-gray-500 font-medium mb-2 cursor-pointer">Nom d'utilisateur</h4>
             <div className="flex items-center">
-              <FiUser className="text-gray-500 w-6 h-6 mr-2" />
+              <FiUser className="text-gold w-6 h-6 mr-2" />
               {editingField === 'username' ? (
                 <input
                   type="text"
@@ -177,7 +177,7 @@ const SettingsPage = () => {
           <div className="flex flex-col mb-4">
             <h4 className="text-gray-500 font-medium mb-2 cursor-pointer">Nom et prénom</h4>
             <div className="flex items-center">
-              <FiUser className="text-gray-500 w-6 h-6 mr-2" />
+              <FiUser className="text-gold w-6 h-6 mr-2" />
               {editingField === 'name' ? (
                 <div className="grid grid-cols-2 gap-4">
                   <input
@@ -221,7 +221,7 @@ const SettingsPage = () => {
           <div className="flex flex-col mb-4">
             <h4 className="text-gray-500 font-medium mb-2 cursor-pointer">Biographie</h4>
             <div className="flex items-center">
-              <FiInfo className="text-gray-500 w-6 h-6 mr-2" />
+              <FiInfo className="text-gold w-6 h-6 mr-2" />
               {editingField === 'biography' ? (
                 <textarea
                   name="biography"
@@ -253,7 +253,7 @@ const SettingsPage = () => {
           <div className="flex flex-col mb-4">
             <h4 className="text-gray-500 font-medium mb-2 cursor-pointer">Adresse email</h4>
             <div className="flex items-center">
-              <FiMail className="text-gray-500 w-6 h-6 mr-2" />
+              <FiMail className="text-gold w-6 h-6 mr-2" />
               {editingField === 'email' ? (
                 <input
                   type="email"
@@ -286,7 +286,7 @@ const SettingsPage = () => {
           <div className="flex flex-col mb-4">
             <h4 className="text-gray-500 font-medium mb-2 cursor-pointer">Adresse PayPal</h4>
             <div className="flex items-center">
-              <FiMail className="text-gray-500 w-6 h-6 mr-2" />
+              <FiMail className="text-gold w-6 h-6 mr-2" />
               {editingField === 'paypalAddress' ? (
                 <input
                   type="email"
@@ -320,7 +320,7 @@ const SettingsPage = () => {
           <div className="flex flex-col mb-4">
             <h4 className="text-gray-500 font-medium mb-2 cursor-pointer">Mot de passe</h4>
             <div className="flex items-center">
-              <FiLock className="text-gray-500 w-6 h-6 mr-2" />
+              <FiLock className="text-gold w-6 h-6 mr-2" />
               {editingField === 'password' ? (
                 <input
                   type="password"
@@ -353,7 +353,7 @@ const SettingsPage = () => {
           <div className="flex flex-col mb-4">
             <h4 className="text-gray-500 font-medium mb-2 cursor-pointer">Date d'inscription</h4>
             <div className="flex items-center">
-              <FiCalendar className="text-gray-500 w-6 h-6 mr-2" />
+              <FiCalendar className="text-gold w-6 h-6 mr-2" />
               <p className="text-gray-700">
                 {new Date(formData.registrationDate).toLocaleDateString('fr-FR')}
               </p>
@@ -364,7 +364,7 @@ const SettingsPage = () => {
           <div className="flex flex-col mb-4">
             <h4 className="text-gray-500 font-medium mb-2 cursor-pointer">Adresse</h4>
             <div className="flex items-center">
-              <FiMapPin className="text-gray-500 w-6 h-6 mr-2" />
+              <FiMapPin className="text-gold w-6 h-6 mr-2" />
               {editingField === 'address' ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="flex flex-col">
