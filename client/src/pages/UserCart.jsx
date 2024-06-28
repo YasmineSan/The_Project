@@ -88,7 +88,7 @@ export const UserCart = () => {
         throw new Error('Failed to delete item');
       }
 
-      const updatedCart = cart.filter(item => item.id !== id);
+      const updatedCart = cart.filter(item => item.article_id !== id);
       setCart(updatedCart);
     } catch (error) {
       console.error('Error:', error);
@@ -96,24 +96,24 @@ export const UserCart = () => {
   };
 
   const handleQuantityChange = async (id, quantity) => {
-    // try {
-    //   const response = await fetch(`https://4.233.138.141:3001/api/cart/${id}`, {
-    //     method: 'PUT',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //       'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-    //     },
-    //     body: JSON.stringify({ quantity })
-    //   });
+    try {
+      const response = await fetch(`https://4.233.138.141:3001/api/cart/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+        },
+        body: JSON.stringify({ quantity })
+      });
 
-    //   if (!response.ok) {
-    //     throw new Error('Failed to update quantity');
-    //   }
+      if (!response.ok) {
+        throw new Error('Failed to update quantity');
+      }
 
-    //   setCart(cart.map(item => item.id === id ? { ...item, quantity } : item));
-    // } catch (error) {
-    //   console.error('Error:', error);
-    // }
+      setCart(cart.map(item => item.article_id === id ? { ...item, quantity } : item));
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
   const subtotal = cart.reduce((acc, item) => acc + item.article_price * item.quantity, 0);
@@ -214,4 +214,3 @@ export const UserCart = () => {
 };
 
 export default UserCart;
-

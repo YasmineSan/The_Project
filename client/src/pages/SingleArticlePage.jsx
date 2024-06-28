@@ -13,6 +13,7 @@ const SingleArticlePage = () => {
   const { articleId } = useParams();
 
   useEffect(() => {
+    window.scrollTo(0, 0); // Scroll to top
     const fetchOneArticle = async () => {
       try {
         const response = await fetch(`http://4.233.138.141:3001/api/articles/articles/${articleId}`, {
@@ -96,7 +97,7 @@ const SingleArticlePage = () => {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${localStorage.getItem('authToken')}`
           },
-          body: JSON.stringify({ id: articleId, number })
+          body: JSON.stringify({ "articleId": articleId, "quantity": number })
         });
 
         if (response.ok) {
