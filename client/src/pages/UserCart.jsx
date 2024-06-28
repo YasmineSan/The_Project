@@ -88,37 +88,16 @@ export const UserCart = () => {
         throw new Error('Failed to delete item');
       }
 
-      const updatedCart = cart.filter(item => item.article_id !== id);
+      const updatedCart = cart.filter(item => item.id !== id);
       setCart(updatedCart);
     } catch (error) {
       console.error('Error:', error);
     }
   };
 
-  const handleQuantityChange = async (id, quantity) => {
-    try {
-      const response = await fetch(`https://4.233.138.141:3001/api/cart/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-        },
-        body: JSON.stringify({ quantity })
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to update quantity');
-      }
-
-      setCart(cart.map(item => item.article_id === id ? { ...item, quantity } : item));
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
-
-  const subtotal = cart.reduce((acc, item) => acc + item.article_price * item.quantity, 0);
-  const totalShipping = cart.reduce((acc, item) => acc + item.shipping_cost * item.quantity, 0);
-  const totalCommission = cart.reduce((acc, item) => acc + (item.article_price * 0.1 * item.quantity), 0);
+  const subtotal = cart.reduce((acc, item) => acc + item.article_price * 1, 0);
+  const totalShipping = cart.reduce((acc, item) => acc + item.shipping_cost * 1, 0);
+  const totalCommission = cart.reduce((acc, item) => acc + (item.article_price * 0.1 * 1), 0);
   const total = subtotal + totalShipping + totalCommission;
 
   if (loading) {
@@ -135,7 +114,7 @@ export const UserCart = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="col-span-2">
             {cart.map((item) => (
-              <div key={item.article_id} className="border rounded-lg p-4 mb-4 bg-white relative">
+              <div key={item.article_id} className="border rounded-lg p-4 mb-4 bg-white relative transition-transform duration-300 hover:scale-105">
                 <div className="flex flex-col md:flex-row items-start mb-4">
                   <NavLink to={`/articles/:${item.article_id}`} className="mr-0 md:mr-8 mb-4 md:mb-0">
                     <img src={item.article_photo} alt={item.title} className="w-32 h-32 object-cover" />
@@ -154,17 +133,9 @@ export const UserCart = () => {
                       <span className="text-gray-500">Commission: </span>
                       <span className="font-medium">{(item.article_price * 0.1).toFixed(2)}€ (10%)</span> 
                     </div>
-                    <div className="flex items-center mt-4">
-                      <label className="mr-2">Quantité:</label>
-                      <select
-                        value={item.quantity}
-                        onChange={(e) => handleQuantityChange(item.article_id, parseInt(e.target.value))}
-                        className="border rounded px-2 py-1 transition duration-300 hover:bg-gray-200"
-                      >
-                        {[...Array(10).keys()].map(x => (
-                          <option key={x + 1} value={x + 1}>{x + 1}</option>
-                        ))}
-                      </select>
+                    <div className="mt-4">
+                      <span className="text-gray-500">Quantité: </span>
+                      <span className="font-medium">1</span>
                     </div>
                   </div>
                 </div>

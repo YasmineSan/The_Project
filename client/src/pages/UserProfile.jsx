@@ -137,10 +137,10 @@ export const UserProfile = () => {
             <p className="text-gray-700 mb-8">{user.biography}</p>
 
             {userId ? (
-              <button className="bg-gold text-white py-2 px-4 rounded-full shadow-md border border-gold hover:bg-white hover:text-gold hover:border hover:border-gold transition-all duration-300 flex items-center">
+              <NavLink to={`/contactUser/${user.user_id}`} className="bg-gold text-white py-2 px-4 rounded-full shadow-md border border-gold hover:bg-white hover:text-gold hover:border hover:border-gold transition-all duration-300 flex items-center">
                 Contacter
                 <FiMail className="ml-2" />
-              </button>
+              </NavLink>
             ) : (
               <NavLink to="/usersettings" className="bg-gold text-white py-2 px-4 rounded-full shadow-md border border-gold hover:bg-white hover:text-gold hover:border hover:border-gold transition-all duration-300 flex items-center">
                 Paramètres

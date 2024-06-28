@@ -10,6 +10,7 @@ const SingleArticlePage = () => {
   const [user, setUser] = useState({});
   const [showNotification, setShowNotification] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState('');
+  const [quantity, setQuantity] = useState(1);
   const { articleId } = useParams();
 
   useEffect(() => {
@@ -86,7 +87,6 @@ const SingleArticlePage = () => {
   }, [articleId]);
 
   const handleAddToCart = async () => {
-    const number = 1;
     const isAuthenticated = !!localStorage.getItem('authToken');
 
     if (isAuthenticated) {
@@ -97,7 +97,7 @@ const SingleArticlePage = () => {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${localStorage.getItem('authToken')}`
           },
-          body: JSON.stringify({ "articleId": articleId, "quantity": number })
+          body: JSON.stringify({ "articleId": articleId, "quantity": quantity })
         });
 
         if (response.ok) {
@@ -175,6 +175,19 @@ const SingleArticlePage = () => {
                 {article.article_description}
               </p>
               <div className="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4 mb-4">
+                <div className="flex items-center">
+                  <label htmlFor="quantity" className="mr-2">Quantité:</label>
+                  <select 
+                    id="quantity"
+                    value={quantity}
+                    onChange={(e) => setQuantity(parseInt(e.target.value))}
+                    className="border rounded px-2 py-1"
+                  >
+                    {[...Array(10).keys()].map(x => (
+                      <option key={x + 1} value={x + 1}>{x + 1}</option>
+                    ))}
+                  </select>
+                </div>
                 <button 
                   onClick={handleAddToFavorites} 
                   className="flex-1 bg-white border border-gold text-gold py-2 px-4 rounded flex items-center justify-center hover:bg-gold hover:text-white transition-colors duration-300"

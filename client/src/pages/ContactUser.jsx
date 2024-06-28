@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, NavLink } from 'react-router-dom';
 
 const ContactUser = () => {
   const [subject, setSubject] = useState('');
@@ -29,30 +29,30 @@ const ContactUser = () => {
       alert('Veuillez remplir tous les champs.');
     }
 
-    const fetchOtherUserProfile = async () => {//Récupérer le profil de l'autre utilisateur
-        try {
-          const response = await fetch(`http://4.233.138.141:3001/api/users/${id}`, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-            }
-          });
-
-          if (!response.ok) {
-            throw new Error('Failed to fetch user profile');
-          } else {
-            setUser(await response.json());
-          }
-;
-        } catch (error) {
-          console.error('Error:', error);
-        }
-      };
-
-      fetchOtherUserProfile();
-
   };
+
+  const fetchOtherUserProfile = async () => {//Récupérer le profil de l'autre utilisateur
+    try {
+      const response = await fetch(`http://4.233.138.141:3001/api/users/${userId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch user profile');
+      } else {
+        setUser(await response.json());
+      }
+;
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  fetchOtherUserProfile();
 
   return (
     <main className="w-full min-h-[820px] bg-gray-100 pt-28">
@@ -119,7 +119,7 @@ const ContactUser = () => {
         )}
 
         <div className="mt-8 text-center">
-          <NavLink to={`/profile/:${user.user_id}`} className="text-gold hover:underline">
+          <NavLink to={`/userprofile/:${user.user_id}`} className="text-gold hover:underline">
               Retour au profil de l'utilisateur
           </NavLink>
           
