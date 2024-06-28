@@ -87,7 +87,7 @@ export const UserProfile = () => {
 
       const fetchUserArticles = async () => {//Récupérer les articles de l'utilisateur en cours
         try {
-          const response = await fetch(`http://4.233.138.141:3001/api/users/${userId}`, {
+          const response = await fetch(`http://4.233.138.141:3001/api/articles/user/articles`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',

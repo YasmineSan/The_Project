@@ -45,7 +45,7 @@ const CardArticle = ({ id, image, title, price }) => {
   };
 
   return (
-    <div className="transform transition duration-300 hover:scale-105">
+    <div className="transform transition duration-300 hover:scale-105 bg-white">
       <div className="border rounded-lg overflow-hidden shadow-lg h-70 flex flex-col justify-center items-center text-center">
         <NavLink to={`/articles/${id}`} className="w-full h-full flex flex-col justify-center items-center">
           <img src={image} alt={title} className="w-full h-48 object-cover" />
