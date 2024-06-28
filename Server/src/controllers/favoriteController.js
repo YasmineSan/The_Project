@@ -22,9 +22,15 @@ exports.getUserFavorites = async (req, res) => {
         const userId = req.user.id;
         const pool = await poolPromise;
 
+        // Jointure pour récupérer les détails des articles
         const result = await pool.request()
             .input('user_id', userId)
-            .query('SELECT * FROM Favorites WHERE user_id = @user_id');
+            .query(`
+                SELECT a.*
+                FROM Favorites f
+                JOIN Articles a ON f.article_id = a.id
+                WHERE f.user_id = @user_id
+            `);
 
         res.json(result.recordset);
     } catch (err) {
