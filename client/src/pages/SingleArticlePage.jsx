@@ -126,7 +126,7 @@ const SingleArticlePage = () => {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('authToken')}`
         },
-        body: JSON.stringify({ articleId })
+        body: JSON.stringify({ "articleId": articleId })
       });
 
       if (response.ok) {

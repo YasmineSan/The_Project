@@ -21,7 +21,6 @@ const FavoritePage = () => {
         }
 
         const data = await response.json();
-        console.log('Fetched favorite articles:', data); // Log the data for debugging
         setFavoriteArticles(data);
       } catch (error) {
         console.error('Error fetching favorite articles:', error);
@@ -32,7 +31,7 @@ const FavoritePage = () => {
   }, []);
 
   const removeFromFavorites = (id) => {
-    setFavoriteArticles(prevArticles => prevArticles.filter(article => article.article_id !== id));
+    setFavoriteArticles(prevArticles => prevArticles.filter(article => article.id !== id));
   };
 
   return (
@@ -42,12 +41,12 @@ const FavoritePage = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {favoriteArticles.length > 0 ? (
-            favoriteArticles.map((article) => (
+            favoriteArticles.map(article => (
               <FavoriteCard
                 key={article.article_id}
                 id={article.article_id}
                 image={article.article_photo}
-                title={article.title}
+                title={article.article_title}
                 price={article.article_price}
                 onRemoveFromFavorites={removeFromFavorites}
               />
