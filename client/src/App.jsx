@@ -59,7 +59,7 @@ const router = createBrowserRouter([
 
       },
       {
-        path: 'comment',
+        path: 'comment/:userId',
         element: <CommentPage />
       },
       {

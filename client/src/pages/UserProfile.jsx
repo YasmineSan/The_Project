@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FiMail, FiMapPin } from 'react-icons/fi';
 import CardArticle from '../components/CardArticle';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { IoConstructOutline } from 'react-icons/io5';
 
 export const UserProfile = () => {
@@ -131,7 +131,7 @@ export const UserProfile = () => {
                   <span className="text-yellow-400 ml-2">{'★'.repeat(Math.floor(10))}</span>
                   <span className="text-gray-400">{'★'.repeat(5 - Math.floor(10))}</span>
                 </div> */}
-                 <a href='#' className="hover:underline text-gold">Toutes les évaluations</a> {/*Logique à faire */}
+                 <Link to={`/comment/${userId}`} className="hover:underline text-gold">Toutes les évaluations</Link> {/*Logique à faire */}
               </div>
             </div>
             
