@@ -103,6 +103,11 @@ const Header = () => {
     window.location.assign('#');
   }
 
+  const handleUserSettings = () => {
+    setIsUserDropdownOpen(false);
+    window.location.assign('/userSettings');
+  }
+
   // Fake données pour test
 
   const categories = ['Catégorie 1', 'Catégorie 2', 'Catégorie 3']; // Exemple de catégories
@@ -184,8 +189,9 @@ const Header = () => {
                         <li className='px-4 py-2 hover:bg-gold hover:text-white transition-all cursor-pointer' onClick={handleUserProfile}>Mon profil</li>
                         <li className='px-4 py-2 hover:bg-gold hover:text-white transition-all cursor-pointer' onClick={handleUserOrders}>Mes commandes</li>
                         <li className='px-4 py-2 hover:bg-gold hover:text-white transition-all cursor-pointer' onClick={handleUserSales}>Mes ventes</li>
+                        <li className='px-4 py-2 hover:bg-gold hover:text-white transition-all cursor-pointer' onClick={handleUserSettings}>Paramètres</li>
                         <li 
-                          className='px-4 py-2 hover:bg-red-500 hover:text-white transition-all cursor-pointer text-red-500' 
+                          className='px-4 py-2 hover:bg-red-500 hover:text-white transition-all cursor-pointer text-red-500'
                           onClick={handleLogout}
                         >
                           Déconnexion

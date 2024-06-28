@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { FiMail, FiMapPin } from 'react-icons/fi';
+import { FiMail, FiMapPin, FiSettings } from 'react-icons/fi';
 import CardArticle from '../components/CardArticle';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, NavLink } from 'react-router-dom';
 import { IoConstructOutline } from 'react-icons/io5';
 
 export const UserProfile = () => {
@@ -9,12 +9,11 @@ export const UserProfile = () => {
   const [user, setUser] = useState({});
   const [articles, setArticles] = useState([]);
  
-
   useEffect(() => {
     
     if (userId) {// Si c'est un autre utilisateur
 
-      const id = userId[1]
+      const id = userId[1];
 
       const fetchOtherUserProfile = async () => {//Récupérer le profil de l'autre utilisateur
         try {
@@ -31,7 +30,6 @@ export const UserProfile = () => {
           } else {
             setUser(await response.json());
           }
-;
         } catch (error) {
           console.error('Error:', error);
         }
@@ -39,8 +37,7 @@ export const UserProfile = () => {
 
       fetchOtherUserProfile();
 
-      const fetchOtherUserArticles = async() => {//Récupérer les articles d'un autre utilisateur'
-        const id = userId[1]
+      const fetchOtherUserArticles = async () => {//Récupérer les articles d'un autre utilisateur'
         try {
           const response = await fetch(`http://4.233.138.141:3001/api/articles/user/${id}/articles`, {
             method: 'GET',
@@ -49,11 +46,11 @@ export const UserProfile = () => {
               'Authorization': `Bearer ${localStorage.getItem('authToken')}`
             }
           });
-  
+
           if (!response.ok) {
             throw new Error('Network response was not ok');
           }
-  
+
           const data = await response.json();
           setArticles(data);
         } catch (error) {
@@ -67,39 +64,41 @@ export const UserProfile = () => {
 
       const fetchCurrentUser = async () => {//Récupérer le profil de l'utilisateur en cours
         try {
-        const response = await fetch(`http://4.233.138.141:3001/api/users/dashboard`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-          }})
-        
-        if (response.ok) {
-          
-            setUser(await response.json());
-            
-        } else {
-            console.log('Failed to fetch user profile');
-        }
-      } catch (error) {
-        console.error('Error:', error);
-      }}
-
-      fetchCurrentUser();
-
-      const fetchUserArticles = async() => {//Récupérer les articles de l'utilisateur en cours
-        try {
-          const response = await fetch(`http://4.233.138.141:3001/api/users/${userId}`, {
+          const response = await fetch(`http://4.233.138.141:3001/api/users/dashboard`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
               'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-            }})
-          
+            }
+          });
+
+          if (response.ok) {
+            setUser(await response.json());
+
+          } else {
+            console.log('Failed to fetch user profile');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      }
+
+      fetchCurrentUser();
+
+      const fetchUserArticles = async () => {//Récupérer les articles de l'utilisateur en cours
+        try {
+          const response = await fetch(`http://4.233.138.141:3001/api/articles/user/articles`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+            }
+          });
+
           if (response.ok) {
             const data = await response.json()
             setArticles(data);
-  
+
           } else {
             console.log('Failed to fetch user articles');
           }
@@ -109,7 +108,7 @@ export const UserProfile = () => {
       }
 
       fetchUserArticles();
-      
+
     }
   }, []);
 
@@ -131,16 +130,23 @@ export const UserProfile = () => {
                   <span className="text-yellow-400 ml-2">{'★'.repeat(Math.floor(10))}</span>
                   <span className="text-gray-400">{'★'.repeat(5 - Math.floor(10))}</span>
                 </div> */}
-                 <Link to={`/comment/${userId}`} className="hover:underline text-gold">Toutes les évaluations</Link> {/*Logique à faire */}
+                 <a href='#' className="hover:underline text-gold">Toutes les évaluations</a> {/*Logique à faire */}
               </div>
             </div>
             
             <p className="text-gray-700 mb-8">{user.biography}</p>
 
-            <button className="bg-gold text-white py-2 px-4 rounded-full shadow-md border border-gold hover:bg-white hover:text-gold hover:border hover:border-gold transition-all duration-300 flex items-center">
-              Contacter
-              <FiMail className="ml-2" />
-            </button>
+            {userId ? (
+              <NavLink to={`/contactUser/${user.user_id}`} className="bg-gold text-white py-2 px-4 rounded-full shadow-md border border-gold hover:bg-white hover:text-gold hover:border hover:border-gold transition-all duration-300 flex items-center">
+                Contacter
+                <FiMail className="ml-2" />
+              </NavLink>
+            ) : (
+              <NavLink to="/usersettings" className="bg-gold text-white py-2 px-4 rounded-full shadow-md border border-gold hover:bg-white hover:text-gold hover:border hover:border-gold transition-all duration-300 flex items-center">
+                Paramètres
+                <FiSettings className="ml-2" />
+              </NavLink>
+            )}
             
           </div>
         </div>
