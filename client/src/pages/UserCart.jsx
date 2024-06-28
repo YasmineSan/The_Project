@@ -181,7 +181,7 @@ export const UserCart = () => {
               <p className="text-sm text-gray-500 mt-1">(Sans commission ni frais de livraison)</p>
             </div>
           </div>
-          <div className="col-span-2 lg:col-span-1 bg-white shadow-lg rounded-lg">
+          <div className="col-span-2 lg:col-span-1 bg-white shadow-lg rounded-lg h-[310px]">
             <div className="p-4">
               <h3 className="text-lg font-semibold tracking-wider uppercase">Total</h3>
               <div className="flex justify-between mt-4">
