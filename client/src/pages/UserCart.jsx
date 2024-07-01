@@ -48,6 +48,7 @@ export const UserCart = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    window.scrollTo(0, 0); // Scroll to top
     const fetchCart = async () => {
       try {
         const response = await fetch('http://4.233.138.141:3001/api/cart/user', {
@@ -95,26 +96,6 @@ export const UserCart = () => {
     }
   };
 
-  const handleQuantityChange = async (id, quantity) => {
-    try {
-      const response = await fetch(`https://4.233.138.141:3001/api/cart/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-        },
-        body: JSON.stringify({ quantity })
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to update quantity');
-      }
-
-      setCart(cart.map(item => item.article_id === id ? { ...item, quantity } : item));
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
 
   const subtotal = cart.reduce((acc, item) => acc + item.article_price * item.quantity, 0);
   const totalShipping = cart.reduce((acc, item) => acc + item.shipping_cost * item.quantity, 0);
@@ -134,17 +115,15 @@ export const UserCart = () => {
       <main className='container mx-auto py-28 px-4 sm:px-6 lg:px-8'>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="col-span-2">
-            {cart.map((item) => (
-              <div key={item.article_id} className="border rounded-lg p-4 mb-4 bg-white relative">
+            {cart.map((item, i) => (
+              <div key={i} className="border rounded-lg p-4 mb-4 bg-white relative">
                 <div className="flex flex-col md:flex-row items-start mb-4">
                   <NavLink to={`/articles/${item.article_id}`} className="mr-0 md:mr-8 mb-4 md:mb-0">
                     <img src={item.article_photo} alt={item.title} className="w-32 h-32 object-cover" />
                   </NavLink>
                   <div className="flex-1">
                     <div className="text-xl mb-2 font-medium">{item.article_price}€</div>
-                    <NavLink to={`/articles/${item.article_id}`}>
-                      <h2 className="text-lg font-semibold">{item.title}</h2>
-                    </NavLink>
+                      <h2 className="text-lg font-semibold"><NavLink to={`/articles/${item.article_id}`} className="hover:text-gold">{item.title}</NavLink></h2>
                     <p className="text-gray-600">{item.article_description.length > 100 ? item.article_description.slice(0, 100) + '...' : item.article_description}</p>
                     <div className="mt-2">
                       <span className="text-gray-500">Frais de livraison: </span>
