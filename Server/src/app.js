@@ -5,6 +5,8 @@ const rateLimit = require('express-rate-limit');
 const cors = require('cors'); // Ajout de l'importation du package cors
 const app = express();
 const upload = require('./middleware/uploadImage'); // Importer le middleware d'upload
+const orderRoutes = require('./routes/orderRoutes');
+const paymentRoutes = require('./routes/paymentRoutes');
 
 // Middleware pour sécuriser les en-têtes HTTP
 app.use(helmet());
@@ -33,6 +35,15 @@ app.use('/api/categories', require('./routes/categoryRoutes'));
 app.use('/api/orders', require('./routes/orderRoutes'));
 app.use('/api/favorites', require('./routes/favoriteRoutes'));
 app.use('/api/cart', require('./routes/cartRoutes'));
+
+app.use(express.json());
+
+// Utiliser les routes des commandes
+app.use('/api/orders', orderRoutes);
+
+// Utiliser les routes des paiements
+app.use('/api/payments', paymentRoutes);
+
 
 // Serve HTML files
 app.get('/login', (req, res) => {
