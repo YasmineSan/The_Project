@@ -24,8 +24,13 @@ exports.handlePaymentSuccess = async (req, res) => {
         const { paymentIntentId, userId, articleIds } = req.body;
         const pool = await poolPromise;
 
+        // Récupérer le Payment Intent depuis Stripe
         const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
 
+        // Log l'état du Payment Intent
+        console.log('Payment Intent Status:', paymentIntent.status);
+
+        // Vérifier l'état du Payment Intent
         if (paymentIntent.status === 'succeeded') {
             const transaction = await pool.transaction();
             try {
@@ -82,9 +87,11 @@ exports.handlePaymentSuccess = async (req, res) => {
                 throw err;
             }
         } else {
+            console.log('Payment Intent not successful:', paymentIntent);
             res.status(400).send({ message: 'Payment not successful' });
         }
     } catch (err) {
+        console.error('Error handling payment success:', err);
         res.status(500).send({ message: err.message });
     }
 };

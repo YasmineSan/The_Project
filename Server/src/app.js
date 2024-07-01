@@ -28,6 +28,17 @@ app.use(cors({
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
+// Middleware to capture raw request body
+app.use(express.json({
+  limit: '5mb',
+  verify: (req, res, buf) => {
+      req.rawBody = buf.toString();
+  }
+}));
+// Importer et utiliser les routes webhook
+const webhookRoutes = require('./routes/webhookRoutes');
+app.use('/api', webhookRoutes);
+
 // Routes
 app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/articles', require('./routes/articleRoutes'));
