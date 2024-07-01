@@ -137,12 +137,12 @@ export const UserCart = () => {
             {cart.map((item) => (
               <div key={item.article_id} className="border rounded-lg p-4 mb-4 bg-white relative">
                 <div className="flex flex-col md:flex-row items-start mb-4">
-                  <NavLink to={`/articles/:${item.article_id}`} className="mr-0 md:mr-8 mb-4 md:mb-0">
+                  <NavLink to={`/articles/${item.article_id}`} className="mr-0 md:mr-8 mb-4 md:mb-0">
                     <img src={item.article_photo} alt={item.title} className="w-32 h-32 object-cover" />
                   </NavLink>
                   <div className="flex-1">
                     <div className="text-xl mb-2 font-medium">{item.article_price}€</div>
-                    <NavLink to={`/articles/:${item.article_id}`}>
+                    <NavLink to={`/articles/${item.article_id}`}>
                       <h2 className="text-lg font-semibold">{item.title}</h2>
                     </NavLink>
                     <p className="text-gray-600">{item.article_description.length > 100 ? item.article_description.slice(0, 100) + '...' : item.article_description}</p>
@@ -153,18 +153,6 @@ export const UserCart = () => {
                     <div>
                       <span className="text-gray-500">Commission: </span>
                       <span className="font-medium">{(item.article_price * 0.1).toFixed(2)}€ (10%)</span> 
-                    </div>
-                    <div className="flex items-center mt-4">
-                      <label className="mr-2">Quantité:</label>
-                      <select
-                        value={item.quantity}
-                        onChange={(e) => handleQuantityChange(item.article_id, parseInt(e.target.value))}
-                        className="border rounded px-2 py-1 transition duration-300 hover:bg-gray-200"
-                      >
-                        {[...Array(10).keys()].map(x => (
-                          <option key={x + 1} value={x + 1}>{x + 1}</option>
-                        ))}
-                      </select>
                     </div>
                   </div>
                 </div>
