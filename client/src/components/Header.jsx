@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { FiSearch, FiX, FiMenu, FiHeart, FiUser, FiShoppingCart } from 'react-icons/fi';
+import { FiMenu, FiSearch, FiHeart, FiUser, FiShoppingCart } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const useClickOutside = (handler) => {
@@ -24,7 +24,6 @@ const useClickOutside = (handler) => {
 };
 
 const Header = () => {
-  const [searchQuery, setSearchQuery] = useState('');
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -38,21 +37,6 @@ const Header = () => {
       setIsAuthenticated(false);
     }
   }, []);
-
-  const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
-  };
-
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      navigate(`/all-articles?search=${encodeURIComponent(searchQuery)}`);
-    }
-  };
-
-  const clearSearch = () => {
-    setSearchQuery('');
-  };
 
   const toggleCategoryDropdown = () => {
     setIsCategoryDropdownOpen((prev) => !prev);
@@ -87,7 +71,7 @@ const Header = () => {
 
   return (
     <header>
-      <nav className='fixed mx-auto border-b-2 border-gold top-0 left-0 right-0 bg-white bg-opacity-100 z-10'>
+      <nav className='fixed mx-auto shadow-md top-0 left-0 right-0 bg-white bg-opacity-100 z-10'>
         <div className='flex container px-4 lg:px-10 items-center justify-between mx-auto'>
           <NavLink to="/" className='mr-5'>
             <img src="/craftify.png" alt="logo Craftify" className='w-20 mr-5' />
@@ -118,22 +102,13 @@ const Header = () => {
               )}
             </AnimatePresence>
 
-            <form onSubmit={handleSearchSubmit} className='relative max-w-full sm:max-w-xs lg:max-w-md mr-4 sm:mx-4'>
-              <input
-                type="text"
-                placeholder='Que recherchez-vous?'
-                value={searchQuery}
-                onChange={handleSearchChange}
-                className='w-full py-1 sm:py-2 pl-4 pr-10 border border-gold rounded-full focus:outline-none'
-              />
-              <div className='absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer'>
-                {searchQuery ? (
-                  <FiX className='h-5 text-darkGrey hover:text-gold transition-colors duration-300' onClick={clearSearch} />
-                ) : (
-                  <FiSearch className='h-5 text-darkGrey hover:text-gold transition-colors duration-300' />
-                )}
-              </div>
-            </form>
+            {/* Lien vers la page des articles avec loupe */}
+            <div className='max-w-full sm:max-w-xs lg:max-w-md mr-4 sm:mx-4'>
+              <NavLink to="/all-articles" className='w-full py-1 sm:py-2 pl-4 pr-10 focus:outline-none block text-slate-500 text-sm sm:text-base truncate border-b-2 border-gold'>
+                <FiSearch className='h-5 w-5 text-darkGrey mr-2 inline-block align-middle hover:text-gold transition-colors duration-300' />
+                <span className='inline-block align-middle'>Vous recherchez un article?</span>
+              </NavLink>
+            </div>
           </div>
           
           {isAuthenticated ? (
