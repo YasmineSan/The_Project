@@ -11,6 +11,10 @@ const ContactUser = () => {
 
   const id = userId[1];
 
+  useEffect(() => {
+    window.scrollTo(0, 0); // Scroll to top
+  }, []);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (subject.trim() && message.trim()) {

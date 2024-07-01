@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const Contact = () => {
   // États pour gérer les champs du formulaire et le message de confirmation
@@ -8,6 +8,10 @@ const Contact = () => {
   const [message, setMessage] = useState('');
   const [confirmationMessage, setConfirmationMessage] = useState('');
 
+  useEffect(() => {
+    window.scrollTo(0, 0); // Scroll to top
+  }, []);
+  
   // Fonction pour gérer la soumission du formulaire
   const handleSubmit = (e) => {
     e.preventDefault();
