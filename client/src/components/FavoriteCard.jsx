@@ -18,14 +18,11 @@ const FavoriteCard = ({ id, image, title, price, onRemoveFromFavorites }) => {
 
       if (!response.ok) {
         throw new Error('Network response was not ok');
+      } else {
+        window.location.assign('/favorites');
       }
 
-      setNotificationMessage('Article retiré des favoris !');
-      setShowNotification(true);
-      setTimeout(() => {
-        setShowNotification(false);
-        onRemoveFromFavorites(id);
-      }, 2000);  // Message pendant 2 secondes
+      
     } catch (error) {
       console.error('Error removing favorite article:', error);
     }
@@ -51,11 +48,6 @@ const FavoriteCard = ({ id, image, title, price, onRemoveFromFavorites }) => {
           </button>
         </div>
       </div>
-      {showNotification && (
-        <div className="fixed bottom-4 right-4 bg-red-500 text-white py-2 px-4 rounded">
-          {notificationMessage}
-        </div>
-      )}
     </div>
   );
 };
