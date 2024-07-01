@@ -71,7 +71,7 @@ const Header = () => {
 
   return (
     <header>
-      <nav className='fixed mx-auto shadow-md top-0 left-0 right-0 bg-white bg-opacity-100 z-10'>
+      <nav className='fixed mx-auto shadow-md top-0 left-0 right-0 bg-white bg-opacity-100 z-10 min-h-16 flex'>
         <div className='flex container px-4 lg:px-10 items-center justify-between mx-auto'>
           <NavLink to="/" className='mr-5'>
             <img src="/craftify.png" alt="logo Craftify" className='w-20 mr-5' />
@@ -103,24 +103,24 @@ const Header = () => {
             </AnimatePresence>
 
             {/* Lien vers la page des articles avec loupe */}
-            <div className='max-w-full sm:max-w-xs lg:max-w-md mr-4 sm:mx-4'>
-              <NavLink to="/all-articles" className='w-full py-1 sm:py-2 pl-4 pr-10 focus:outline-none block text-slate-500 text-sm sm:text-base truncate border-b-2 border-gold'>
-                <FiSearch className='h-5 w-5 text-darkGrey mr-2 inline-block align-middle hover:text-gold transition-colors duration-300' />
+            <div className='flex items-center mr-4 sm:mx-4 overflow-hidden max-w-36 sm:max-w-full border-b-2 border-gold'>
+              <NavLink to="/all-articles" className='py-1 sm:py-2 focus:outline-none block text-slate-500 text-sm sm:text-base truncate '>
                 <span className='inline-block align-middle'>Vous recherchez un article?</span>
               </NavLink>
+              <FiSearch className='min-h-5 min-w-5 mr-2 text-darkGrey ml-2 inline-block align-middle hover:text-gold transition-colors duration-300' />
             </div>
           </div>
           
           {isAuthenticated ? (
             <div className='flex items-center space-x-4'>
               <NavLink to="/favorites">
-                <FiHeart className='h-6 w-6 text-darkGrey hover:text-gold transition-colors duration-300' />
+                <FiHeart className='h-5 w-5 sm:h-6 sm:w-6 text-darkGrey hover:text-gold transition-colors duration-300' />
               </NavLink>
               <NavLink to="/cart">
-                <FiShoppingCart className='h-6 w-6 text-darkGrey hover:text-gold transition-colors duration-300' />
+                <FiShoppingCart className='h-5 w-5 sm:h-6 sm:w-6 text-darkGrey hover:text-gold transition-colors duration-300' />
               </NavLink>
               <div className='relative'>
-                <FiUser className='h-6 w-6 text-darkGrey cursor-pointer hover:text-gold transition-colors duration-300' onClick={toggleUserDropdown} />
+                <FiUser className='h-5 w-5 sm:h-6 sm:w-6 text-darkGrey cursor-pointer hover:text-gold transition-colors duration-300' onClick={toggleUserDropdown} />
                 <AnimatePresence>
                   {isUserDropdownOpen && (
                     <motion.div
