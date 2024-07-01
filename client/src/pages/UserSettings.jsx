@@ -42,6 +42,7 @@ const SettingsPage = () => {
             },
             password: '************',
           };
+          
           setUser(mockUser);
           setFormData({ ...mockUser });
           setLoading(false);

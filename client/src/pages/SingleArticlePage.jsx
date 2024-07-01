@@ -8,7 +8,8 @@ const SingleArticlePage = () => {
   const [article, setArticle] = useState({});
   const [otherArticles, setOtherArticles] = useState([]);
   const [user, setUser] = useState({});
-  const [showNotification, setShowNotification] = useState(false);
+  const [showNotificationSuccess, setShowNotificationSuccess] = useState(false);
+  const [showNotificationError, setShowNotificationError] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState('');
   const [quantity, setQuantity] = useState(1);
   const { articleId } = useParams();
@@ -102,9 +103,9 @@ const SingleArticlePage = () => {
 
         if (response.ok) {
           setNotificationMessage('Article ajouté au panier !');
-          setShowNotification(true);
+          setShowNotificationSuccess(true);
           setTimeout(() => {
-            setShowNotification(false);
+            setShowNotificationSuccess(false);
             window.location.href = '/cart';
           }, 2000); // Redirection après 2 secondes
         } else {
@@ -131,11 +132,16 @@ const SingleArticlePage = () => {
 
       if (response.ok) {
         setNotificationMessage('Article ajouté aux favoris !');
-        setShowNotification(true);
+        setShowNotificationSuccess(true);
         setTimeout(() => {
-          setShowNotification(false);
-        }, 2000); // Notification visible pendant 2 secondes
+          setShowNotificationSuccess(false);
+        }, 3000); // Notification visible pendant 2 secondes
       } else {
+        setNotificationMessage('Article déjà dans vos favoris !');
+        setShowNotificationError(true);
+        setTimeout(() => {
+          setShowNotificationError(false);
+        }, 3000); // Notification visible pendant 2 secondes
         console.error('Erreur lors de l\'ajout aux favoris', response.statusText);
       }
     } catch (error) {
@@ -232,8 +238,13 @@ const SingleArticlePage = () => {
         </div>
       </div>
 
-      {showNotification && (
+      {showNotificationSuccess && (
         <div className="fixed bottom-4 right-4 bg-green-500 text-white py-2 px-4 rounded">
+          {notificationMessage}
+        </div>
+      )}
+      {showNotificationError && (
+        <div className="fixed bottom-4 right-4 bg-red-500 text-white py-2 px-4 rounded">
           {notificationMessage}
         </div>
       )}
