@@ -11,6 +11,10 @@ const ContactUser = () => {
 
   const id = userId[1];
 
+  useEffect(() => {
+    window.scrollTo(0, 0); // Scroll to top
+  }, []);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (subject.trim() && message.trim()) {
@@ -63,14 +67,18 @@ const ContactUser = () => {
         </p>
 
         <div className="flex flex-col items-center mb-6 sm:flex-row sm:justify-center">
-          <img
-            className="w-16 h-16 rounded-full mr-0 mb-4 sm:mr-4 sm:mb-0"
-            src={user.profile_image}
-            alt={user.username}
-          />
-          <div className="text-center sm:text-left">
-            <h2 className="text-xl font-semibold">{user.username}</h2>
-          </div>
+          <NavLink to={`/userProfile/:${userId}`}>
+            <img
+              className="w-16 h-16 rounded-full mr-0 mb-4 sm:mr-4 sm:mb-0"
+              src={user.profile_image}
+              alt={user.username}
+            />
+          </NavLink>
+          <NavLink to={`/userProfile/:${userId}`}>
+            <div className="text-center sm:text-left">
+              <h2 className="text-xl font-semibold hover:text-gold hover:underline">{user.username}</h2>
+            </div>
+          </NavLink>
         </div>
 
         <form onSubmit={handleSubmit}>

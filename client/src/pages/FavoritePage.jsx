@@ -19,9 +19,8 @@ const FavoritePage = () => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-
-        const data = await response.json();
-        setFavoriteArticles(data);
+        
+        setFavoriteArticles(await response.json());
       } catch (error) {
         console.error('Error fetching favorite articles:', error);
       }
@@ -46,7 +45,7 @@ const FavoritePage = () => {
                 key={article.article_id}
                 id={article.article_id}
                 image={article.article_photo}
-                title={article.article_title}
+                title={article.title}
                 price={article.article_price}
                 onRemoveFromFavorites={removeFromFavorites}
               />
