@@ -28,7 +28,7 @@ exports.getUserFavorites = async (req, res) => {
             .query(`
                 SELECT a.*
                 FROM Favorites f
-                JOIN Articles a ON f.article_id = a.id
+                JOIN Articles a ON f.article_id = a.article_id
                 WHERE f.user_id = @user_id
             `);
 
