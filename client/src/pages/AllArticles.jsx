@@ -20,6 +20,8 @@ const AllArticles = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [articles, setArticles] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const articlesPerPage = 12;
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -66,6 +68,7 @@ const AllArticles = () => {
 
   const handleCategoryClick = (category) => {
     setSelectedCategory(category);
+    setCurrentPage(1); // Reset to the first page when category changes
     setMenuOpen(false); // Ferme le menu lors de la sélection d'une catégorie
   };
 
@@ -79,6 +82,28 @@ const AllArticles = () => {
     return matchCategory && matchSearch;
   });
 
+  const indexOfLastArticle = currentPage * articlesPerPage;
+  const indexOfFirstArticle = indexOfLastArticle - articlesPerPage;
+  const currentArticles = filteredArticles.slice(indexOfFirstArticle, indexOfLastArticle);
+
+  const totalPages = Math.ceil(filteredArticles.length / articlesPerPage);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handlePageClick = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
   return (
     <div className="min-h-screen bg-slate-100 pt-10 pb-10">
       <div className="w-full max-w-[90%] mx-auto bg-white p-6 rounded-lg shadow-md mt-24 mb-10">
@@ -90,7 +115,7 @@ const AllArticles = () => {
         </div>
         <div className="md:flex">
           <div className={`md:w-1/4 bg-gray-200 p-4 rounded-lg ${menuOpen ? 'block' : 'hidden'} md:block`}>
-            <h2 className="text-xl font-bold mb-4 hidden md:block">Catégories</h2>
+            <h2 className="text-xl font-semibold mb-4 hidden md:block">Catégories</h2>
             <ul className="space-y-2 md:space-y-0 md:block">
               {categories.map((category, i) => (
                 <li 
@@ -104,10 +129,10 @@ const AllArticles = () => {
             </ul>
           </div>
           <div className="md:w-3/4 p-4">
-            <h2 className="text-2xl font-medium mb-4">Articles</h2>
+            <h2 className="text-2xl font-normal mb-8">{filteredArticles.length} articles trouvés</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredArticles.length > 0 ? (
-                filteredArticles.map((article) => (
+              {currentArticles.length > 0 ? (
+                currentArticles.map((article) => (
                   <CardArticle
                     key={article.article_id}
                     id={article.article_id}
@@ -119,6 +144,32 @@ const AllArticles = () => {
               ) : (
                 <p>Aucun article trouvé dans cette catégorie.</p>
               )}
+            </div>
+            {/* Pagination */}
+            <div className="flex justify-center mt-12">
+              <button
+                onClick={handlePrevPage}
+                disabled={currentPage === 1}
+                className="mx-2 px-4 py-2 bg-gray-300 rounded"
+              >
+                Précédent
+              </button>
+              {Array.from({ length: totalPages }, (_, i) => (
+                <button
+                  key={i}
+                  onClick={() => handlePageClick(i + 1)}
+                  className={`mx-2 px-4 py-2 rounded ${currentPage === i + 1 ? 'bg-gold text-white' : 'bg-gray-300'}`}
+                >
+                  {i + 1}
+                </button>
+              ))}
+              <button
+                onClick={handleNextPage}
+                disabled={currentPage === totalPages}
+                className="mx-2 px-4 py-2 bg-gray-300 rounded"
+              >
+                Suivant
+              </button>
             </div>
           </div>
         </div>
