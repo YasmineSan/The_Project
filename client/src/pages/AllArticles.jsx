@@ -29,7 +29,7 @@ const AllArticles = () => {
     if (category) {
       setSelectedCategory(categoryMap[parseInt(category)] || 'Toutes');
     } else {
-      setSelectedCategory('Toutes');
+      setSelectedCategory('Toutes'); 
     }
 
     if (search) {

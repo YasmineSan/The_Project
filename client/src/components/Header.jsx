@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { FiSearch, FiX, FiMenu, FiHeart, FiUser, FiShoppingCart } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const useClickOutside = (handler) => {
   const domNode = useRef();
+  
 
   useEffect(() => {
     const maybeHandler = (event) => {
@@ -29,6 +30,7 @@ const Header = () => {
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const categoryMap = {
     5: 'Forge',
@@ -57,12 +59,15 @@ const Header = () => {
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      navigate(`/all-articles?search=${encodeURIComponent(searchQuery)}`);
+      navigate(`/articles?search=${encodeURIComponent(searchQuery)}`);
     }
   };
 
   const clearSearch = () => {
     setSearchQuery('');
+    if (location.pathname.startsWith('/articles')) {
+      navigate('/articles');
+    }
   };
 
   const toggleCategoryDropdown = () => {
@@ -118,7 +123,7 @@ const Header = () => {
                 >
                   <ul>
                     {categories.map((category) => (
-                      <li key={category} className='px-4 py-2 hover:bg-gold hover:text-white transition-all' onClick={() => navigate(`/all-articles?category=${encodeURIComponent(category)}`)}>
+                      <li key={category} className='px-4 py-2 hover:bg-gold hover:text-white transition-all' onClick={() => navigate(`/articles?category=${encodeURIComponent(category)}`)}>
                         {categoryMap[category]}
                       </li>
                     ))}
