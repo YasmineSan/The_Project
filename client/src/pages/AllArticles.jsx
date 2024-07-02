@@ -115,7 +115,7 @@ const AllArticles = () => {
         </div>
         <div className="md:flex">
           <div className={`md:w-1/4 bg-gray-200 p-4 rounded-lg ${menuOpen ? 'block' : 'hidden'} md:block`}>
-            <h2 className="text-xl font-bold mb-4 hidden md:block">Catégories</h2>
+            <h2 className="text-xl font-semibold mb-4 hidden md:block">Catégories</h2>
             <ul className="space-y-2 md:space-y-0 md:block">
               {categories.map((category, i) => (
                 <li 
@@ -129,7 +129,7 @@ const AllArticles = () => {
             </ul>
           </div>
           <div className="md:w-3/4 p-4">
-            <h2 className="text-2xl font-medium mb-4">{filteredArticles.length} articles trouvés</h2>
+            <h2 className="text-2xl font-normal mb-8">{filteredArticles.length} articles trouvés</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {currentArticles.length > 0 ? (
                 currentArticles.map((article) => (
