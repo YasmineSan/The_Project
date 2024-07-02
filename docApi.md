@@ -326,6 +326,118 @@ Pour que les développeurs front-end puissent utiliser efficacement votre API, v
       ```
     - Token : Oui
 
-## Conclusion
 
-Avec cette documentation, vos développeurs front-end pourront facilement comprendre comment utiliser les endpoints de votre API. Assurez-vous que toutes les routes nécessitant un token d'authentification utilisent bien le middleware authenticateToken. Si vous avez d'autres questions ou besoin de plus d'aide, n'hésitez pas à demander !
+## Obtenir toutes les évaluations
+
+- Méthode : GET
+
+URL : http://localhost:3001/api/evaluations
+
+Exemple de réponse :
+
+json
+Copier le code
+[
+    {
+        "evaluation_id": 1,
+        "evaluation_number": 5,
+        "evaluation_description": "Je le veux !",
+        "user_id": 7,
+        "article_id": 9,
+        "date_added": "2023-07-01T00:00:00.000Z",
+        "commented_user_id": null
+    }
+]
+
+## Obtenir une évaluation par ID
+
+Méthode : GET
+URL : http://localhost:3000/api/evaluations/:id
+Remplacez :id par l'ID de l'évaluation que vous souhaitez obtenir, par exemple 1.
+
+Exemple de réponse :
+
+json
+Copier le code
+{
+    "evaluation_id": 1,
+    "evaluation_number": 5,
+    "evaluation_description": "Je le veux !",
+    "user_id": 7,
+    "article_id": 9,
+    "date_added": "2023-07-01T00:00:00.000Z",
+    "commented_user_id": null
+}
+
+## Créer une nouvelle évaluation
+
+Méthode : POST
+URL : http://localhost:3000/api/evaluations
+Body (JSON) :
+
+json
+Copier le code
+{
+    "evaluation_number": 4,
+    "evaluation_description": "Très bon produit",
+    "user_id": 8,
+    "article_id": 10
+}
+Exemple de réponse :
+
+json
+Copier le code
+{
+    "evaluation_id": 2,
+    "evaluation_number": 4,
+    "evaluation_description": "Très bon produit",
+    "user_id": 8,
+    "article_id": 10,
+    "date_added": "2023-07-01T00:00:00.000Z",
+    "commented_user_id": null
+}
+
+## Mettre à jour une évaluation
+
+Méthode : PUT
+URL : http://localhost:3000/api/evaluations/:id
+Remplacez :id par l'ID de l'évaluation que vous souhaitez mettre à jour, par exemple 1.
+
+Body (JSON) :
+
+json
+Copier le code
+{
+    "evaluation_number": 3,
+    "evaluation_description": "Produit correct",
+    "user_id": 7,
+    "article_id": 9
+}
+Exemple de réponse :
+
+json
+Copier le code
+{
+    "evaluation_id": 1,
+    "evaluation_number": 3,
+    "evaluation_description": "Produit correct",
+    "user_id": 7,
+    "article_id": 9,
+    "date_added": "2023-07-01T00:00:00.000Z",
+    "commented_user_id": null
+}
+
+## Supprimer une évaluation
+
+Méthode : DELETE
+URL : http://localhost:3000/api/evaluations/:id
+Remplacez :id par l'ID de l'évaluation que vous souhaitez supprimer, par exemple 1.
+
+Exemple de réponse :
+
+json
+Copier le code
+{}
+ 
+
+
