@@ -6,28 +6,58 @@ exports.createOrder = async (req, res) => {
         const userId = req.user.id;
         const pool = await poolPromise;
 
-        // Vérifier si l'article dans la commande appartient à l'utilisateur
         const articleIds = order_details.map(detail => detail.article_id);
+
+        // Récupérer les détails des articles pour calculer le prix total et obtenir les informations des articles
         const articlesResult = await pool.request()
-            .input('article_ids', articleIds.join(','))
             .query(`
-                SELECT owner_id 
+                SELECT article_id, title, article_description, article_price, shipping_cost
                 FROM Articles 
                 WHERE article_id IN (${articleIds.map(id => `'${id}'`).join(',')})
             `);
         
-        const userOwnsArticle = articlesResult.recordset.some(article => article.owner_id === userId);
+        let totalPrice = 0;
+        let detailedArticles = [];
+        articlesResult.recordset.forEach(article => {
+            const quantity = order_details.find(detail => detail.article_id === article.article_id).quantity;
+            totalPrice += (article.article_price + (article.shipping_cost || 0)) * quantity;
 
-        if (userOwnsArticle) {
-            return res.status(403).send({ message: 'Tu ne peux pas acheter ton propre article.' });
-        }
+            detailedArticles.push({
+                article_id: article.article_id,
+                title: article.title,
+                description: article.article_description,
+                price: article.article_price,
+                shipping_cost: article.shipping_cost,
+                quantity: quantity
+            });
+        });
 
+        // Créer la commande avec les détails des articles
         const result = await pool.request()
             .input('user_id', userId)
-            .input('order_details', JSON.stringify(order_details))
-            .query('INSERT INTO Orders (user_id, order_details) OUTPUT INSERTED.order_id VALUES (@user_id, @order_details)');
+            .input('total_price', totalPrice)
+            .input('article_details', JSON.stringify(detailedArticles))
+            .query('INSERT INTO Orders (user_id, total_price, article_details) OUTPUT INSERTED.order_id VALUES (@user_id, @total_price, @article_details)');
+        
+        const orderId = result.recordset[0].order_id;
 
-        res.status(201).send({ message: 'Order created successfully', order_id: result.recordset[0].order_id });
+        // Marquer les articles comme vendus
+        await pool.request()
+            .query(`
+                UPDATE Articles 
+                SET sold = 1 
+                WHERE article_id IN (${articleIds.map(id => `'${id}'`).join(',')})
+            `);
+
+        // Supprimer les articles des autres tables liées
+        await pool.request()
+            .query(`
+                DELETE FROM User_Article WHERE article_id IN (${articleIds.map(id => `'${id}'`).join(',')});
+                DELETE FROM Favorites WHERE article_id IN (${articleIds.map(id => `'${id}'`).join(',')});
+                DELETE FROM Cart WHERE article_id IN (${articleIds.map(id => `'${id}'`).join(',')});
+            `);
+
+        res.status(201).send({ message: 'Order created successfully', order_id: orderId });
     } catch (err) {
         res.status(500).send({ message: err.message });
     }

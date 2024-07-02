@@ -46,6 +46,7 @@ app.use('/api/categories', require('./routes/categoryRoutes'));
 app.use('/api/orders', require('./routes/orderRoutes'));
 app.use('/api/favorites', require('./routes/favoriteRoutes'));
 app.use('/api/cart', require('./routes/cartRoutes'));
+app.use('/orders', orderRoutes);
 
 app.use(express.json());
 
