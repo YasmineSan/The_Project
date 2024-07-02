@@ -3,13 +3,24 @@ const { poolPromise } = require('../utils/db');
 exports.addCategory = async (req, res) => {
     try {
         const { category_name } = req.body;
+
+        // Vérification si category_name est fourni
+        if (!category_name) {
+            return res.status(400).send({ message: 'Le nom de la catégorie est requis.' });
+        }
+
         const pool = await poolPromise;
 
         const result = await pool.request()
             .input('category_name', category_name)
             .query('INSERT INTO Categories (category_name) OUTPUT INSERTED.category_id VALUES (@category_name)');
 
-        res.status(201).send({ message: 'Category added successfully', category_id: result.recordset[0].category_id });
+        // Vérification si l'insertion a réussi et si le résultat contient l'ID inséré
+        if (result.recordset.length > 0) {
+            res.status(201).send({ message: 'Catégorie ajoutée avec succès', category_id: result.recordset[0].category_id });
+        } else {
+            res.status(500).send({ message: 'Échec de l\'ajout de la catégorie' });
+        }
     } catch (err) {
         res.status(500).send({ message: err.message });
     }

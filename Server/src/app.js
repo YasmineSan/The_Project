@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-const cors = require('cors'); // Ajout de l'importation du package cors
+const cors = require('cors');
 const app = express();
 const upload = require('./middleware/uploadImage'); // Importer le middleware d'upload
 const orderRoutes = require('./routes/orderRoutes');
@@ -13,7 +13,7 @@ app.use(helmet());
 
 // Middleware pour gérer les CORS
 app.use(cors({
-  origin: 'http://localhost:5173/' // Remplace par l'origine de ton frontend
+  origin: 'http://localhost:5173' // Remplace par l'origine de ton frontend
 }));
 
 // Middleware pour limiter le nombre de requêtes
