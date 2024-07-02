@@ -6,6 +6,15 @@ exports.addFavorite = async (req, res) => {
         const userId = req.user.id;
         const pool = await poolPromise;
 
+        // Vérifier si l'article appartient à l'utilisateur
+        const articleResult = await pool.request()
+            .input('article_id', articleId)
+            .query('SELECT owner_id FROM Articles WHERE article_id = @article_id');
+        
+        if (articleResult.recordset[0].owner_id === userId) {
+            return res.status(403).send({ message: 'Tu ne peux pas ajouter ton propre article en favori.' });
+        }
+
         await pool.request()
             .input('user_id', userId)
             .input('article_id', articleId)

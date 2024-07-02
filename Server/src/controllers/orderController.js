@@ -6,9 +6,25 @@ exports.createOrder = async (req, res) => {
         const userId = req.user.id;
         const pool = await poolPromise;
 
+        // Vérifier si l'article dans la commande appartient à l'utilisateur
+        const articleIds = order_details.map(detail => detail.article_id);
+        const articlesResult = await pool.request()
+            .input('article_ids', articleIds.join(','))
+            .query(`
+                SELECT owner_id 
+                FROM Articles 
+                WHERE article_id IN (${articleIds.map(id => `'${id}'`).join(',')})
+            `);
+        
+        const userOwnsArticle = articlesResult.recordset.some(article => article.owner_id === userId);
+
+        if (userOwnsArticle) {
+            return res.status(403).send({ message: 'Tu ne peux pas acheter ton propre article.' });
+        }
+
         const result = await pool.request()
             .input('user_id', userId)
-            .input('order_details', order_details)
+            .input('order_details', JSON.stringify(order_details))
             .query('INSERT INTO Orders (user_id, order_details) OUTPUT INSERTED.order_id VALUES (@user_id, @order_details)');
 
         res.status(201).send({ message: 'Order created successfully', order_id: result.recordset[0].order_id });
