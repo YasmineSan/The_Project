@@ -30,6 +30,17 @@ const Header = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
 
+  const categoryMap = {
+    5: 'Forge',
+    6: 'Bois',
+    15: 'Couture',
+    16: 'Ebeniste',
+    17: 'Forgeron',
+    18: 'Artisan',
+  };
+
+  const categories = Object.keys(categoryMap);
+
   useEffect(() => {
     const token = localStorage.getItem('authToken');
     if (token) {
@@ -83,8 +94,6 @@ const Header = () => {
     window.location.assign('/');
   };
 
-  const categories = [5, 6, 15, 16, 17, 18, 19]; // Exemple de catégories
-
   return (
     <header>
       <nav className='fixed mx-auto border-b-2 border-gold top-0 left-0 right-0 bg-white bg-opacity-100 z-10'>
@@ -110,7 +119,7 @@ const Header = () => {
                   <ul>
                     {categories.map((category) => (
                       <li key={category} className='px-4 py-2 hover:bg-gold hover:text-white transition-all' onClick={() => navigate(`/all-articles?category=${encodeURIComponent(category)}`)}>
-                        {category}
+                        {categoryMap[category]}
                       </li>
                     ))}
                   </ul>
