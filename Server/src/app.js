@@ -35,6 +35,7 @@ app.use(express.json({
       req.rawBody = buf.toString();
   }
 }));
+
 // Importer et utiliser les routes webhook
 const webhookRoutes = require('./routes/webhookRoutes');
 app.use('/api', webhookRoutes);
@@ -48,14 +49,15 @@ app.use('/api/favorites', require('./routes/favoriteRoutes'));
 app.use('/api/cart', require('./routes/cartRoutes'));
 app.use('/orders', orderRoutes);
 
-app.use(express.json());
-
 // Utiliser les routes des commandes
 app.use('/api/orders', orderRoutes);
 
 // Utiliser les routes des paiements
 app.use('/api/payments', paymentRoutes);
 
+// Utiliser les routes des évaluations
+const evaluationRoutes = require('./routes/evaluationRoutes');
+app.use('/api/evaluations', evaluationRoutes);
 
 // Serve HTML files
 app.get('/login', (req, res) => {
