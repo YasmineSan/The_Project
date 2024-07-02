@@ -13,7 +13,7 @@ app.use(helmet());
 
 // Middleware pour gérer les CORS
 app.use(cors({
-  origin: 'http://localhost:5173' // Remplace par l'origine de ton frontend
+  origin: 'http://localhost:5173/' // Remplace par l'origine de ton frontend
 }));
 
 // Middleware pour limiter le nombre de requêtes
@@ -59,19 +59,19 @@ app.use('/api/payments', paymentRoutes);
 
 // Serve HTML files
 app.get('/login', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'login.html'));
+  res.sendFile(path.join(dirname, 'views', 'login.html'));
 });
 
 app.get('/register', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'register.html'));
+  res.sendFile(path.join(dirname, 'views', 'register.html'));
 });
 
 app.get('/dashboard', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'dashboard.html'));
+  res.sendFile(path.join(dirname, 'views', 'dashboard.html'));
 });
 
 app.get('/profile', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'profile.html'));
+  res.sendFile(path.join(dirname, 'views', 'profile.html'));
 });
 
 app.get('/', (req, res) => {
