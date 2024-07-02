@@ -16,6 +16,7 @@ import SingleArticlePage from './pages/SingleArticlePage';
 import AllArticles from './pages/AllArticles';
 import {RouterProvider, createBrowserRouter, createMemoryRouter, Outlet, useRouteError} from "react-router-dom"
 import SettingsPage from './pages/UserSettings';
+import AllSales from './pages/AllSales';
 
 
 
@@ -78,7 +79,11 @@ const router = createBrowserRouter([
       },
       {
         path: 'userSettings',
-        element: <SettingsPage/>
+        element: <SettingsPage />
+      },
+      {
+        path: 'allsales',
+        element: <AllSales />
       },
     ]
   }
