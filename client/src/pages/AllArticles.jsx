@@ -3,7 +3,16 @@ import { useLocation } from 'react-router-dom';
 import CardArticle from '../components/CardArticle';
 import { FiMenu } from 'react-icons/fi';
 
-const categories = ['Toutes', 5, 6, 15, 16, 17, 18, 19];
+const categories = ['Toutes', 5, 6, 15, 16, 17, 18];
+
+const categoryMap = {
+  5: 'Forge',
+  6: 'Bois',
+  15: 'Couture',
+  16: 'Ebeniste',
+  17: 'Forgeron',
+  18: 'Artisan',
+};
 
 const AllArticles = () => {
   const location = useLocation();
@@ -18,7 +27,7 @@ const AllArticles = () => {
     const search = params.get('search');
 
     if (category) {
-      setSelectedCategory(parseInt(category));
+      setSelectedCategory(categoryMap[parseInt(category)] || 'Toutes');
     } else {
       setSelectedCategory('Toutes');
     }
@@ -65,7 +74,7 @@ const AllArticles = () => {
   };
 
   const filteredArticles = articles.filter(article => {
-    const matchCategory = selectedCategory === 'Toutes' || article.category_id === selectedCategory;
+    const matchCategory = selectedCategory === 'Toutes' || article.category_name === selectedCategory;
     const matchSearch = searchQuery === '' || article.title.toLowerCase().includes(searchQuery.toLowerCase());
     return matchCategory && matchSearch;
   });
@@ -86,10 +95,10 @@ const AllArticles = () => {
               {categories.map((category, i) => (
                 <li 
                   key={i}
-                  className={`cursor-pointer mb-2 p-2 rounded ${selectedCategory === category ? 'bg-gold text-white' : 'text-gray-700'}`}
-                  onClick={() => handleCategoryClick(category)}
+                  className={`cursor-pointer mb-2 p-2 rounded ${selectedCategory === (categoryMap[category] || 'Toutes') ? 'bg-gold text-white' : 'text-gray-700'}`}
+                  onClick={() => handleCategoryClick(categoryMap[category] || 'Toutes')}
                 >
-                  {category}
+                  {categoryMap[category] || category}
                 </li>
               ))}
             </ul>
