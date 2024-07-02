@@ -70,13 +70,20 @@ exports.getUserOrders = async (req, res) => {
 
         const result = await pool.request()
             .input('user_id', userId)
-            .query('SELECT * FROM Orders WHERE user_id = @user_id');
+            .query(`
+                SELECT o.*, u.username, u.email, u.first_name, u.last_name, u.street, u.street_number, u.apartment, u.postal_code, u.city
+                FROM Orders o
+                JOIN Users u ON o.user_id = u.user_id
+                WHERE o.user_id = @user_id
+            `);
 
         res.json(result.recordset);
     } catch (err) {
         res.status(500).send({ message: err.message });
     }
 };
+
+
 
 exports.getOrderById = async (req, res) => {
     try {
@@ -85,7 +92,12 @@ exports.getOrderById = async (req, res) => {
 
         const result = await pool.request()
             .input('order_id', orderId)
-            .query('SELECT * FROM Orders WHERE order_id = @order_id');
+            .query(`
+                SELECT o.*, u.username, u.email, u.first_name, u.last_name, u.street, u.street_number, u.apartment, u.postal_code, u.city
+                FROM Orders o
+                JOIN Users u ON o.user_id = u.user_id
+                WHERE o.order_id = @order_id
+            `);
 
         const order = result.recordset[0];
         if (!order) {
@@ -97,6 +109,7 @@ exports.getOrderById = async (req, res) => {
         res.status(500).send({ message: err.message });
     }
 };
+
 
 exports.updateOrderStatus = async (req, res) => {
     try {
