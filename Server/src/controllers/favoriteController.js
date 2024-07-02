@@ -9,9 +9,9 @@ exports.addFavorite = async (req, res) => {
         // Vérifier si l'article appartient à l'utilisateur
         const articleResult = await pool.request()
             .input('article_id', articleId)
-            .query('SELECT owner_id FROM Articles WHERE article_id = @article_id');
+            .query('SELECT user_id FROM Articles WHERE article_id = @article_id');
         
-        if (articleResult.recordset[0].owner_id === userId) {
+        if (articleResult.recordset[0].user_id === userId) {
             return res.status(403).send({ message: 'Tu ne peux pas ajouter ton propre article en favori.' });
         }
 
@@ -25,6 +25,7 @@ exports.addFavorite = async (req, res) => {
         res.status(500).send({ message: err.message });
     }
 };
+
 
 exports.getUserFavorites = async (req, res) => {
     try {
