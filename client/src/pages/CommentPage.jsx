@@ -11,24 +11,24 @@ const CommentPage = () => {
   const [rating, setRating] = useState(0);
 
   useEffect(() => {
-    const fetchComments = async () => {
-      try {
-        const response = await fetch(`http://4.233.138.141:3001/api/comments/seller/${sellerId}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-          }
-        });
-        if (!response.ok) {
-          throw new Error('Failed to fetch comments');
-        }
-        const commentsData = await response.json();
-        setComments(commentsData);
-      } catch (error) {
-        console.error('Error:', error);
-      }
-    };
+    // const fetchComments = async () => {
+    //   try {
+    //     const response = await fetch(`http://4.233.138.141:3001/api/comments/seller/${sellerId}`, {
+    //       method: 'GET',
+    //       headers: {
+    //         'Content-Type': 'application/json',
+    //         'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+    //       }
+    //     });
+    //     if (!response.ok) {
+    //       throw new Error('Failed to fetch comments');
+    //     }
+    //     const commentsData = await response.json();
+    //     setComments(commentsData);
+    //   } catch (error) {
+    //     console.error('Error:', error);
+    //   }
+    // };
 
     const fetchSeller = async () => {
       try {
@@ -50,7 +50,7 @@ const CommentPage = () => {
     };
 
     if (sellerId) {
-      fetchComments();
+      // fetchComments();
       fetchSeller();
     }
   }, [sellerId]);
@@ -90,7 +90,7 @@ const CommentPage = () => {
   return (
     <div className="container mx-auto px-4 pt-28 pb-8 bg-slate-100">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-semibold">Commentaires de {seller.username}</h2>
+        <h2 className="text-2xl font-semibold">Commentaires de cette boutique {seller.username}</h2>
         <Link to={`/profile/${sellerId}`} className="text-gold hover:underline">Retour au profil</Link>
       </div>
       <div className="flex items-center mb-4">
