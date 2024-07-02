@@ -36,7 +36,6 @@ const SettingsPage = () => {
             throw new Error('Failed to fetch user data');
           }
           const userData = await response.json();
-          // console.log(userData);
           setUser(userData);
           setFormData({ ...userData });
           setLoading(false);
@@ -59,10 +58,35 @@ const SettingsPage = () => {
       setEditingField(null); // Reset editingField state to hide input fields
     };
   
-    const handleSaveChanges = () => {
+    const handleSaveChanges = async () => {
       setUser({ ...formData }); // Update user data with formData
-      setEditingField(null); // Reset editingField state to hide input fields
+      setEditingField(null);
+       // Reset editingField state to hide input fields
       // Here you would normally send formData to your backend API
+      try {
+        console.log(formData);
+        console.log(user.user_id);
+           
+          const response = await fetch(`http://4.233.138.141:3001/api/users/${user.user_id}`, {
+            method: 'PUT',
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+              'Content-Type': 'application/json'
+            },
+            body: formData
+          });
+          if (!response.ok) {
+            throw new Error('Failed to fetch user data');
+          }
+          const userData = await response.json();
+          setUser(userData);
+          setFormData({ ...userData });
+          setLoading(false);
+        } catch (error) {
+          console.error('Error:', error);
+          setLoading(false);
+          setError('Failed to fetch user data');
+        }
       console.log('Saving changes:', formData);
     };
   
@@ -117,7 +141,7 @@ const SettingsPage = () => {
               <img
                 src={formData.profile_image}
                 alt="Profile"
-                className="w-28 rounded-full object-cover mr-4"
+                className="w-28 h-28 rounded-full object-cover mr-4"
               />
               <label
                 htmlFor="profilePhotoInput"
@@ -328,7 +352,7 @@ const SettingsPage = () => {
                   className="border border-gray-300 focus:outline-none focus:border-gold rounded-md px-4 py-2 w-full transition-all duration-300 ease-in-out transform focus:scale-105"
                 />
               ) : (
-                <p className="text-gray-700">{formData.hashed_password}</p>
+                <p className="text-gray-700">***********</p>
               )}
               <button
                 className="ml-2 text-gray-500 hover:text-gold transition-colors duration-300 ease-in-out"
