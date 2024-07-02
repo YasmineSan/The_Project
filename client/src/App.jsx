@@ -12,9 +12,11 @@ import AddArticlePage from './pages/AddArticlePage';
 import UserProfile from './pages/UserProfile';
 import CommentPage from './pages/CommentPage';
 import FavoritePage from './pages/FavoritePage';
-// import SingleArticlePage from './pages/SingleArticlePage';
+import SingleArticlePage from './pages/SingleArticlePage';
+import AllArticles from './pages/AllArticles';
 import {RouterProvider, createBrowserRouter, createMemoryRouter, Outlet, useRouteError} from "react-router-dom"
-import { DetailedArticle } from './pages/DetailedArticle';
+import SettingsPage from './pages/UserSettings';
+
 
 
 
@@ -33,20 +35,12 @@ const router = createBrowserRouter([
         element: <LoginInscriptionPage/>
       },
       {
-        path: 'articles',
-        element: <div>articles</div>
-      },
-      {
-        path: 'article', //'userProfile/:userId'
-        element: <DetailedArticle />
-      },
-      {
         path: 'contact',
         element: <Contact />
       },
       {
-        path: 'contactUser',
-        element: <ContactUser user={{ id: '1', name: 'John Doe', image: 'https://picsum.photos/id/237/150/150' }} />
+        path: 'contactUser/:userId',
+        element: <ContactUser />
       },
       {
         path: 'addArticle',
@@ -67,12 +61,24 @@ const router = createBrowserRouter([
 
       },
       {
-        path: 'comment',
+        path: 'comment/:userId',
         element: <CommentPage />
       },
       {
-        path: 'favorite',
+        path: 'favorites',
         element: <FavoritePage /> 
+      },
+      {
+        path: 'articles/:articleId',
+        element: <SingleArticlePage /> 
+      },
+      {
+        path: 'all-articles',
+        element: <AllArticles /> 
+      },
+      {
+        path: 'userSettings',
+        element: <SettingsPage/>
       },
     ]
   }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const Contact = () => {
   // États pour gérer les champs du formulaire et le message de confirmation
@@ -8,6 +8,10 @@ const Contact = () => {
   const [message, setMessage] = useState('');
   const [confirmationMessage, setConfirmationMessage] = useState('');
 
+  useEffect(() => {
+    window.scrollTo(0, 0); // Scroll to top
+  }, []);
+  
   // Fonction pour gérer la soumission du formulaire
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -22,7 +26,7 @@ const Contact = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col justify-center items-center pt-28">
+    <div className="min-h-screen bg-gray-100 flex flex-col justify-center items-center pt-20">
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-semibold text-center mb-4 mt-2">Contactez-nous</h1>
         <p className="text-center text-gray-700 mb-8">

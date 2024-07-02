@@ -43,20 +43,21 @@ const AddArticlePage = () => {
 
     const formData = new FormData(formRef.current);
     formData.append('article_photo', image); // Ajouter l'image au FormData
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('authToken');
     
     // Déboguer le contenu de FormData
     console.log("Contenu de FormData:");
     debugFormData(formData);
 
     try {
-      const response = await fetch('https://4.233.138.141:3001/api/articles', {
+      const response = await fetch('http://4.233.138.141:3001/api/articles', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}` // Ajouter le token dans les en-têtes de la requête
         },
         body: formData
       });
+
       console.log(response)
       const data = await response.json();
       if (response.ok) {
@@ -83,7 +84,7 @@ const AddArticlePage = () => {
     <main className="container mx-auto px-10 sm:px-12 py-28">
       <div className='bg-white shadow-lg rounded-lg p-8 mb-12'>
         <div className="flex flex-col items-center mb-8">
-          <h1 className="text-3xl font-semibold text-center py-6">Mis en vente d'un article</h1>
+          <h1 className="text-3xl font-semibold text-center py-6">Mise en vente d'un article</h1>
         </div>
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
@@ -99,14 +100,14 @@ const AddArticlePage = () => {
         )}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <form ref={formRef} onSubmit={handleSubmit} className="space-y-4 md:order-2">
-            {/* <FormField
+            <FormField
               label="Titre de l'article"
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
               name="title"
-            /> */}
+            />
             <FormField
               label="Description de l'article"
               type="textarea"
@@ -189,7 +190,7 @@ const AddArticlePage = () => {
                   className="cursor-pointer text-center text-gray-500 w-full h-full flex items-center justify-center"
                 >
                   <span>Glissez et déposez une image ici ou cliquez pour télécharger</span>
-                  <input type="file" id="image-upload" className="hidden" onChange={handleImageUpload} />
+                  <input type="file" id="image-upload" className="hidden" onChange={handleImageUpload} required/>
                 </label>
               )}
             </div>

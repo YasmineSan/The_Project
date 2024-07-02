@@ -8,19 +8,20 @@ export const ShowArticlesSection = () => {
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const response = await fetch('httsp://4.233.138.141:3001/api/articles', {
+        const response = await fetch('http://4.233.138.141:3001/api/articles/public/articles', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json'
           }
         });
-        
+        console.log(response)
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
 
         const data = await response.json();
         setArticles(data);
+        
       } catch (error) {
         console.error('Error fetching articles:', error);
       }
@@ -39,13 +40,13 @@ export const ShowArticlesSection = () => {
             Voir plus
           </NavLink>
         </div>
-        {articles.map(article => (
+        {articles.slice(-7).map((article, i) => (
           <CardArticle
-            key={article.id}
-            id={article.id}
-            image={article.image}
-            // title={article.title}
-            price={article.price}
+            key={i}
+            id={article.article_id}
+            image={article.article_photo}
+            title={article.title}
+            price={article.article_price}
           />
         ))}
       </div>

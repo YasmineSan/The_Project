@@ -1,16 +1,35 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { FiHeart, FiTrash } from 'react-icons/fi';
 import { IoHeartDislikeOutline } from 'react-icons/io5';
 
 const FavoriteCard = ({ id, image, title, price, onRemoveFromFavorites }) => {
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState('');
 
-  const handleRemoveClick = () => {
-    onRemoveFromFavorites(id);
+  const handleRemoveClick = async () => {
+    try {
+      const response = await fetch(`http://4.233.138.141:3001/api/favorites/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      } else {
+        window.location.assign('/favorites');
+      }
+
+      
+    } catch (error) {
+      console.error('Error removing favorite article:', error);
+    }
   };
 
   return (
-    <div className="transform transition duration-300 hover:scale-105 bg-white">
+    <div className="transform transition duration-300 hover:scale-105 bg-white rounded-lg">
       <div className="border rounded-lg overflow-hidden shadow-lg h-70 flex flex-col justify-center items-center text-center px-4 py-4">
         <NavLink to={`/article/${id}`} className="w-full h-full flex flex-col justify-center items-center"> 
           <img src={image} alt={title} className="w-full h-48 object-cover" />

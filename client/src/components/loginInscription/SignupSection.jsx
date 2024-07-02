@@ -37,7 +37,7 @@ const SignupSection = ({ setIsLogin }) => {
           setSuccess("Inscription réussie ! Redirection vers la page d'accueil");
           window.scrollTo(0, 0); // Scroll to top
 
-          fetch('https://4.233.138.141:3001/api/users/login', {
+          fetch('http://4.233.138.141:3001/api/users/login', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'

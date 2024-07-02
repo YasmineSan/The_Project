@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { FiSearch, FiX, FiMenu, FiHeart, FiUser, FiShoppingCart } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// Pour détecter les clics à l'extérieur d'un élément
 const useClickOutside = (handler) => {
   const domNode = useRef();
 
@@ -29,6 +28,7 @@ const Header = () => {
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem('authToken');
@@ -45,8 +45,9 @@ const Header = () => {
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
-    console.log('Search query:', searchQuery);
-    // Implémentez la logique de recherche ici
+    if (searchQuery.trim()) {
+      navigate(`/all-articles?search=${encodeURIComponent(searchQuery)}`);
+    }
   };
 
   const clearSearch = () => {
@@ -67,15 +68,6 @@ const Header = () => {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('authToken');
-    setIsAuthenticated(false);
-    setIsUserDropdownOpen(false);
-    window.location.reload();  // Actualisation de la page
-  };
-
-  const categories = ['Catégorie 1', 'Catégorie 2', 'Catégorie 3']; // Exemple de catégories
-
   const categoryDropdownRef = useClickOutside(() => {
     setIsCategoryDropdownOpen(false);
   });
@@ -84,12 +76,21 @@ const Header = () => {
     setIsUserDropdownOpen(false);
   });
 
+  const handleLogout = () => {
+    localStorage.removeItem('authToken');
+    setIsAuthenticated(false);
+    setIsUserDropdownOpen(false);
+    window.location.assign('/');
+  };
+
+  const categories = [5, 6, 15, 16, 17, 18, 19]; // Exemple de catégories
+
   return (
     <header>
       <nav className='fixed mx-auto border-b-2 border-gold top-0 left-0 right-0 bg-white bg-opacity-100 z-10'>
         <div className='flex container px-4 lg:px-10 items-center justify-between mx-auto'>
           <NavLink to="/" className='mr-5'>
-            <img src="craftify.png" alt="logo Craftify" className='w-20 mr-5' />
+            <img src="/craftify.png" alt="logo Craftify" className='w-20 mr-5' />
           </NavLink>
           
           <div className='flex items-center relative'>
@@ -108,7 +109,7 @@ const Header = () => {
                 >
                   <ul>
                     {categories.map((category) => (
-                      <li key={category} className='px-4 py-2 hover:bg-gold hover:text-white transition-all'>
+                      <li key={category} className='px-4 py-2 hover:bg-gold hover:text-white transition-all' onClick={() => navigate(`/all-articles?category=${encodeURIComponent(category)}`)}>
                         {category}
                       </li>
                     ))}
@@ -134,7 +135,7 @@ const Header = () => {
               </div>
             </form>
           </div>
-
+          
           {isAuthenticated ? (
             <div className='flex items-center space-x-4'>
               <NavLink to="/favorites">
@@ -155,15 +156,11 @@ const Header = () => {
                       className='absolute top-full right-0 mt-2 w-48 bg-white border border-gold rounded shadow-lg z-10'
                     >
                       <ul>
-                        <NavLink to="/userProfile"><li className='px-4 py-2 hover:bg-gold hover:text-white transition-all cursor-pointer'>Mon profil</li></NavLink>
-                        <li className='px-4 py-2 hover:bg-gold hover:text-white transition-all cursor-pointer'>Mes commandes</li>
-                        <li className='px-4 py-2 hover:bg-gold hover:text-white transition-all cursor-pointer'>Mes ventes</li>
-                        <li 
-                          className='px-4 py-2 hover:bg-red-500 hover:text-white transition-all cursor-pointer text-red-500' 
-                          onClick={handleLogout}
-                        >
-                          Déconnexion
-                        </li>
+                        <li className='px-4 py-2 hover:bg-gold hover:text-white transition-all cursor-pointer' onClick={() => { navigate('/userprofile'); setIsUserDropdownOpen(false); }}>Mon profil</li>
+                        <li className='px-4 py-2 hover:bg-gold hover:text-white transition-all cursor-pointer' onClick={() => { navigate('#'); setIsUserDropdownOpen(false); }}>Mes commandes</li>
+                        <li className='px-4 py-2 hover:bg-gold hover:text-white transition-all cursor-pointer' onClick={() => { navigate('#'); setIsUserDropdownOpen(false); }}>Mes ventes</li>
+                        <li className='px-4 py-2 hover:bg-gold hover:text-white transition-all cursor-pointer' onClick={() => { navigate('/userSettings'); setIsUserDropdownOpen(false); }}>Paramètres</li>
+                        <li className='px-4 py-2 hover:bg-red-500 hover:text-white transition-all cursor-pointer text-red-500' onClick={handleLogout}>Déconnexion</li>
                       </ul>
                     </motion.div>
                   )}
