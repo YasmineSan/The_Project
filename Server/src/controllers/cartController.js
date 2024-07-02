@@ -26,7 +26,7 @@ exports.getUserCart = async (req, res) => {
             .input('user_id', userId)
             .query(`
                 SELECT c.cart_id, c.quantity, c.added_at, 
-                       a.article_id, a.article_photo, a.article_description, a.article_price, a.shipping_cost, a.category_name
+                       a.article_id, a.title, a.article_photo, a.article_description, a.article_price, a.shipping_cost, a.category_name
                 FROM Cart c
                 JOIN Articles a ON c.article_id = a.article_id
                 WHERE c.user_id = @user_id
@@ -37,6 +37,7 @@ exports.getUserCart = async (req, res) => {
         res.status(500).send({ message: err.message });
     }
 };
+
 
 
 exports.removeFromCart = async (req, res) => {

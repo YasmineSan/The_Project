@@ -60,6 +60,7 @@ exports.addArticle = async (req, res) => {
             .input('shipping_cost', shipping_cost)
             .input('category_id', category_id)
             .input('article_photo', article_photo_url)
+            .input('date_added', new Date()) // Ajoute la date actuelle
             .query(`
                 INSERT INTO Articles (
                     title,
@@ -67,14 +68,16 @@ exports.addArticle = async (req, res) => {
                     article_price,
                     shipping_cost,
                     category_id,
-                    article_photo
+                    article_photo,
+                    date_added
                 ) OUTPUT INSERTED.article_id VALUES (
                     @title,
                     @article_description,
                     @article_price,
                     @shipping_cost,
                     @category_id,
-                    @article_photo
+                    @article_photo,
+                    @date_added
                 )
             `);
 
@@ -107,6 +110,29 @@ exports.getAllArticlesByUser = async (req, res) => {
                 WHERE ua.user_id = @user_id
             `);
         res.json(result.recordset);
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+};
+
+// Récupère un article spécifique d'un utilisateur
+exports.getArticleByUser = async (req, res) => {
+    try {
+        const { articleId } = req.params;
+        const pool = await poolPromise;
+        const result = await pool.request()
+            .input('article_id', articleId)
+            .query(`
+                SELECT a.*
+                FROM Articles a
+                INNER JOIN User_Article ua ON a.article_id = ua.article_id
+                WHERE a.article_id = @article_id
+            `);
+        const article = result.recordset[0];
+        if (!article) {
+            return res.status(404).send({ message: 'Article not found' });
+        }
+        res.json(article);
     } catch (err) {
         res.status(500).send({ message: err.message });
     }
@@ -201,9 +227,19 @@ exports.getArticleById = async (req, res) => {
         const { id } = req.params;
         const pool = await poolPromise;
 
+        console.log(`Fetching article with ID: ${id}`); // Ajout de log pour l'ID de l'article
+
         const result = await pool.request()
             .input('article_id', id)
-            .query('SELECT * FROM Articles WHERE article_id = @article_id');
+            .query(`
+                SELECT a.*, u.profile_image as user_photo, u.user_id
+                FROM Articles a
+                INNER JOIN User_Article ua ON a.article_id = ua.article_id
+                INNER JOIN Users u ON ua.user_id = u.user_id
+                WHERE a.article_id = @article_id
+            `);
+
+        console.log(`Query result: ${JSON.stringify(result.recordset)}`); // Ajout de log pour les résultats de la requête
 
         const article = result.recordset[0];
         if (!article) {
@@ -212,9 +248,38 @@ exports.getArticleById = async (req, res) => {
 
         res.json(article);
     } catch (err) {
+        console.error('Error fetching article:', err); // Log de l'erreur
         res.status(500).send({ message: err.message });
     }
 };
+
+// Récupère tous les articles d'un utilisateur par user_id (public)
+exports.getArticlesByUserId = async (req, res) => {
+    try {
+        const { userId } = req.params; // Récupère le user_id des paramètres de la requête
+        const pool = await poolPromise;
+
+        const result = await pool.request()
+            .input('user_id', userId)
+            .query(`
+                SELECT a.*, u.profile_image as user_photo, u.user_id
+                FROM Articles a
+                INNER JOIN User_Article ua ON a.article_id = ua.article_id
+                INNER JOIN Users u ON ua.user_id = u.user_id
+                WHERE ua.user_id = @user_id
+            `);
+
+        if (result.recordset.length === 0) {
+            return res.status(404).send({ message: 'No articles found for this user' });
+        }
+
+        res.json(result.recordset);
+    } catch (err) {
+        console.error('Error fetching articles:', err); // Log de l'erreur
+        res.status(500).send({ message: err.message });
+    }
+};
+
 
 // Ajoute une évaluation à un article
 exports.addEvaluation = async (req, res) => {

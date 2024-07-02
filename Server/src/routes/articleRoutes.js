@@ -18,14 +18,16 @@ const upload = multer({
 });
 
 // Routes publiques
-router.get('/', articleController.getAllArticles);
+router.get('/public/articles', articleController.getAllArticles);
 router.get('/:articleId/price', articleController.getArticlePrice);
+router.get('/articles/:id', articleController.getArticleById);
 router.get('/prices', articleController.getAllArticlePrices);
 router.get('/categories/:categoryId/prices', (req, res, next) => {
     console.log(`Received request for category: ${req.params.categoryId}`);
     next();
 }, articleController.getCategoryArticlePrices);
 router.get('/test/categories/:categoryId/prices', articleController.getCategoryArticlePrices);
+router.get('/user/:userId/articles', articleController.getArticlesByUserId); // Nouvelle route pour récupérer les articles par user_id
 
 // Routes avec authentification
 router.get('/user/evaluations', authenticateToken, articleController.getAllEvaluationsByUser);
