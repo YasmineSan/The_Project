@@ -126,15 +126,12 @@ const AddArticlePage = () => {
                 required
                 name="category_name"
               >
-                <option value="" disabled>Sélectionner une catégorie</option>
-                <option value="Artisan">Artisan</option>
-                <option value="Ebeniste">Bois</option>
-                <option value="Forgeron">Forgeron</option>
-                <option value="Sculpteur">Sculpteur</option>
-                <option value="Métallier">Métallier</option>
-                <option value="Tailleur de pierre">Tailleur de pierre</option>
-                <option value="Cordonnier">Cordonnier</option>
-                <option value="Graveur">Graveur</option>
+                <option value="artisan">Artisan</option>
+                <option value="bois">Bois</option>
+                <option value="forgeron">Forgeron</option>
+                <option value="forge">Forge</option>
+                <option value="couture">Couture</option>
+                <option value="ebeniste">Ebeniste</option>
               </select>
             </div>
             <div className="flex md:space-x-4 flex-col md:flex-row">
