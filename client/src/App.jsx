@@ -73,7 +73,7 @@ const router = createBrowserRouter([
         element: <SingleArticlePage /> 
       },
       {
-        path: 'articles',
+        path: 'all-articles',
         element: <AllArticles /> 
       },
       {

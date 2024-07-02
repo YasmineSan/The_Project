@@ -22,7 +22,7 @@ const CardArticle = ({ id, image, title, price }) => {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-          }, 
+          },
           body: JSON.stringify({ "articleId": id, "quantity": number })
         });
 
