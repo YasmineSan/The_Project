@@ -15,6 +15,7 @@ const useClickOutside = (handler) => {
     };
 
     document.addEventListener('mousedown', maybeHandler);
+    
 
     return () => {
       document.removeEventListener('mousedown', maybeHandler);
