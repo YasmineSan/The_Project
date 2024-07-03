@@ -164,7 +164,7 @@ const SingleArticlePage = () => {
           <div className="flex flex-col flex-1 lg:ml-10 justify-around">
             <div>
               <div className="flex items-center mb-4">
-                <NavLink to={`/userProfile/${user.user_id}`}>
+                <NavLink to={`/userProfile/:${user.user_id}`}>
                   <img 
                     src={user.profile_image} 
                     alt="Utilisateur" 

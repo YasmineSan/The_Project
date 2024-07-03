@@ -86,7 +86,7 @@ const AddArticlePage = () => {
   };
 
   return (
-    <main className="container mx-auto px-10 sm:px-12 py-28">
+    <main className="mx-auto px-10 sm:px-12 py-28 bg-gray-100">
       <div className='bg-white shadow-lg rounded-lg p-8 mb-12'>
         <div className="flex flex-col items-center mb-8">
           <h1 className="text-3xl font-semibold text-center py-6">Mise en vente d'un article</h1>
