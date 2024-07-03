@@ -1,5 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import FormField from '../components/loginInscription/FormField';
+import { NavLink } from 'react-router-dom';
 
 const AddArticlePage = () => {
   const [image, setImage] = useState(null);
@@ -13,6 +14,10 @@ const AddArticlePage = () => {
 
   const formRef = useRef(null);
 
+  useEffect(() => {
+    window.scrollTo(0, 0); // Scroll to top
+  }, []);
+  
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -194,7 +199,9 @@ const AddArticlePage = () => {
           </div>
         </div>
         <div className="flex justify-end mt-6">
-          <a href="/profile" className="text-gold hover:underline">Retour au profil</a>
+          <NavLink to={`/userprofile`} className="text-gold hover:underline">
+              Retour au profil
+          </NavLink>
         </div>
       </div>
     </main>
