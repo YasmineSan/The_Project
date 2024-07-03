@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
-import { FiShoppingCart } from 'react-icons/fi';
+import { NavLink, useLocation } from 'react-router-dom';
+import { FiShoppingCart, FiEdit } from 'react-icons/fi';
 
-const CardArticle = ({ id, image, title, price}) => {
+const CardArticle = ({ id, image, title, price }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState('');
+  const location = useLocation();
 
   useEffect(() => {
     const token = localStorage.getItem('authToken');
@@ -55,22 +56,32 @@ const CardArticle = ({ id, image, title, price}) => {
           </div>
         </NavLink>
         <div className="flex items-center justify-center mt-2 space-x-2">
-          {isAuthenticated ? (
-            <button 
-              onClick={handleAddToCart} 
+          {location.pathname === '/userprofile' ? (
+            <button
+              onClick={() => window.location.href = `/editArticle/${id}`}
               className="py-2 mb-4 px-4 bg-gold text-white rounded-full flex items-center border border-gold hover:bg-white hover:text-gold hover:border hover:border-gold duration-300"
             >
-              <FiShoppingCart className="mr-3" />
-              Acheter
+              <FiEdit className="mr-3" />
+              Modifier
             </button>
           ) : (
-            <button 
-              onClick={handleRedirectToLogin} 
-              className="py-2 mb-4 px-4 bg-gold text-white rounded-full flex items-center border border-gold hover:bg-white hover:text-gold hover:border hover:border-gold duration-300"
-            >
-              <FiShoppingCart className="mr-3" />
-              Acheter
-            </button>
+            isAuthenticated ? (
+              <button
+                onClick={handleAddToCart}
+                className="py-2 mb-4 px-4 bg-gold text-white rounded-full flex items-center border border-gold hover:bg-white hover:text-gold hover:border hover:border-gold duration-300"
+              >
+                <FiShoppingCart className="mr-3" />
+                Acheter
+              </button>
+            ) : (
+              <button
+                onClick={handleRedirectToLogin}
+                className="py-2 mb-4 px-4 bg-gold text-white rounded-full flex items-center border border-gold hover:bg-white hover:text-gold hover:border hover:border-gold duration-300"
+              >
+                <FiShoppingCart className="mr-3" />
+                Acheter
+              </button>
+            )
           )}
         </div>
       </div>
