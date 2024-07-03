@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { FiShoppingCart } from 'react-icons/fi';
 
-const CardArticle = ({ id, image, title, price }) => {
+const CardArticle = ({ id, image, title, price, isSold }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState('');
@@ -45,8 +45,8 @@ const CardArticle = ({ id, image, title, price }) => {
   };
 
   return (
-    <div className="transform transition duration-300 hover:scale-105 bg-white">
-      <div className="border rounded-lg overflow-hidden shadow-lg h-70 flex flex-col justify-center items-center text-center">
+    <div className="transform transition rounded-lg duration-300 hover:scale-105 bg-white">
+      <div className="border rounded-lg overflow-hidden shadow-lg h-full flex flex-col justify-center items-center text-center">
         <NavLink to={`/articles/${id}`} className="w-full h-full flex flex-col justify-center items-center">
           <img src={image} alt={title} className="w-full h-48 object-cover" />
           <div className="pt-3 flex flex-col items-center">

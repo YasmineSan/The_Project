@@ -157,13 +157,13 @@ const SingleArticlePage = () => {
             <img 
               src={article.article_photo}
               alt={article.article_title}
-              className="rounded-lg mb-8 lg:mb-4 object-cover"
+              className="rounded-lg mb-10 sm:mb-4 lg:mb-0 object-cover"
             />
           </div>
           
           <div className="flex flex-col flex-1 lg:ml-10 justify-around">
             <div>
-              <div className="flex items-center mb-6 lg:mb-4">
+              <div className="flex items-center mb-4">
                 <NavLink to={`/userProfile/${user.user_id}`}>
                   <img 
                     src={user.profile_image} 
