@@ -11,6 +11,10 @@ exports.addToCart = async (req, res) => {
             .input('article_id', articleId)
             .query('SELECT user_id FROM Articles WHERE article_id = @article_id');
         
+        if (articleResult.recordset.length === 0) {
+            return res.status(404).send({ message: 'Article not found.' });
+        }
+
         if (articleResult.recordset[0].user_id === userId) {
             return res.status(403).send({ message: 'Tu ne peux pas ajouter ton propre article au panier.' });
         }
@@ -22,6 +26,7 @@ exports.addToCart = async (req, res) => {
 
         res.status(201).send({ message: 'Article added to cart successfully' });
     } catch (err) {
+        console.error('Error adding to cart:', err);
         res.status(500).send({ message: err.message });
     }
 };
@@ -43,6 +48,7 @@ exports.getUserCart = async (req, res) => {
 
         res.json(result.recordset);
     } catch (err) {
+        console.error('Error fetching user cart:', err);
         res.status(500).send({ message: err.message });
     }
 };
@@ -60,6 +66,7 @@ exports.removeFromCart = async (req, res) => {
 
         res.send({ message: 'Article removed from cart successfully' });
     } catch (err) {
+        console.error('Error removing from cart:', err);
         res.status(500).send({ message: err.message });
     }
 };
