@@ -173,7 +173,7 @@ const Header = () => {
                       <ul>
                         <li className='px-4 py-2 hover:bg-gold hover:text-white transition-all cursor-pointer' onClick={() => { navigate('/userprofile'); setIsUserDropdownOpen(false); }}>Mon profil</li>
                         <li className='px-4 py-2 hover:bg-gold hover:text-white transition-all cursor-pointer' onClick={() => { navigate('#'); setIsUserDropdownOpen(false); }}>Mes commandes</li>
-                        <li className='px-4 py-2 hover:bg-gold hover:text-white transition-all cursor-pointer' onClick={() => { navigate('#'); setIsUserDropdownOpen(false); }}>Mes ventes</li>
+                        <li className='px-4 py-2 hover:bg-gold hover:text-white transition-all cursor-pointer' onClick={() => { navigate('/allsales'); setIsUserDropdownOpen(false); }}>Mes ventes</li>
                         <li className='px-4 py-2 hover:bg-gold hover:text-white transition-all cursor-pointer' onClick={() => { navigate('/userSettings'); setIsUserDropdownOpen(false); }}>Paramètres</li>
                         <li className='px-4 py-2 hover:bg-red-500 hover:text-white transition-all cursor-pointer text-red-500' onClick={handleLogout}>Déconnexion</li>
                       </ul>

@@ -131,7 +131,7 @@ const SettingsPage = () => {
     console.log(formData);
 
   return (
-    <main className="container mx-auto px-4 sm:px-20 pt-36 pb-20 bg-slate-100">
+    <main className="container mx-auto px-4 sm:px-20 pt-36 pb-20 bg-gray-100">
       <div className="bg-white shadow-lg rounded-lg p-8">
         <h1 className="text-2xl sm:text-3xl font-medium mb-8 text-center sm:text-left">Paramètres du compte</h1>
 

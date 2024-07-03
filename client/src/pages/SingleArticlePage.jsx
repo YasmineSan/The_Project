@@ -150,7 +150,7 @@ const SingleArticlePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 pt-10 pb-10">
+    <div className="min-h-screen bg-gray-100 pt-10 pb-10">
       <div className="max-w-[80%] mx-auto bg-white p-6 rounded-lg shadow-md mt-24 mb-10">
         <div className="flex flex-col lg:flex-row">
           <div className="flex-1 min-h-20">

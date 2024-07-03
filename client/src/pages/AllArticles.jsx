@@ -107,7 +107,7 @@ const AllArticles = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 pt-10 pb-10">
+    <div className="min-h-screen bg-gray-100 pt-10 pb-10">
       <div className="w-full max-w-[90%] mx-auto bg-white p-6 rounded-lg shadow-md mt-24 mb-10">
         <div className="md:hidden mb-4 flex justify-between items-center">
           <h2 className="text-2xl font-medium">Catégories</h2>

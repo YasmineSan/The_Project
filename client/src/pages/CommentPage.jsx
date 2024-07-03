@@ -88,7 +88,7 @@ const CommentPage = () => {
   const formattedAverageRating = validAverageRating.toFixed(1);
 
   return (
-    <div className="container mx-auto px-4 pt-28 pb-8 bg-slate-100">
+    <div className="container mx-auto px-4 pt-28 pb-8 bg-gray-100">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-semibold">Commentaires de cette boutique {seller.username}</h2>
         <Link to={`/profile/${sellerId}`} className="text-gold hover:underline">Retour au profil</Link>

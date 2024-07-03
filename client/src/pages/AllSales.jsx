@@ -29,7 +29,7 @@ const AllSales = () => {
   ];
 
   return (
-    <div className="container mx-auto px-4 pt-28 pb-8 bg-slate-100">
+    <div className="container mx-auto px-4 pt-28 pb-8 bg-gray-100">
       <h2 className="text-2xl font-semibold mb-6">Mes ventes</h2>
       {sales.map(sale => (
         <div key={sale.id} className="bg-white p-4 mb-6 mx-8 sm:mx-32 lg:mx-0 rounded-lg shadow-lg">

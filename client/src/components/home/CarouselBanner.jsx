@@ -5,7 +5,7 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 const CarouselBanner = () => {
 
   return (
-    <section className='container mx-auto px-12'>
+    <section className='container mx-auto px-12 pt-4'>
       <Carousel autoPlay infiniteLoop dynamicHeight showThumbs={false} showStatus={false} swipeable showArrows={false} className="rounded-xl overflow-hidden max-h-[550px]">
         <div className='relative'>
           <img
