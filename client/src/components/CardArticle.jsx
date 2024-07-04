@@ -50,7 +50,7 @@ const CardArticle = ({ id, image, title, price }) => {
         <NavLink to={`/articles/${id}`} className="w-full h-full flex flex-col justify-center items-center">
           <img src={image} alt={title} className="w-full h-48 object-cover" />
           <div className="pt-3 flex flex-col items-center">
-            <h3 className="text-lg font-medium">{title}</h3>
+            <h3 className="text-lg font-medium px-2">{title}</h3>
             <p className="text-base text-gray-700">{price} €</p>
           </div>
         </NavLink>

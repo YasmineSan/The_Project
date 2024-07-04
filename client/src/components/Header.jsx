@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { FiSearch, FiX, FiMenu, FiHeart, FiUser, FiShoppingCart } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const useClickOutside = (handler) => {
   const domNode = useRef();
+  
 
   useEffect(() => {
     const maybeHandler = (event) => {
@@ -14,6 +15,7 @@ const useClickOutside = (handler) => {
     };
 
     document.addEventListener('mousedown', maybeHandler);
+    
 
     return () => {
       document.removeEventListener('mousedown', maybeHandler);
@@ -29,6 +31,18 @@ const Header = () => {
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const categoryMap = {
+    5: 'Forge',
+    6: 'Bois',
+    15: 'Couture',
+    16: 'Ebeniste',
+    17: 'Forgeron',
+    18: 'Artisan',
+  };
+
+  const categories = Object.keys(categoryMap);
 
   useEffect(() => {
     const token = localStorage.getItem('authToken');
@@ -46,12 +60,15 @@ const Header = () => {
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      navigate(`/all-articles?search=${encodeURIComponent(searchQuery)}`);
+      navigate(`/articles?search=${encodeURIComponent(searchQuery)}`);
     }
   };
 
   const clearSearch = () => {
     setSearchQuery('');
+    if (location.pathname.startsWith('/articles')) {
+      navigate('/articles');
+    }
   };
 
   const toggleCategoryDropdown = () => {
@@ -83,11 +100,9 @@ const Header = () => {
     window.location.assign('/');
   };
 
-  const categories = [5, 6, 15, 16, 17, 18, 19]; // Exemple de catégories
-
   return (
     <header>
-      <nav className='fixed mx-auto border-b-2 border-gold top-0 left-0 right-0 bg-white bg-opacity-100 z-10'>
+      <nav className='fixed mx-auto top-0 left-0 right-0 shadow-md bg-white bg-opacity-100 z-10'>
         <div className='flex container px-4 lg:px-10 items-center justify-between mx-auto'>
           <NavLink to="/" className='mr-5'>
             <img src="/craftify.png" alt="logo Craftify" className='w-20 mr-5' />
@@ -109,8 +124,8 @@ const Header = () => {
                 >
                   <ul>
                     {categories.map((category) => (
-                      <li key={category} className='px-4 py-2 hover:bg-gold hover:text-white transition-all' onClick={() => navigate(`/all-articles?category=${encodeURIComponent(category)}`)}>
-                        {category}
+                      <li key={category} className='px-4 py-2 hover:bg-gold hover:text-white transition-all' onClick={() => navigate(`/articles?category=${encodeURIComponent(category)}`)}>
+                        {categoryMap[category]}
                       </li>
                     ))}
                   </ul>

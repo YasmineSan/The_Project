@@ -10,7 +10,8 @@ export const UserProfile = () => {
   const [articles, setArticles] = useState([]);
  
   useEffect(() => {
-    
+    window.scrollTo(0, 0); // Scroll to top
+
     if (userId) {// Si c'est un autre utilisateur
 
       const id = userId[1];

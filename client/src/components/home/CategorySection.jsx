@@ -11,16 +11,16 @@ export const CategorySection = () => {
   const controls = useAnimation();
 
   const categories = [
-    { id: 1, name: 'Category 1', image: 'https://picsum.photos/300' },
-    { id: 2, name: 'Category 2', image: 'https://picsum.photos/300' },
-    { id: 3, name: 'Category 3', image: 'https://picsum.photos/300' },
-    { id: 4, name: 'Category 4', image: 'https://picsum.photos/300' },
-    { id: 5, name: 'Category 5', image: 'https://picsum.photos/300' },
-    { id: 6, name: 'Category 6', image: 'https://picsum.photos/300' },
-    { id: 7, name: 'Category 7', image: 'https://picsum.photos/300' },
-    { id: 8, name: 'Category 8', image: 'https://picsum.photos/300' },
-    { id: 9, name: 'Category 9', image: 'https://picsum.photos/300' },
-    { id: 10, name: 'Category 10', image: 'https://picsum.photos/300' },
+    { id: 5, name: 'Forge', image: 'https://picsum.photos/300' },
+    { id: 6, name: 'Bois', image: 'https://picsum.photos/300' },
+    { id: 15, name: 'Couture', image: 'https://picsum.photos/300' },
+    { id: 16, name: 'Ebeniste', image: 'https://picsum.photos/300' },
+    { id: 17, name: 'Forgeron', image: 'https://picsum.photos/300' },
+    { id: 18, name: 'Artisan', image: 'https://picsum.photos/300' },
+    // { id: 7, name: 'Category 7', image: 'https://picsum.photos/300' },
+    // { id: 8, name: 'Category 8', image: 'https://picsum.photos/300' },
+    // { id: 9, name: 'Category 9', image: 'https://picsum.photos/300' },
+    // { id: 10, name: 'Category 10', image: 'https://picsum.photos/300' },
   ];
 
   const itemsPerPage = 3;
@@ -62,7 +62,7 @@ export const CategorySection = () => {
                 {categories.slice(pageIndex * itemsPerPage, (pageIndex + 1) * itemsPerPage).map((category) => (
                   <NavLink
                     key={category.id}
-                    to={`/categories/${category.id}`}
+                    to={`/articles/?category=${category.id}`}
                     className="w-1/3 p-4 flex flex-col items-center transform transition-transform duration-300 hover:scale-105"
                   >
                     <div className="rounded-full w-25 h-25 overflow-hidden mb-2">

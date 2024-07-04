@@ -36,7 +36,6 @@ const SettingsPage = () => {
             throw new Error('Failed to fetch user data');
           }
           const userData = await response.json();
-          // console.log(userData);
           setUser(userData);
           setFormData({ ...userData });
           setLoading(false);
@@ -59,10 +58,35 @@ const SettingsPage = () => {
       setEditingField(null); // Reset editingField state to hide input fields
     };
   
-    const handleSaveChanges = () => {
+    const handleSaveChanges = async () => {
       setUser({ ...formData }); // Update user data with formData
-      setEditingField(null); // Reset editingField state to hide input fields
+      setEditingField(null);
+       // Reset editingField state to hide input fields
       // Here you would normally send formData to your backend API
+      try {
+        console.log(formData);
+        console.log(user.user_id);
+           
+          const response = await fetch(`http://4.233.138.141:3001/api/users/${user.user_id}`, {
+            method: 'PUT',
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+              'Content-Type': 'application/json'
+            },
+            body: formData
+          });
+          if (!response.ok) {
+            throw new Error('Failed to fetch user data');
+          }
+          const userData = await response.json();
+          setUser(userData);
+          setFormData({ ...userData });
+          setLoading(false);
+        } catch (error) {
+          console.error('Error:', error);
+          setLoading(false);
+          setError('Failed to fetch user data');
+        }
       console.log('Saving changes:', formData);
     };
   
@@ -108,16 +132,16 @@ const SettingsPage = () => {
   return (
     <main className="container mx-auto px-4 sm:px-20 pt-36 pb-20 bg-slate-100">
       <div className="bg-white shadow-lg rounded-lg p-8">
-        <h1 className="text-3xl font-medium mb-6">Paramètres du compte</h1>
+        <h1 className="text-2xl sm:text-3xl font-medium mb-8 text-center sm:text-left">Paramètres du compte</h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
           {/* Profile Photo */}
           <div className="flex flex-col items-center justify-center mb-4 md:col-span-2">
             <div className="relative">
               <img
                 src={formData.profile_image}
                 alt="Profile"
-                className="w-28 rounded-full object-cover mr-4"
+                className="w-28 h-28 rounded-full object-cover mr-4"
               />
               <label
                 htmlFor="profilePhotoInput"
@@ -141,8 +165,8 @@ const SettingsPage = () => {
           {/* Username */}
           <div className="flex flex-col mb-4">
             <h4 className="text-gray-500 font-medium mb-2 cursor-pointer">Nom d'utilisateur</h4>
-            <div className="flex items-center">
-              <FiUser className="text-gold w-6 h-6 mr-2" />
+            <div className="flex items-start">
+              <FiUser className="text-gold min-w-6 h-6 mr-2" />
               {editingField === 'username' ? (
                 <input
                   type="text"
@@ -174,8 +198,8 @@ const SettingsPage = () => {
           {/* Name */}
           <div className="flex flex-col mb-4">
             <h4 className="text-gray-500 font-medium mb-2 cursor-pointer">Nom et prénom</h4>
-            <div className="flex items-center">
-              <FiUser className="text-gold w-6 h-6 mr-2" />
+            <div className="flex items-start">
+              <FiUser className="text-gold min-w-6 h-6 mr-2" />
               {editingField === 'name' ? (
                 <div className="grid grid-cols-2 gap-4">
                   <input
@@ -218,8 +242,8 @@ const SettingsPage = () => {
           {/* Biography */}
           <div className="flex flex-col mb-4">
             <h4 className="text-gray-500 font-medium mb-2 cursor-pointer">Biographie</h4>
-            <div className="flex items-center">
-              <FiInfo className="text-gold w-6 h-6 mr-2" />
+            <div className="flex items-start">
+              <FiInfo size={18} className="text-gold min-w-6 h-6 mr-2" />
               {editingField === 'biography' ? (
                 <textarea
                   name="biography"
@@ -250,8 +274,8 @@ const SettingsPage = () => {
           {/* Email */}
           <div className="flex flex-col mb-4">
             <h4 className="text-gray-500 font-medium mb-2 cursor-pointer">Adresse email</h4>
-            <div className="flex items-center">
-              <FiMail className="text-gold w-6 h-6 mr-2" />
+            <div className="flex items-start">
+              <FiMail className="text-gold min-w-6 h-6 mr-2" />
               {editingField === 'email' ? (
                 <input
                   type="email"
@@ -283,8 +307,8 @@ const SettingsPage = () => {
           {/* PayPal */}
           <div className="flex flex-col mb-4">
             <h4 className="text-gray-500 font-medium mb-2 cursor-pointer">Adresse PayPal</h4>
-            <div className="flex items-center">
-              <FiMail className="text-gold w-6 h-6 mr-2" />
+            <div className="flex items-start">
+              <FiMail className="text-gold min-w-6 h-6 mr-2" />
               {editingField === 'paypalAddress' ? (
                 <input
                   type="email"
@@ -317,8 +341,8 @@ const SettingsPage = () => {
           {/* Password */}
           <div className="flex flex-col mb-4">
             <h4 className="text-gray-500 font-medium mb-2 cursor-pointer">Mot de passe</h4>
-            <div className="flex items-center">
-              <FiLock className="text-gold w-6 h-6 mr-2" />
+            <div className="flex items-start">
+              <FiLock className="text-gold min-w-6 h-6 mr-2" />
               {editingField === 'password' ? (
                 <input
                   type="password"
@@ -328,7 +352,7 @@ const SettingsPage = () => {
                   className="border border-gray-300 focus:outline-none focus:border-gold rounded-md px-4 py-2 w-full transition-all duration-300 ease-in-out transform focus:scale-105"
                 />
               ) : (
-                <p className="text-gray-700">{formData.hashed_password}</p>
+                <p className="text-gray-700">***********</p>
               )}
               <button
                 className="ml-2 text-gray-500 hover:text-gold transition-colors duration-300 ease-in-out"
@@ -350,8 +374,8 @@ const SettingsPage = () => {
         {/* Registration Date */}
           <div className="flex flex-col mb-4">
             <h4 className="text-gray-500 font-medium mb-2 cursor-pointer">Date d'inscription</h4>
-            <div className="flex items-center">
-              <FiCalendar className="text-gold w-6 h-6 mr-2" />
+            <div className="flex items-start">
+              <FiCalendar className="text-gold min-w-6 h-6 mr-2" />
               <p className="text-gray-700">
                 {new Date(formData.registration_date).toLocaleDateString('fr-FR')}
               </p>
@@ -361,8 +385,8 @@ const SettingsPage = () => {
           {/* Address */}
           <div className="flex flex-col mb-4">
             <h4 className="text-gray-500 font-medium mb-2 cursor-pointer">Adresse</h4>
-            <div className="flex items-center">
-              <FiMapPin className="text-gold w-6 h-6 mr-2" />
+            <div className="flex items-start">
+              <FiMapPin className="text-gold min-w-6 h-6 mr-2" />
               {editingField === 'address' ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="flex flex-col">

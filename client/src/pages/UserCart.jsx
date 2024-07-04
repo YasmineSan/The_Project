@@ -10,6 +10,7 @@ const CheckoutForm = ({ total }) => {
   const stripe = useStripe();
   const elements = useElements();
   const [paymentMessage, setPaymentMessage] = useState('');
+  const [response , setResponse] = useState([]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -29,6 +30,32 @@ const CheckoutForm = ({ total }) => {
       setPaymentMessage(error.message);
     } else {
       setPaymentMessage('Paiement effectué avec succès !');
+
+      // Ajoute une commande
+      const handleAddOrder = async () => {
+        try {
+          const response = await fetch('http://4.233.138.141:3001/api/payments/create-payment-intent', {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ total, "currency":'EUR' })
+          });
+  
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+  
+          const data = await response.json();
+          setResponse(data);
+          console.log(data);
+        } catch (error) {
+          console.error('Error fetching articles:', error);
+        }
+      };
+
+      handleAddOrder();
     }
   };
 
@@ -148,7 +175,7 @@ export const UserCart = () => {
               <p className="text-sm text-gray-500 mt-1">(Sans commission ni frais de livraison)</p>
             </div>
           </div>
-          <div className="col-span-2 lg:col-span-1 bg-white shadow-lg rounded-lg h-[310px]">
+          <div className="col-span-2 lg:col-span-1 bg-white shadow-lg rounded-lg h-[330px]">
             <div className="p-4">
               <h3 className="text-lg font-semibold tracking-wider uppercase">Total</h3>
               <div className="flex justify-between mt-4">

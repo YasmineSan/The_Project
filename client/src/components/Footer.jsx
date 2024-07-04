@@ -5,7 +5,7 @@ import { FaXTwitter, FaInstagram, FaFacebook} from "react-icons/fa6";
 
 const Footer = () => {
   return (
-    <footer className="bg-inherit border-t-2 border-gold mx-auto">
+    <footer className="bg-inherit mx-auto ">
       <div className="flex container justify-between gap-5 flex-wrap flex-col sm:flex-row items-center mx-auto lg:px-10 px-4 py-10">
         <div className="footer-left">
           <p className="tracking-wider text-darkGrey font-light">© CRAFTIFY 2024</p>
