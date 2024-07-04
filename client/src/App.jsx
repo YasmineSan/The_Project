@@ -3,7 +3,6 @@ import React from 'react';
 import Home from './pages/Home';
 import LoginInscriptionPage from './pages/LoginInscriptionPage';
 import ContactUser from './pages/ContactUser';
-// import Contact from './pages/Contact';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Contact from './pages/Contact';
@@ -17,6 +16,7 @@ import AllArticles from './pages/AllArticles';
 import {RouterProvider, createBrowserRouter, createMemoryRouter, Outlet, useRouteError} from "react-router-dom"
 import SettingsPage from './pages/UserSettings';
 import AllSales from './pages/AllSales';
+import ArticleDetailPage from './pages/ArticleDetailPage';
 
 
 
@@ -84,6 +84,10 @@ const router = createBrowserRouter([
       {
         path: 'allsales',
         element: <AllSales />
+      },
+      {
+        path: 'articledetail',
+        element: <ArticleDetailPage />
       },
     ]
   }
