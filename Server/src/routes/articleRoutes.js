@@ -28,6 +28,8 @@ router.get('/categories/:categoryId/prices', (req, res, next) => {
 }, articleController.getCategoryArticlePrices);
 router.get('/test/categories/:categoryId/prices', articleController.getCategoryArticlePrices);
 router.get('/user/:userId/articles', articleController.getArticlesByUserId); // Nouvelle route pour récupérer les articles par user_id
+// Route pour récupérer tous les articles sauf ceux vendus
+router.get('/available-articles', articleController.getAvailableArticles);
 
 // Routes avec authentification
 router.get('/user/evaluations', authenticateToken, articleController.getAllEvaluationsByUser);

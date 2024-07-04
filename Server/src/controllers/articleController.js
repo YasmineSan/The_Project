@@ -137,6 +137,24 @@ exports.getArticleByUser = async (req, res) => {
         res.status(500).send({ message: err.message });
     }
 };
+// Récupère tous les articles qui ne sont pas vendus (solde = 0)
+exports.getAvailableArticles = async (req, res) => {
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request()
+            .query(`
+                SELECT a.*, ua.user_id
+                FROM Articles a
+                LEFT JOIN User_Article ua ON a.article_id = ua.article_id
+                WHERE a.sold = 0
+            `);
+        res.json(result.recordset);
+    } catch (err) {
+        console.error('Error fetching available articles:', err); // Log de l'erreur
+        res.status(500).send({ message: err.message });
+    }
+};
+
 
 // Met à jour un article
 exports.updateArticle = async (req, res) => {
