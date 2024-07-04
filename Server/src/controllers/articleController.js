@@ -272,7 +272,7 @@ exports.getArticleById = async (req, res) => {
 };
 
 
-// Récupère tous les articles d'un utilisateur par user_id (public)
+// (modifier avec columns sold) Récupère tous les articles d'un utilisateur par user_id (public)
 exports.getArticlesByUserId = async (req, res) => {
     try {
         const { userId } = req.params; // Récupère le user_id des paramètres de la requête
@@ -285,7 +285,7 @@ exports.getArticlesByUserId = async (req, res) => {
                 FROM Articles a
                 INNER JOIN User_Article ua ON a.article_id = ua.article_id
                 INNER JOIN Users u ON ua.user_id = u.user_id
-                WHERE ua.user_id = @user_id
+                WHERE ua.user_id = @user_id AND a.sold = 0
             `);
 
         if (result.recordset.length === 0) {
@@ -298,6 +298,7 @@ exports.getArticlesByUserId = async (req, res) => {
         res.status(500).send({ message: err.message });
     }
 };
+
 
 
 // Ajoute une évaluation à un article
