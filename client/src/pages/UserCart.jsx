@@ -6,7 +6,7 @@ import { Elements, CardElement, useStripe, useElements } from '@stripe/react-str
 
 const stripePromise = loadStripe('pk_test_51PWEtF2Kq8XatW7q7Vjga2elQagu6zi8Y3u1JM92VgXDSKqPpNNy0hx2muypSjci1rW6wumGMyzMSnEjFRrQnyY000VY8Zg9Ca');
 
-const CheckoutForm = ({ total, cart, setCart }) => {
+const CheckoutForm = ({ total, cart, setCart, handleRemoveItem }) => {
   const stripe = useStripe();
   const elements = useElements();
   const [paymentMessage, setPaymentMessage] = useState('');
@@ -32,8 +32,11 @@ const CheckoutForm = ({ total, cart, setCart }) => {
       setPaymentMessage('Paiement effectué avec succès !');
       console.log(cart)
 
-      //[ {"article_id": , "qantity": }, ]
-      const body = 
+
+      const body = cart.map(item => ({
+        article_id: item.article_id,
+        quantity: item.quantity,
+      }));
 
       // Ajoute une commande
       const handleAddOrder = async () => {
@@ -59,7 +62,9 @@ const CheckoutForm = ({ total, cart, setCart }) => {
         }
       };
 
-      handleAddOrder();
+     await handleAddOrder();
+     //handleRemoveItem()
+     cart.forEach(item => handleRemoveItem(item.article_id)); 
     }
   };
 
@@ -200,7 +205,7 @@ export const UserCart = () => {
               </div>
               <div className="mt-4 p-2 bg-slate-100 shadow-lg">
                 <Elements stripe={stripePromise} >
-                  <CheckoutForm total={total} cart={cart} setCart={setCart}/>
+                  <CheckoutForm total={total} cart={cart} setCart={setCart} handleRemoveItem={handleRemoveItem}/>
                 </Elements>
               </div>
             </div>

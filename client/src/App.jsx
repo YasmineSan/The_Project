@@ -17,6 +17,7 @@ import {RouterProvider, createBrowserRouter, createMemoryRouter, Outlet, useRout
 import SettingsPage from './pages/UserSettings';
 import AllSales from './pages/AllSales';
 import ArticleDetailPage from './pages/ArticleDetailPage';
+import OrderPage from './pages/OrderPage';
 
 
 
@@ -88,6 +89,10 @@ const router = createBrowserRouter([
       {
         path: 'articledetail',
         element: <ArticleDetailPage />
+      },
+      {
+        path: 'orderpage',
+        element: <OrderPage />
       },
     ]
   }

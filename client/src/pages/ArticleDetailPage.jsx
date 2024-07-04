@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, NavLink } from 'react-router-dom';
 
 const ArticleDetailPage = () => {
   const location = useLocation();
@@ -226,6 +226,13 @@ const ArticleDetailPage = () => {
               </div>
             </div>
           </div>
+
+        </div>
+        <div className="mt-8 text-right">
+          <NavLink to={`/userprofile`} className="text-gold hover:underline">
+              Retour au profil
+          </NavLink>
+          
         </div>
       </div>
     </main>

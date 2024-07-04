@@ -13,6 +13,7 @@ const AddArticlePage = () => {
   const [success, setSuccess] = useState('');
 
   const formRef = useRef(null);
+  const navigate = useNavigate();
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -67,6 +68,7 @@ const AddArticlePage = () => {
         window.scrollTo(0, 0); // Scroll to top
 
         // Redirection vers la page de confirmation avec les données du formulaire
+        
         navigate('/articledetail', {
           state: {
             image: URL.createObjectURL(image),
