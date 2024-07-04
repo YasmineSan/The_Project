@@ -6,7 +6,7 @@ import { Elements, CardElement, useStripe, useElements } from '@stripe/react-str
 
 const stripePromise = loadStripe('pk_test_51PWEtF2Kq8XatW7q7Vjga2elQagu6zi8Y3u1JM92VgXDSKqPpNNy0hx2muypSjci1rW6wumGMyzMSnEjFRrQnyY000VY8Zg9Ca');
 
-const CheckoutForm = ({ total }) => {
+const CheckoutForm = ({ total, cart, setCart }) => {
   const stripe = useStripe();
   const elements = useElements();
   const [paymentMessage, setPaymentMessage] = useState('');
@@ -30,17 +30,21 @@ const CheckoutForm = ({ total }) => {
       setPaymentMessage(error.message);
     } else {
       setPaymentMessage('Paiement effectué avec succès !');
+      console.log(cart)
+
+      //[ {"article_id": , "qantity": }, ]
+      const body = 
 
       // Ajoute une commande
       const handleAddOrder = async () => {
         try {
-          const response = await fetch('http://4.233.138.141:3001/api/payments/create-payment-intent', {
+          const response = await fetch('http://4.233.138.141:3001/orders', {
             method: 'POST',
             headers: {
               'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ total, "currency":'EUR' })
+            body: JSON.stringify({"order_details": body})
           });
   
           if (!response.ok) {
@@ -195,8 +199,8 @@ export const UserCart = () => {
                 <span>{total.toFixed(2)}€</span>
               </div>
               <div className="mt-4 p-2 bg-slate-100 shadow-lg">
-                <Elements stripe={stripePromise}>
-                  <CheckoutForm total={total} />
+                <Elements stripe={stripePromise} >
+                  <CheckoutForm total={total} cart={cart} setCart={setCart}/>
                 </Elements>
               </div>
             </div>

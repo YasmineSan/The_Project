@@ -23,7 +23,7 @@ const SignupSection = ({ setIsLogin }) => {
 
     if (password && confirmPassword && password === confirmPassword) {
       try {
-        const response = await fetch('https://4.233.138.141:3001/api/users/register', {
+        const response = await fetch('http://4.233.138.141:3001/api/users/register', {
           method: 'POST',
           body: formData
         });
