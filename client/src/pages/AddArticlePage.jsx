@@ -1,6 +1,6 @@
-import React, { useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useRef, useEffect } from 'react';
 import FormField from '../components/loginInscription/FormField';
+import { NavLink, useNavigate } from 'react-router-dom';
 
 const AddArticlePage = () => {
   const [image, setImage] = useState(null);
@@ -13,7 +13,6 @@ const AddArticlePage = () => {
   const [success, setSuccess] = useState('');
 
   const formRef = useRef(null);
-  const navigate = useNavigate();
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -92,7 +91,7 @@ const AddArticlePage = () => {
   };
 
   return (
-    <main className="container mx-auto px-10 sm:px-12 py-28">
+    <main className="mx-auto px-10 sm:px-12 py-28 bg-gray-100">
       <div className='bg-white shadow-lg rounded-lg p-8 mb-12'>
         <div className="flex flex-col items-center mb-8">
           <h1 className="text-3xl font-semibold text-center py-6">Mise en vente d'un article</h1>
@@ -137,15 +136,12 @@ const AddArticlePage = () => {
                 required
                 name="category_name"
               >
-                <option value="" disabled>Sélectionner une catégorie</option>
-                <option value="Artisan">Artisan</option>
-                <option value="Ebeniste">Bois</option>
-                <option value="Forgeron">Forgeron</option>
-                <option value="Sculpteur">Sculpteur</option>
-                <option value="Métallier">Métallier</option>
-                <option value="Tailleur de pierre">Tailleur de pierre</option>
-                <option value="Cordonnier">Cordonnier</option>
-                <option value="Graveur">Graveur</option>
+                <option value="artisan">Artisan</option>
+                <option value="bois">Bois</option>
+                <option value="forgeron">Forgeron</option>
+                <option value="forge">Forge</option>
+                <option value="couture">Couture</option>
+                <option value="ebeniste">Ebeniste</option>
               </select>
             </div>
             <div className="flex md:space-x-4 flex-col md:flex-row">
@@ -208,7 +204,9 @@ const AddArticlePage = () => {
           </div>
         </div>
         <div className="flex justify-end mt-6">
-          <a href="/profile" className="text-gold hover:underline">Retour au profil</a>
+          <NavLink to={`/userprofile`} className="text-gold hover:underline">
+              Retour au profil
+          </NavLink>
         </div>
       </div>
     </main>

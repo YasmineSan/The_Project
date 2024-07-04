@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FiMail, FiMapPin, FiSettings } from 'react-icons/fi';
+import { FiMail, FiMapPin, FiSettings, FiPlus  } from 'react-icons/fi';
 import CardArticle from '../components/CardArticle';
 import { useParams, Link, NavLink } from 'react-router-dom';
 import { IoConstructOutline } from 'react-icons/io5';
@@ -10,7 +10,8 @@ export const UserProfile = () => {
   const [articles, setArticles] = useState([]);
  
   useEffect(() => {
-    
+    window.scrollTo(0, 0); // Scroll to top
+
     if (userId) {// Si c'est un autre utilisateur
 
       const id = userId[1];
@@ -113,7 +114,7 @@ export const UserProfile = () => {
   }, []);
 
   return (
-    <main className="container mx-auto px-10 sm:px-12 py-36">
+    <main className="w-full mx-auto px-10 sm:px-12 py-36 bg-gray-100">
       <div className=" bg-white shadow-lg rounded-lg p-8 mb-12 lg:mx-28">
         <div className="flex flex-col sm:flex-row items-center">
           <img src={user.profile_image} alt="Profile" className="w-40 h-40 rounded-full object-cover mb-4 sm:mr-10 shadow-md" />
@@ -155,6 +156,16 @@ export const UserProfile = () => {
       <div>
         <h2 className="text-2xl font-medium mb-6">{articles.length} articles</h2>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 lg:gap-10">
+           {!userId && (
+            <NavLink to={`/addArticle`} className="transform transition duration-300 hover:scale-105 cursor-pointer bg-white rounded-lg border-4 border-dashed border-gray-300 flex flex-col items-center justify-center text-center p-6 shadow-lg hover:bg-gray-100">
+              <div className="flex items-center justify-center text-gold mb-4">
+                <FiPlus className="text-6xl transition duration-300 transform hover:rotate-90" />
+              </div>
+              <div className="text-lg font-medium text-gray-700">
+                Créer un article
+              </div>
+            </NavLink>
+          )}
           {articles.length > 0 ? (
             articles.map(article => (
               <CardArticle

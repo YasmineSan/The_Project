@@ -33,10 +33,10 @@ export const ShowArticlesSection = () => {
   return (
     <section className="container mx-auto py-20 px-12">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-8 lg:gap-10">
-        <div className="flex flex-col justify-center items-start p-4 rounded-lg shadow-lg">
+        <div className="flex flex-col justify-center items-start p-4 rounded-lg shadow-lg bg-white">
           <h2 className="text-2xl lg:text-3xl font-semibold mb-4">Découvrez nos articles</h2>
           <p className="mb-4 text-base">Parcourez notre sélection d'articles et trouvez ceux qui vous plaisent.</p>
-          <NavLink to="/articles" className="py-2 px-5 hover:bg-gold hover:text-white rounded-full bg-white text-gold border border-gold">
+          <NavLink to="/articles" className="py-2 px-5 hover:bg-gold hover:text-white rounded-full bg-white text-gold border border-gold transition-all duration-300">
             Voir plus
           </NavLink>
         </div>

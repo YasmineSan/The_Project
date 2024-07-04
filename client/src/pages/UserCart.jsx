@@ -138,7 +138,7 @@ export const UserCart = () => {
   }
 
   return (
-    <div className="bg-slate-100 min-h-screen">
+    <div className="bg-gray-100 min-h-screen">
       <main className='container mx-auto py-28 px-4 sm:px-6 lg:px-8'>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="col-span-2">

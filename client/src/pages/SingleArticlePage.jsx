@@ -150,21 +150,21 @@ const SingleArticlePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 pt-10 pb-10">
+    <div className="min-h-screen bg-gray-100 pt-10 pb-10">
       <div className="max-w-[80%] mx-auto bg-white p-6 rounded-lg shadow-md mt-24 mb-10">
         <div className="flex flex-col lg:flex-row">
           <div className="flex-1 min-h-20">
             <img 
               src={article.article_photo}
               alt={article.article_title}
-              className="rounded-lg mb-4 lg:mb-0 object-cover"
+              className="rounded-lg mb-10 sm:mb-4 lg:mb-0 object-cover"
             />
           </div>
           
           <div className="flex flex-col flex-1 lg:ml-10 justify-around">
             <div>
               <div className="flex items-center mb-4">
-                <NavLink to={`/userProfile/${user.user_id}`}>
+                <NavLink to={`/userProfile/:${user.user_id}`}>
                   <img 
                     src={user.profile_image} 
                     alt="Utilisateur" 
@@ -172,7 +172,7 @@ const SingleArticlePage = () => {
                   />
                 </NavLink>
                 <NavLink to={`/userProfile/:${user.user_id}`}>
-                  <span className="font-semibold hover:text-gold hover:underline">{user.username}</span>
+                  <span className="font-medium hover:text-gold hover:underline text-xl md:text-lg">{user.username}</span>
                 </NavLink>
               </div>
               <h1 className="text-2xl font-semibold mb-2">{article.title}</h1>
@@ -180,20 +180,7 @@ const SingleArticlePage = () => {
               <p className="mb-6">
                 {article.article_description}
               </p>
-              <div className="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4 mb-4">
-                <div className="flex items-center">
-                  <label htmlFor="quantity" className="mr-2">Quantité:</label>
-                  <select 
-                    id="quantity"
-                    value={quantity}
-                    onChange={(e) => setQuantity(parseInt(e.target.value))}
-                    className="border rounded px-2 py-1"
-                  >
-                    {[...Array(10).keys()].map(x => (
-                      <option key={x + 1} value={x + 1}>{x + 1}</option>
-                    ))}
-                  </select>
-                </div>
+              <div className="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4 mb-6">
                 <button 
                   onClick={handleAddToFavorites} 
                   className="flex-1 bg-white border border-gold text-gold py-2 px-4 rounded flex items-center justify-center hover:bg-gold hover:text-white transition-colors duration-300"
