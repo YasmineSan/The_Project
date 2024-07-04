@@ -33,7 +33,7 @@ const CheckoutForm = ({ total, cart, setCart }) => {
       console.log(cart)
 
       //[ {"article_id": , "qantity": }, ]
-      const body = 
+      // const body = 
 
       // Ajoute une commande
       const handleAddOrder = async () => {

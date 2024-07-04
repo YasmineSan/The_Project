@@ -14,7 +14,6 @@ export const ShowArticlesSection = () => {
             'Content-Type': 'application/json'
           }
         });
-        console.log(response)
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -28,6 +27,7 @@ export const ShowArticlesSection = () => {
     };
 
     fetchArticles();
+    
   }, []);
 
   return (
@@ -40,6 +40,7 @@ export const ShowArticlesSection = () => {
             Voir plus
           </NavLink>
         </div>
+        {console.log(articles)}
         {articles.slice(-7).map((article, i) => (
           <CardArticle
             key={i}

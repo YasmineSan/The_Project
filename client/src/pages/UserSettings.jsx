@@ -20,6 +20,7 @@ const SettingsPage = () => {
     const [editingField, setEditingField] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null); // State for error message
+    const [profileImage, setProfileImage] = useState('')
 
   
     useEffect(() => {
@@ -60,28 +61,36 @@ const SettingsPage = () => {
     };
   
     const handleSaveChanges = async () => {
+      const currentData = user; // Save current user data
+      
       setUser({ ...formData }); // Update user data with formData
-      setEditingField(null);
-       // Reset editingField state to hide input fields
-      // Here you would normally send formData to your backend API
+      setEditingField(null); // Reset editingField state to hide input fields
+
+      // Compare currentData with formData to get changed fields
+      let changes = {};
+      for (const key in formData) {
+        if (currentData[key] !== formData[key]) {
+          changes[key] = formData[key];
+        }
+      }
+      changes = {...changes, "profile_image" : profileImage}
+      console.log(changes)
+      
+      
+      // Send data to API
       try {
-        console.log(formData);
-        console.log(user.user_id);
-           
           const response = await fetch(`http://4.233.138.141:3001/api/users/${user.user_id}`, {
             method: 'PUT',
             headers: {
               'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
               'Content-Type': 'application/json'
             },
-            body: formData
+            body: JSON.stringify(changes)
           });
           if (!response.ok) {
             throw new Error('Failed to fetch user data');
           }
           const userData = await response.json();
-          setUser(userData);
-          setFormData({ ...userData });
           setLoading(false);
         } catch (error) {
           console.error('Error:', error);
@@ -101,13 +110,15 @@ const SettingsPage = () => {
   
     const handleProfilePhotoChange = (e) => {
       const file = e.target.files[0];
+      
       if (file) {
         // Vérifier le type d'image
         if (file.type === 'image/png' || file.type === 'image/jpeg') {
           const reader = new FileReader();
           reader.onloadend = () => {
-            setFormData({ ...formData, profilePhoto: reader.result });
-            setEditingField('profilePhoto'); // Activer l'édition de la photo de profil
+            setProfileImage(file)
+            setFormData({ ...formData, profile_image: reader.result });
+            setEditingField('profile_image'); // Activer l'édition de la photo de profil
             setError(null); // Effacer l'erreur précédente si elle existe
           };
           reader.readAsDataURL(file);
@@ -131,7 +142,7 @@ const SettingsPage = () => {
     console.log(formData);
 
   return (
-    <main className="container mx-auto px-4 sm:px-20 pt-36 pb-20 bg-gray-100">
+    <main className="mx-auto px-4 sm:px-20 pt-36 pb-20 bg-gray-100">
       <div className="bg-white shadow-lg rounded-lg p-8">
         <h1 className="text-2xl sm:text-3xl font-medium mb-8 text-center sm:text-left">Paramètres du compte</h1>
 
@@ -313,8 +324,8 @@ const SettingsPage = () => {
               {editingField === 'paypalAddress' ? (
                 <input
                   type="email"
-                  name="paypalAddress"
-                  value={formData.paypalAddress}
+                  name="paypal_address"
+                  value={formData.paypal_address}
                   onChange={handleChange}
                   className="border border-gray-300 focus:outline-none focus:border-gold rounded-md px-4 py-2 w-full transition-all duration-300 ease-in-out transform focus:scale-105"
                 />
@@ -327,7 +338,7 @@ const SettingsPage = () => {
               >
                 <FiEdit2 size={18} />
               </button>
-              {editingField === 'paypalAddress' && (
+              {editingField === 'paypal_address' && (
                 <button
                   className="ml-2 text-gray-500 hover:text-gold transition-colors duration-300 ease-in-out"
                   onClick={() => setEditingField(null)}
@@ -410,16 +421,16 @@ const SettingsPage = () => {
                       className="border border-gray-300 focus:outline-none focus:border-gold rounded-md px-4 py-2 w-full transition-all duration-300 ease-in-out transform focus:scale-105"
                     />
                   </div>
-                  {/* <div className="flex flex-col">
+                  <div className="flex flex-col">
                     <label className="text-gray-500 font-medium mb-2">Boîte</label>
                     <input
                       type="text"
-                      name="box"
-                      value={formData.box}
+                      name="apartment"
+                      value={formData.apartment}
                       onChange={handleChange}
                       className="border border-gray-300 focus:outline-none focus:border-gold rounded-md px-4 py-2 w-full transition-all duration-300 ease-in-out transform focus:scale-105"
                     />
-                  </div> */}
+                  </div>
                   <div className="flex flex-col">
                     <label className="text-gray-500 font-medium mb-2">Code postal</label>
                     <input
@@ -443,7 +454,7 @@ const SettingsPage = () => {
                 </div>
               ) : (
                 <div>
-                  <p className="text-gray-700">{`${formData.street}, ${formData.street_number}, ${formData.city} ${formData.postal_code}`}</p>
+                  <p className="text-gray-700">{`${formData.street}, ${formData.street_number} ${formData.apartment}, ${formData.city} ${formData.postal_code}`}</p>
                 </div>
               )}
               <button
