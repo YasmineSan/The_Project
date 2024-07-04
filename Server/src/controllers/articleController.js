@@ -232,7 +232,7 @@ exports.getArticleById = async (req, res) => {
         const result = await pool.request()
             .input('article_id', id)
             .query(`
-                SELECT a.*, u.profile_image as user_photo, u.user_id
+                SELECT a.*, u.profile_image as user_photo, u.user_id, u.username, u.biography
                 FROM Articles a
                 INNER JOIN User_Article ua ON a.article_id = ua.article_id
                 INNER JOIN Users u ON ua.user_id = u.user_id
@@ -252,6 +252,7 @@ exports.getArticleById = async (req, res) => {
         res.status(500).send({ message: err.message });
     }
 };
+
 
 // Récupère tous les articles d'un utilisateur par user_id (public)
 exports.getArticlesByUserId = async (req, res) => {

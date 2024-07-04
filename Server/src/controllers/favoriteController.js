@@ -6,12 +6,16 @@ exports.addFavorite = async (req, res) => {
         const userId = req.user.id;
         const pool = await poolPromise;
 
-        // Vérifier si l'article appartient à l'utilisateur
+        // Vérifier si l'article appartient à l'utilisateur en utilisant la table User_Article
         const articleResult = await pool.request()
             .input('article_id', articleId)
-            .query('SELECT owner_id FROM Articles WHERE article_id = @article_id');
+            .query('SELECT user_id FROM User_Article WHERE article_id = @article_id');
         
-        if (articleResult.recordset[0].owner_id === userId) {
+        if (articleResult.recordset.length === 0) {
+            return res.status(404).send({ message: 'Article not found.' });
+        }
+
+        if (articleResult.recordset[0].user_id === userId) {
             return res.status(403).send({ message: 'Tu ne peux pas ajouter ton propre article en favori.' });
         }
 
@@ -22,6 +26,7 @@ exports.addFavorite = async (req, res) => {
 
         res.status(201).send({ message: 'Favorite added successfully' });
     } catch (err) {
+        console.error('Error adding favorite:', err);
         res.status(500).send({ message: err.message });
     }
 };
@@ -43,6 +48,7 @@ exports.getUserFavorites = async (req, res) => {
 
         res.json(result.recordset);
     } catch (err) {
+        console.error('Error fetching user favorites:', err);
         res.status(500).send({ message: err.message });
     }
 };
@@ -60,6 +66,7 @@ exports.deleteFavorite = async (req, res) => {
 
         res.send({ message: 'Favorite deleted successfully' });
     } catch (err) {
+        console.error('Error deleting favorite:', err);
         res.status(500).send({ message: err.message });
     }
 };

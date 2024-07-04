@@ -193,8 +193,8 @@ Pour que les développeurs front-end puissent utiliser efficacement votre API, v
     - Body :
       ```json
       {
-         "name": "string"
-      }
+        "category_name": "Bougies"
+        }
       ```
     - Token : Oui
 
