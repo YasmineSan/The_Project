@@ -29,7 +29,11 @@ const AllArticles = () => {
     const search = params.get('search');
 
     if (category) {
-      setSelectedCategory(categoryMap[parseInt(category)] || 'Toutes');
+      if (category === 'all') {
+        setSelectedCategory('Toutes');
+      } else {
+        setSelectedCategory(categoryMap[parseInt(category)] || 'Toutes');
+      }
     } else {
       setSelectedCategory('Toutes'); 
     }
