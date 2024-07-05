@@ -1,98 +1,208 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const OrderPage = () => {
-  const orders = [
-    {
-      id: 1,
-      imageUrl: 'katana.jpg',
-      title: 'Katana',
-      price: '500€',
-      description: `Acier à haute teneur en manganèse 65, avec ou sans bohi. Nakago bien formé Traitement thermique : équipement moderne et professionnel pour un chauffage globalement uniforme et une trempe à l'huile spéciale, revenu précis à température électronique contrôlée.`,
-      Username: 'User12345',
-      FirstName: 'Aimar',
-      LastName: 'Jean',
-      purchaseDate: new Date().toLocaleDateString('fr-FR'),
-      address: 'Rue des artisans 10, 4000 Liège'
-    },
-    {
-      id: 2,
-      imageUrl: 'katana.jpg',
-      title: 'Katana',
-      price: '500€',
-      description: `Acier à haute teneur en manganèse 65, avec ou sans bohi. Nakago bien formé Traitement thermique : équipement moderne et professionnel pour un chauffage globalement uniforme et une trempe à l'huile spéciale, revenu précis à température électronique contrôlée.`,
-      Username: 'User67890',
-      FirstName: 'Doe',
-      LastName: 'John',
-      purchaseDate: new Date().toLocaleDateString('fr-FR'),
-      address: 'Rue des artisans 20, 5000 Namur'
-    },
-    {
-        id: 1,
-        imageUrl: 'katana.jpg',
-        title: 'Katana',
-        price: '500€',
-        description: `Acier à haute teneur en manganèse 65, avec ou sans bohi. Nakago bien formé Traitement thermique : équipement moderne et professionnel pour un chauffage globalement uniforme et une trempe à l'huile spéciale, revenu précis à température électronique contrôlée.`,
-        Username: 'User12345',
-        FirstName: 'Aimar',
-        LastName: 'Jean',
-        purchaseDate: new Date().toLocaleDateString('fr-FR'),
-        address: 'Rue des artisans 10, 4000 Liège'
-      },
-  ];
+  const [orders, setOrders] = useState([]);
+  const [expandedDescriptions, setExpandedDescriptions] = useState({});
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const response = await fetch('http://4.233.138.141:3001/api/orders/user', {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        setOrders(data); // Mettre à jour les commandes récupérées depuis le backend
+      } catch (error) {
+        console.error('Erreur lors de la récupération des commandes:', error);
+        setError('Erreur lors de la récupération des commandes');
+      }
+    };
+
+    fetchOrders(); // Appeler la fonction pour récupérer les commandes lors du chargement initial
+  }, []); // Le tableau vide indique que useEffect s'exécute une seule fois au montage
 
   const truncateText = (text, maxLength) => {
+    if (!text) return ''; // Vérifier si text est défini
     if (text.length <= maxLength) {
       return text;
     }
     return text.substring(0, maxLength) + '...';
   };
 
-  const [expandedDescriptions, setExpandedDescriptions] = useState({});
-
   const toggleDescription = (id) => {
     setExpandedDescriptions((prevState) => ({
       ...prevState,
-      [id]: !prevState[id]
+      [id]: !prevState[id],
     }));
   };
 
+
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const date = new Date(dateString);
+    return date.toLocaleDateString('fr-FR', options); 
+  };
+
   return (
-    <div className="container mx-auto px-4 pt-28 pb-8 bg-gray-100">
+    <div className="min-h-screen w-full px-4 pt-28 pb-8 bg-gray-100">
       <h2 className="text-2xl font-semibold mb-6">Mes commandes</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {orders.map(order => (
-          <div key={order.id} className="bg-white p-4 rounded-lg shadow-lg flex flex-col">
-            <img src={order.imageUrl} alt={`Image de ${order.title}`} className="w-full h-48 object-cover rounded-lg mb-4" />
-            <div className="flex flex-col flex-1">
-              <h3 className="text-lg font-semibold">{order.title}</h3>
-              <p className="text-lg font-semibold text-gold mb-2">{order.price}</p>
-              <p className="text-gray-600 flex-1">
-                {expandedDescriptions[order.id]
-                  ? order.description
-                  : truncateText(order.description, 100)}
-                <button
-                  className="text-gold ml-2"
-                  onClick={() => toggleDescription(order.id)}
-                >
-                  {expandedDescriptions[order.id] ? 'Voir moins' : 'Voir plus'}
-                </button>
-              </p>
-              <div className="mt-4">
-                <p className="text-gray-700 mb-2"><span className="font-semibold">Vendu par :</span> {order.Username}</p>
-                <p className="text-gray-700 mb-2"><span className="font-semibold">Nom :</span> {order.LastName}</p>
-                <p className="text-gray-700 mb-2"><span className="font-semibold">Prénom :</span> {order.FirstName}</p>
-                <p className="text-gray-700 mb-2"><span className="font-semibold">Date d'achat :</span> {order.purchaseDate}</p>
-                <p className="text-gray-700 mb-2"><span className="font-semibold">Adresse :</span> {order.address}</p>
-              </div>
-            </div>
-            <button className="mt-4 bg-gold text-white py-2 px-4 rounded-full shadow-md border border-gold hover:bg-white hover:text-gold hover:border-gold transition-all duration-300">
-              Contacter le vendeur
-            </button>
-          </div>
-        ))}
-      </div>
+      {error ? (
+        <p className="text-red-500">{error}</p>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {Array.isArray(orders) && orders.length > 0 ? (
+            orders.map((order) => {
+              console.log(order); 
+
+              return (
+                <div key={order.order_id} className="bg-white p-4 rounded-lg shadow-lg flex flex-col">
+                  <div className="flex items-center justify-between mb-4">
+                    <p className="text-lg font-semibold text-gold">{order.total_price} €</p>
+                  </div>
+                  <div className="flex flex-col flex-1">
+                    <p className="text-gray-600 flex-1">
+                      {expandedDescriptions[order.order_id]
+                        ? order.article_details && truncateText(order.article_details, 100)
+                        : truncateText(order.article_details, 100)}
+                      <button
+                        className="text-gold ml-2"
+                        onClick={() => toggleDescription(order.order_id)}
+                      >
+                        {expandedDescriptions[order.order_id] ? 'Voir moins' : 'Voir plus'}
+                      </button>
+                    </p>
+                    <div className="mt-4">
+                    {/* <p className="text-gray-700 mb-2"><span className="font-semibold">Description :</span> {order.article_details}</p> */}
+                      <p className="text-gray-700 mb-2"><span className="font-semibold">Vendu par :</span> {order.username}</p>
+                      <p className="text-gray-700 mb-2"><span className="font-semibold">Nom :</span> {order.last_name}</p>
+                      <p className="text-gray-700 mb-2"><span className="font-semibold">Prénom :</span> {order.first_name}</p>
+                      <p className="text-gray-700 mb-2"><span className="font-semibold">Date d'achat :</span> {formatDate(order.order_date)}</p>
+                      <p className="text-gray-700 mb-2"><span className="font-semibold">Adresse :</span> {`${order.street_number}, ${order.street}, ${order.postal_code} ${order.city}`}</p>
+                    </div>
+                  </div>
+                  <button className="mt-4 bg-gold text-white py-2 px-4 rounded-full shadow-md border border-gold hover:bg-white hover:text-gold hover:border-gold transition-all duration-300">
+                    Contacter le vendeur
+                  </button>
+                </div>
+              );
+            })
+          ) : (
+            <p>Aucune commande trouvée.</p>
+          )}
+        </div>
+      )}
     </div>
   );
 };
 
 export default OrderPage;
+
+
+// import React, { useState } from 'react';
+
+// const OrderPage = () => {
+//   const orders = [
+//     {
+//       id: 1,
+//       imageUrl: 'katana.jpg',
+//       title: 'Katana',
+//       price: '500€',
+//       description: `Acier à haute teneur en manganèse 65, avec ou sans bohi. Nakago bien formé Traitement thermique : équipement moderne et professionnel pour un chauffage globalement uniforme et une trempe à l'huile spéciale, revenu précis à température électronique contrôlée.`,
+//       Username: 'User12345',
+//       FirstName: 'Aimar',
+//       LastName: 'Jean',
+//       purchaseDate: new Date().toLocaleDateString('fr-FR'),
+//       address: 'Rue des artisans 10, 4000 Liège'
+//     },
+//     {
+//       id: 2,
+//       imageUrl: 'katana.jpg',
+//       title: 'Katana',
+//       price: '500€',
+//       description: `Acier à haute teneur en manganèse 65, avec ou sans bohi. Nakago bien formé Traitement thermique : équipement moderne et professionnel pour un chauffage globalement uniforme et une trempe à l'huile spéciale, revenu précis à température électronique contrôlée.`,
+//       Username: 'User67890',
+//       FirstName: 'Doe',
+//       LastName: 'John',
+//       purchaseDate: new Date().toLocaleDateString('fr-FR'),
+//       address: 'Rue des artisans 20, 5000 Namur'
+//     },
+//     {
+//         id: 1,
+//         imageUrl: 'katana.jpg',
+//         title: 'Katana',
+//         price: '500€',
+//         description: `Acier à haute teneur en manganèse 65, avec ou sans bohi. Nakago bien formé Traitement thermique : équipement moderne et professionnel pour un chauffage globalement uniforme et une trempe à l'huile spéciale, revenu précis à température électronique contrôlée.`,
+//         Username: 'User12345',
+//         FirstName: 'Aimar',
+//         LastName: 'Jean',
+//         purchaseDate: new Date().toLocaleDateString('fr-FR'),
+//         address: 'Rue des artisans 10, 4000 Liège'
+//       },
+//   ];
+
+//   const truncateText = (text, maxLength) => {
+//     if (text.length <= maxLength) {
+//       return text;
+//     }
+//     return text.substring(0, maxLength) + '...';
+//   };
+
+//   const [expandedDescriptions, setExpandedDescriptions] = useState({});
+
+//   const toggleDescription = (id) => {
+//     setExpandedDescriptions((prevState) => ({
+//       ...prevState,
+//       [id]: !prevState[id]
+//     }));
+//   };
+
+//   return (
+//     <div className="min-h-screen w-full px-4 pt-28 pb-8 bg-gray-100">
+//       <h2 className="text-2xl font-semibold mb-6">Mes commandes</h2>
+//       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+//         {orders.map(order => (
+//           <div key={order.id} className="bg-white p-4 rounded-lg shadow-lg flex flex-col">
+//             <img src={order.imageUrl} alt={`Image de ${order.title}`} className="w-full h-48 object-cover rounded-lg mb-4" />
+//             <div className="flex flex-col flex-1">
+//               <h3 className="text-lg font-semibold">{order.title}</h3>
+//               <p className="text-lg font-semibold text-gold mb-2">{order.price}</p>
+//               <p className="text-gray-600 flex-1">
+//                 {expandedDescriptions[order.id]
+//                   ? order.description
+//                   : truncateText(order.description, 100)}
+//                 <button
+//                   className="text-gold ml-2"
+//                   onClick={() => toggleDescription(order.id)}
+//                 >
+//                   {expandedDescriptions[order.id] ? 'Voir moins' : 'Voir plus'}
+//                 </button>
+//               </p>
+//               <div className="mt-4">
+//                 <p className="text-gray-700 mb-2"><span className="font-semibold">Vendu par :</span> {order.Username}</p>
+//                 <p className="text-gray-700 mb-2"><span className="font-semibold">Nom :</span> {order.LastName}</p>
+//                 <p className="text-gray-700 mb-2"><span className="font-semibold">Prénom :</span> {order.FirstName}</p>
+//                 <p className="text-gray-700 mb-2"><span className="font-semibold">Date d'achat :</span> {order.purchaseDate}</p>
+//                 <p className="text-gray-700 mb-2"><span className="font-semibold">Adresse :</span> {order.address}</p>
+//               </div>
+//             </div>
+//             <button className="mt-4 bg-gold text-white py-2 px-4 rounded-full shadow-md border border-gold hover:bg-white hover:text-gold hover:border-gold transition-all duration-300">
+//               Contacter le vendeur
+//             </button>
+//           </div>
+//         ))}
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default OrderPage;
