@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const useClickOutside = (handler) => {
   const domNode = useRef();
-  
 
   useEffect(() => {
     const maybeHandler = (event) => {
@@ -15,7 +14,6 @@ const useClickOutside = (handler) => {
     };
 
     document.addEventListener('mousedown', maybeHandler);
-    
 
     return () => {
       document.removeEventListener('mousedown', maybeHandler);
@@ -30,6 +28,7 @@ const Header = () => {
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false); // Ajout de l'état d'animation
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -73,25 +72,41 @@ const Header = () => {
   };
 
   const toggleCategoryDropdown = () => {
-    setIsCategoryDropdownOpen((prev) => !prev);
-    if (isUserDropdownOpen) {
-      setIsUserDropdownOpen(false);
+    if (!isAnimating) {
+      setIsAnimating(true);
+      setIsCategoryDropdownOpen((prev) => !prev);
+      if (isUserDropdownOpen) {
+        setIsUserDropdownOpen(false);
+      }
+      setTimeout(() => setIsAnimating(false), 300); // Ajustez la durée pour correspondre à la durée de l'animation
     }
   };
 
   const toggleUserDropdown = () => {
-    setIsUserDropdownOpen((prev) => !prev);
-    if (isCategoryDropdownOpen) {
-      setIsCategoryDropdownOpen(false);
+    if (!isAnimating) {
+      setIsAnimating(true);
+      setIsUserDropdownOpen((prev) => !prev);
+      if (isCategoryDropdownOpen) {
+        setIsCategoryDropdownOpen(false);
+      }
+      setTimeout(() => setIsAnimating(false), 300); // Ajustez la durée pour correspondre à la durée de l'animation
     }
   };
 
   const categoryDropdownRef = useClickOutside(() => {
-    setIsCategoryDropdownOpen(false);
+    if (!isAnimating) {
+      setIsAnimating(true);
+      setIsCategoryDropdownOpen(false);
+      setTimeout(() => setIsAnimating(false), 300); // Ajustez la durée pour correspondre à la durée de l'animation
+    }
   });
 
   const userDropdownRef = useClickOutside(() => {
-    setIsUserDropdownOpen(false);
+    if (!isAnimating) {
+      setIsAnimating(true);
+      setIsUserDropdownOpen(false);
+      setTimeout(() => setIsAnimating(false), 300); // Ajustez la durée pour correspondre à la durée de l'animation
+    }
   });
 
   const handleLogout = () => {
@@ -125,7 +140,7 @@ const Header = () => {
                 >
                   <ul>
                     {categories.map((category) => (
-                      <li key={category} className='px-4 py-2 hover:bg-gold hover:text-white transition-all' onClick={() => { navigate(`/articles?category=${encodeURIComponent(category)}`); setIsCategoryDropdownOpen(false);}}>
+                      <li key={category} className='px-4 py-2 hover:bg-gold hover:text-white transition-all' onClick={() => { navigate(`/articles?category=${encodeURIComponent(category)}`); setIsCategoryDropdownOpen(false); }}>
                         {categoryMap[category]}
                       </li>
                     ))}
