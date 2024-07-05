@@ -40,6 +40,7 @@ const Header = () => {
     16: 'Ebeniste',
     17: 'Forgeron',
     18: 'Artisan',
+    "all": "Tous les articles"
   };
 
   const categories = Object.keys(categoryMap);
@@ -124,7 +125,7 @@ const Header = () => {
                 >
                   <ul>
                     {categories.map((category) => (
-                      <li key={category} className='px-4 py-2 hover:bg-gold hover:text-white transition-all' onClick={() => navigate(`/articles?category=${encodeURIComponent(category)}`)}>
+                      <li key={category} className='px-4 py-2 hover:bg-gold hover:text-white transition-all' onClick={() => { navigate(`/articles?category=${encodeURIComponent(category)}`); setIsCategoryDropdownOpen(false);}}>
                         {categoryMap[category]}
                       </li>
                     ))}
