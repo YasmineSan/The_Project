@@ -478,16 +478,16 @@ const SettingsPage = () => {
         {editingField && (
           <div className="flex justify-end mt-6">
             <button
-              className="bg-red-500 text-white px-4 py-2 rounded-md mr-4 hover:bg-red-600 transition-all duration-300 ease-in-out transform hover:scale-105"
-              onClick={handleCancelEdit}
-            >
-              <FiX className="inline mr-2" /> Annuler
-            </button>
-            <button
-              className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition-all duration-300 ease-in-out transform hover:scale-105"
+              className="px-4 py-2 bg-gold text-white hover:text-gold hover:bg-inherit transition-colors duration-300 ease-in-out border border-gold rounded"
               onClick={handleSaveChanges}
             >
               <FiSave className="inline mr-2" /> Sauvegarder
+            </button>
+            <button
+              className="px-4 py-2 bg-red-500 ml-4 text-white hover:bg-red-600 transition-colors duration-300 ease-in-out rounded"
+              onClick={handleCancelEdit}
+            >
+              <FiX className="inline mr-2" /> Annuler
             </button>
           </div>
         )}

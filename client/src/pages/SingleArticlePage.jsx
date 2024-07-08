@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useParams } from 'react-router-dom';
-import { FiHeart } from "react-icons/fi";
+import { FiHeart, FiEdit3 } from "react-icons/fi";
 import { MdAddShoppingCart } from "react-icons/md";
 import CardArticle from '../components/CardArticle';
 
@@ -207,19 +207,24 @@ const SingleArticlePage = () => {
                 {article.article_description}
               </p>
               {isOwner ? (
-                <button className="px-4 py-2 bg-gold text-white hover:text-gold hover:bg-inherit transition-colors duration-300 ease-in-out border border-gold rounded">
-                  Modifier
-                </button>
+                <div className="flex justify-center mb-6">
+                <NavLink to={`/editArticle/${article.article_id}`}
+                  className="md:w-1/2 bg-white border border-gold text-gold py-2 px-4 rounded flex items-center justify-center hover:bg-gold hover:text-white transition-colors duration-300"
+                >
+                  <span className="mr-2"><FiEdit3 /></span> Modifier cet article
+                </NavLink>
+              </div>
+                
               ) : (
                 <div className="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4 mb-6">
-                  <button 
-                    onClick={handleAddToFavorites} 
+                  <button
+                    onClick={handleAddToFavorites}
                     className="flex-1 bg-white border border-gold text-gold py-2 px-4 rounded flex items-center justify-center hover:bg-gold hover:text-white transition-colors duration-300"
                   >
                     <span className="mr-2"><FiHeart /></span> Ajouter aux favoris
                   </button>
-                  <button 
-                    onClick={handleAddToCart} 
+                  <button
+                    onClick={handleAddToCart}
                     className="flex-1 bg-white border border-gold text-gold py-2 px-4 rounded flex items-center justify-center hover:bg-gold hover:text-white transition-colors duration-300"
                   >
                     <span className="mr-2"><MdAddShoppingCart /></span> Ajouter au panier
