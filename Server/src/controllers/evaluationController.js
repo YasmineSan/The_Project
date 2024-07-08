@@ -1,4 +1,3 @@
-// src/controllers/evaluationController.js
 const { poolPromise } = require('../utils/db');
 
 // Obtenir toutes les évaluations
@@ -32,14 +31,14 @@ exports.getEvaluationById = async (req, res) => {
 // Créer une nouvelle évaluation
 exports.createEvaluation = async (req, res) => {
     try {
-        const { evaluation_number, evaluation_description, user_id, article_id } = req.body;
+        const { evaluation_number, evaluation_description, user_id, commented_user_id } = req.body;
         const pool = await poolPromise;
         const result = await pool.request()
             .input('evaluation_number', evaluation_number)
             .input('evaluation_description', evaluation_description)
             .input('user_id', user_id)
-            .input('article_id', article_id)
-            .query('INSERT INTO Evaluations (evaluation_number, evaluation_description, user_id, article_id) VALUES (@evaluation_number, @evaluation_description, @user_id, @article_id)');
+            .input('commented_user_id', commented_user_id)
+            .query('INSERT INTO Evaluations (evaluation_number, evaluation_description, user_id, commented_user_id) VALUES (@evaluation_number, @evaluation_description, @user_id, @commented_user_id)');
         res.status(201).json(result.recordset);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -49,15 +48,15 @@ exports.createEvaluation = async (req, res) => {
 // Mettre à jour une évaluation
 exports.updateEvaluation = async (req, res) => {
     try {
-        const { evaluation_number, evaluation_description, user_id, article_id } = req.body;
+        const { evaluation_number, evaluation_description, user_id, commented_user_id } = req.body;
         const pool = await poolPromise;
         const result = await pool.request()
             .input('id', req.params.id)
             .input('evaluation_number', evaluation_number)
             .input('evaluation_description', evaluation_description)
             .input('user_id', user_id)
-            .input('article_id', article_id)
-            .query('UPDATE Evaluations SET evaluation_number = @evaluation_number, evaluation_description = @evaluation_description, user_id = @user_id, article_id = @article_id WHERE evaluation_id = @id');
+            .input('commented_user_id', commented_user_id)
+            .query('UPDATE Evaluations SET evaluation_number = @evaluation_number, evaluation_description = @evaluation_description, user_id = @user_id, commented_user_id = @commented_user_id WHERE evaluation_id = @id');
         res.status(200).json(result.recordset);
     } catch (error) {
         res.status(500).json({ message: error.message });
