@@ -21,7 +21,21 @@ const OrderPage = () => {
         }
 
         const data = await response.json();
-        setOrders(data); // Mettre à jour les commandes récupérées depuis le backend
+        // Parse the description JSON
+        const parsedOrders = data.map(order => {
+          if (order.article_details) {
+            try {
+              order.article_details = JSON.parse(order.article_details);
+            } catch (e) {
+              console.error('Failed to parse article_details:', e);
+              order.article_details = [];
+            }
+          } else {
+            order.article_details = [];
+          }
+          return order;
+        });
+        setOrders(parsedOrders); // Mettre à jour les commandes récupérées depuis le backend
       } catch (error) {
         console.error('Erreur lors de la récupération des commandes:', error);
         setError('Erreur lors de la récupération des commandes');
@@ -31,21 +45,12 @@ const OrderPage = () => {
     fetchOrders(); // Appeler la fonction pour récupérer les commandes lors du chargement initial
   }, []); // Le tableau vide indique que useEffect s'exécute une seule fois au montage
 
-  const truncateText = (text, maxLength) => {
-    if (!text) return ''; // Vérifier si text est défini
-    if (text.length <= maxLength) {
-      return text;
-    }
-    return text.substring(0, maxLength) + '...';
-  };
-
   const toggleDescription = (id) => {
     setExpandedDescriptions((prevState) => ({
       ...prevState,
       [id]: !prevState[id],
     }));
   };
-
 
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -62,7 +67,7 @@ const OrderPage = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {Array.isArray(orders) && orders.length > 0 ? (
             orders.map((order) => {
-              console.log(order); 
+              console.log(order);
 
               return (
                 <div key={order.order_id} className="bg-white p-4 rounded-lg shadow-lg flex flex-col">
@@ -70,19 +75,27 @@ const OrderPage = () => {
                     <p className="text-lg font-semibold text-gold">{order.total_price} €</p>
                   </div>
                   <div className="flex flex-col flex-1">
-                    <p className="text-gray-600 flex-1">
-                      {expandedDescriptions[order.order_id]
-                        ? order.article_details && truncateText(order.article_details, 100)
-                        : truncateText(order.article_details, 100)}
-                      <button
-                        className="text-gold ml-2"
-                        onClick={() => toggleDescription(order.order_id)}
-                      >
-                        {expandedDescriptions[order.order_id] ? 'Voir moins' : 'Voir plus'}
-                      </button>
-                    </p>
                     <div className="mt-4">
-                    {/* <p className="text-gray-700 mb-2"><span className="font-semibold">Description :</span> {order.article_details}</p> */}
+                      {order.article_details[0] && (
+                        <>
+                          <p className="text-gray-700 mb-2">
+                            <span className="font-semibold">Description :</span> 
+                            {expandedDescriptions[order.order_id]
+                              ? order.article_details[0].description
+                              : order.article_details[0].description.slice(0, 100) + (order.article_details[0].description.length > 100 ? '...' : '')}
+                            {order.article_details[0].description.length > 100 && (
+                              <button
+                                className="text-gold ml-2"
+                                onClick={() => toggleDescription(order.order_id)}
+                              >
+                                {expandedDescriptions[order.order_id] ? 'Voir moins' : 'Voir plus'}
+                              </button>
+                            )}
+                          </p>
+                          <p className="text-gray-700 mb-2"><span className="font-semibold">Titre :</span> {order.article_details[0].title}</p>
+                          <p className="text-gray-700 mb-2"><span className="font-semibold">Prix :</span> {order.article_details[0].price} €</p>
+                        </>
+                      )}
                       <p className="text-gray-700 mb-2"><span className="font-semibold">Vendu par :</span> {order.username}</p>
                       <p className="text-gray-700 mb-2"><span className="font-semibold">Nom :</span> {order.last_name}</p>
                       <p className="text-gray-700 mb-2"><span className="font-semibold">Prénom :</span> {order.first_name}</p>
