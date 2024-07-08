@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 const OrderPage = () => {
   const [orders, setOrders] = useState([]);
@@ -21,7 +22,6 @@ const OrderPage = () => {
         }
 
         const data = await response.json();
-        // Parse the description JSON
         const parsedOrders = data.map(order => {
           if (order.article_details) {
             try {
@@ -43,7 +43,7 @@ const OrderPage = () => {
     };
 
     fetchOrders(); // Appeler la fonction pour récupérer les commandes lors du chargement initial
-  }, []); // Le tableau vide indique que useEffect s'exécute une seule fois au montage
+  }, []); 
 
   const toggleDescription = (id) => {
     setExpandedDescriptions((prevState) => ({
@@ -103,9 +103,18 @@ const OrderPage = () => {
                       <p className="text-gray-700 mb-2"><span className="font-semibold">Adresse :</span> {`${order.street_number}, ${order.street}, ${order.postal_code} ${order.city}`}</p>
                     </div>
                   </div>
-                  <button className="mt-4 bg-gold text-white py-2 px-4 rounded-full shadow-md border border-gold hover:bg-white hover:text-gold hover:border-gold transition-all duration-300">
-                    Contacter le vendeur
-                  </button>
+                  <Link
+                  to={`/contactUser/${order.user_id}`}
+                  className="mt-4 bg-inherit text-gold py-2 px-4 rounded-full shadow-md border border-gold hover:bg-gold hover:text-white hover:border-gold transition-all duration-300 text-center"
+                >
+                  Contacter le vendeur
+                </Link>
+                  <Link
+                  to={`/addEvaluation/:${order.user_id}`}
+                  className="mt-4 bg-inherit text-gold py-2 px-4 rounded-full shadow-md border border-gold hover:bg-gold hover:text-white hover:border-gold transition-all duration-300 text-center"
+                >
+                  Evaluer le vendeur
+                </Link>
                 </div>
               );
             })

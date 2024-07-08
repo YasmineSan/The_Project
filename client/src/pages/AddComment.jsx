@@ -1,73 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import Comment from '../components/Comment';
-
+import { Link, useParams, useNavigate } from 'react-router-dom';
 
 const AddComment = () => {
   const { sellerId } = useParams();
-  const [comments, setComments] = useState([]);
+  const navigate = useNavigate();
   const [newComment, setNewComment] = useState('');
   const [seller, setSeller] = useState({});
   const [rating, setRating] = useState(0);
 
-  useEffect(() => {
-    // const fetchComments = async () => {
-    //   try {
-    //     const response = await fetch(`http://4.233.138.141:3001/api/comments/seller/${sellerId}`, {
-    //       method: 'GET',
-    //       headers: {
-    //         'Content-Type': 'application/json',
-    //         'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-    //       }
-    //     });
-    //     if (!response.ok) {
-    //       throw new Error('Failed to fetch comments');
-    //     }
-    //     const commentsData = await response.json();
-    //     setComments(commentsData);
-    //   } catch (error) {
-    //     console.error('Error:', error);
-    //   }
-    // };
-
-    const fetchSeller = async () => {
-      try {
-        const response = await fetch(`http://4.233.138.141:3001/api/users/${sellerId}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-          }
-        });
-        if (!response.ok) {
-          throw new Error('Failed to fetch seller profile');
-        }
-        const sellerData = await response.json();
-        setSeller(sellerData);
-      } catch (error) {
-        console.error('Error:', error);
-      }
-    };
-
-    if (sellerId) {
-      // fetchComments();
-      fetchSeller();
-    }
-  }, [sellerId]);
 
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://4.233.138.141:3001/api/comments', {
+      const response = await fetch('http://4.233.138.141:3001/api/evaluations', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('authToken')}`
         },
         body: JSON.stringify({
-          sellerId,
-          content: newComment,
-          rating
+          evaluation_number: rating,
+          evaluation_description: newComment,
+          user_id: 8
         })
       });
       if (!response.ok) {
@@ -75,9 +29,15 @@ const AddComment = () => {
         console.error('Error response from server:', errorMessage);
         throw new Error('Failed to submit comment');
       }
+
+  
+
       setNewComment('');
       setRating(0);
-      fetchComments(); // Re-fetch comments after submission
+      
+      navigate(`/allEvaluation/${sellerId}`); 
+
+      // navigate(`/allEvaluation/${sellerId}`); 
     } catch (error) {
       console.error('Error submitting comment:', error);
     }
@@ -87,7 +47,7 @@ const AddComment = () => {
     <div className="container mx-auto px-4 pt-28 pb-8 bg-gray-100">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-semibold">Commentaires de cette boutique {seller.username}</h2>
-        <Link to={`/profile/${sellerId}`} className="text-gold hover:underline">Retour au profil</Link>
+        <Link to={`/userProfile`} className="text-gold hover:underline">Retour au profil</Link>
       </div>
       <form onSubmit={handleCommentSubmit} className="mt-8">
         <h3 className="text-lg font-semibold mb-4">Laisser un commentaire</h3>

@@ -131,7 +131,12 @@ export const UserProfile = () => {
                   <span className="text-yellow-400 ml-2">{'★'.repeat(Math.floor(10))}</span>
                   <span className="text-gray-400">{'★'.repeat(5 - Math.floor(10))}</span>
                 </div> */}
-                 <a href='#' className="hover:underline text-gold">Toutes les évaluations</a> {/*Logique à faire */}
+                 <Link
+                  to={`/allEvaluation/${userId}`}
+                  className="hover:underline text-gold"
+                >
+                  Toutes les évaluations
+                </Link>
               </div>
             </div>
             
