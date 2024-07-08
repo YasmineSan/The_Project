@@ -208,11 +208,11 @@ const SingleArticlePage = () => {
               </p>
               {isOwner ? (
                 <div className="flex justify-center mb-6">
-                <button
+                <NavLink to={`/editArticle/${article.article_id}`}
                   className="md:w-1/2 bg-white border border-gold text-gold py-2 px-4 rounded flex items-center justify-center hover:bg-gold hover:text-white transition-colors duration-300"
                 >
                   <span className="mr-2"><FiEdit3 /></span> Modifier cet article
-                </button>
+                </NavLink>
               </div>
                 
               ) : (

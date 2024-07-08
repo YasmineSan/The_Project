@@ -16,9 +16,9 @@ import AllArticles from './pages/AllArticles';
 import {RouterProvider, createBrowserRouter, createMemoryRouter, Outlet, useRouteError} from "react-router-dom"
 import SettingsPage from './pages/UserSettings';
 import AllSales from './pages/AllSales';
-import ArticleDetailPage from './pages/ArticleDetailPage';
 import OrderPage from './pages/OrderPage';
 import ShowComment from './pages/ShowComment';
+import EditArticle from './pages/EditArticle';
 
 
 
@@ -88,8 +88,8 @@ const router = createBrowserRouter([
         element: <AllSales />
       },
       {
-        path: 'articledetail',
-        element: <ArticleDetailPage />
+        path: 'editArticle/:articleId',
+        element: <EditArticle />
       },
       {
         path: 'orderpage',
