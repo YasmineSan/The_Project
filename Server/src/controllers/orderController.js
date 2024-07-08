@@ -4,18 +4,26 @@ exports.createOrder = async (req, res) => {
     try {
         const { order_details } = req.body;
         const userId = req.user.id;
+        console.log('userId:', userId); // Vérifier que userId est défini
         const pool = await poolPromise;
 
-        const articleIds = order_details.map(detail => detail.article_id);
+        if (!userId) {
+            return res.status(400).send({ message: 'User ID not found in request' });
+        }
 
-        // Récupérer les détails des articles pour calculer le prix total et obtenir les informations des articles
-        const articlesResult = await pool.request()
-            .query(`
-                SELECT article_id, title, article_description, article_price, shipping_cost
-                FROM Articles 
-                WHERE article_id IN (${articleIds.map(id => `'${id}'`).join(',')})
-            `);
-        
+        const articleIds = order_details.map(detail => detail.article_id);
+        console.log('articleIds:', articleIds); // Vérifier les articleIds
+
+        const articlesQuery = `
+            SELECT article_id, title, article_description, article_price, shipping_cost, article_photo, user_id AS seller_id
+            FROM Articles 
+            WHERE article_id IN (${articleIds.map(id => `'${id}'`).join(',')})
+        `;
+        console.log('articlesQuery:', articlesQuery); // Vérifier la requête SQL
+
+        const articlesResult = await pool.request().query(articlesQuery);
+        console.log('articlesResult:', articlesResult); // Vérifier le résultat de la requête
+
         let totalPrice = 0;
         let detailedArticles = [];
         articlesResult.recordset.forEach(article => {
@@ -28,37 +36,51 @@ exports.createOrder = async (req, res) => {
                 description: article.article_description,
                 price: article.article_price,
                 shipping_cost: article.shipping_cost,
-                quantity: quantity
+                quantity: quantity,
+                article_photo: article.article_photo,
+                seller_id: article.seller_id  // Inclure l'id du vendeur
             });
         });
 
-        // Créer la commande avec les détails des articles
+        console.log('detailedArticles:', detailedArticles); // Vérifier les articles détaillés
+
+        const insertQuery = `
+            INSERT INTO Orders (user_id, total_price, article_details)
+            OUTPUT INSERTED.order_id
+            VALUES (@user_id, @total_price, @article_details)
+        `;
+        console.log('insertQuery:', insertQuery); // Vérifier la requête d'insertion
+
         const result = await pool.request()
             .input('user_id', userId)
             .input('total_price', totalPrice)
             .input('article_details', JSON.stringify(detailedArticles))
-            .query('INSERT INTO Orders (user_id, total_price, article_details) OUTPUT INSERTED.order_id VALUES (@user_id, @total_price, @article_details)');
-        
+            .query(insertQuery);
+
         const orderId = result.recordset[0].order_id;
+        console.log('orderId:', orderId); // Vérifier l'orderId
 
-        // Marquer les articles comme vendus
-        await pool.request()
-            .query(`
-                UPDATE Articles 
-                SET sold = 1 
-                WHERE article_id IN (${articleIds.map(id => `'${id}'`).join(',')})
-            `);
+        const updateQuery = `
+            UPDATE Articles 
+            SET sold = 1 
+            WHERE article_id IN (${articleIds.map(id => `'${id}'`).join(',')})
+        `;
+        console.log('updateQuery:', updateQuery); // Vérifier la requête de mise à jour
 
-        // Supprimer les articles des autres tables liées
-        await pool.request()
-            .query(`
-                DELETE FROM User_Article WHERE article_id IN (${articleIds.map(id => `'${id}'`).join(',')});
-                DELETE FROM Favorites WHERE article_id IN (${articleIds.map(id => `'${id}'`).join(',')});
-                DELETE FROM Cart WHERE article_id IN (${articleIds.map(id => `'${id}'`).join(',')});
-            `);
+        await pool.request().query(updateQuery);
+
+        const deleteQueries = `
+            DELETE FROM User_Article WHERE article_id IN (${articleIds.map(id => `'${id}'`).join(',')});
+            DELETE FROM Favorites WHERE article_id IN (${articleIds.map(id => `'${id}'`).join(',')});
+            DELETE FROM Cart WHERE article_id IN (${articleIds.map(id => `'${id}'`).join(',')});
+        `;
+        console.log('deleteQueries:', deleteQueries); // Vérifier les requêtes de suppression
+
+        await pool.request().query(deleteQueries);
 
         res.status(201).send({ message: 'Order created successfully', order_id: orderId });
     } catch (err) {
+        console.error('Error:', err); // Vérifier l'erreur complète
         res.status(500).send({ message: err.message });
     }
 };
