@@ -9,7 +9,7 @@ import Contact from './pages/Contact';
 import { UserCart } from './pages/UserCart';
 import AddArticlePage from './pages/AddArticlePage';
 import UserProfile from './pages/UserProfile';
-import CommentPage from './pages/CommentPage';
+import AddComment from './pages/AddComment';
 import FavoritePage from './pages/FavoritePage';
 import SingleArticlePage from './pages/SingleArticlePage';
 import AllArticles from './pages/AllArticles';
@@ -18,6 +18,7 @@ import SettingsPage from './pages/UserSettings';
 import AllSales from './pages/AllSales';
 import ArticleDetailPage from './pages/ArticleDetailPage';
 import OrderPage from './pages/OrderPage';
+import ShowComment from './pages/ShowComment';
 
 
 
@@ -63,8 +64,8 @@ const router = createBrowserRouter([
 
       },
       {
-        path: 'comment/:userId',
-        element: <CommentPage />
+        path: 'addEvaluation/:userId',
+        element: <AddComment />
       },
       {
         path: 'favorites',
@@ -93,6 +94,10 @@ const router = createBrowserRouter([
       {
         path: 'orderpage',
         element: <OrderPage />
+      },
+      {
+        path: 'allEvaluation/:userId',
+        element: <ShowComment />
       },
     ]
   }

@@ -12,7 +12,29 @@ const SingleArticlePage = () => {
   const [showNotificationError, setShowNotificationError] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState('');
   const [quantity, setQuantity] = useState(1);
+  const [currentUserId, setCurrentUserId] = useState(null);
+  const [isOwner, setIsOwner] = useState(false);
   const { articleId } = useParams();
+
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      try {
+        const response = await fetch('http://4.233.138.141:3001/api/users/dashboard', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+          }
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setCurrentUserId(data.user_id);
+        }
+      } catch (error) {
+        console.error('Error fetching current user:', error);
+      }
+    };
+
+    fetchCurrentUser();
+  }, []);
 
   useEffect(() => {
     window.scrollTo(0, 0); // Scroll to top
@@ -21,7 +43,7 @@ const SingleArticlePage = () => {
         const response = await fetch(`http://4.233.138.141:3001/api/articles/articles/${articleId}`, {
           method: 'GET',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
           }
         });
 
@@ -37,6 +59,8 @@ const SingleArticlePage = () => {
           await fetchArticles(data.user_id);
           // Fetch user info
           await fetchUser(data.user_id);
+          // Check if the current user is the owner
+          setIsOwner(data.user_id === currentUserId);
         }
       } catch (error) {
         console.error('Error fetching article:', error);
@@ -84,8 +108,10 @@ const SingleArticlePage = () => {
       }
     };
 
-    fetchOneArticle();
-  }, [articleId]);
+    if (currentUserId !== null) {
+      fetchOneArticle();
+    }
+  }, [articleId, currentUserId]);
 
   const handleAddToCart = async () => {
     const isAuthenticated = !!localStorage.getItem('authToken');
@@ -180,20 +206,26 @@ const SingleArticlePage = () => {
               <p className="mb-6">
                 {article.article_description}
               </p>
-              <div className="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4 mb-6">
-                <button 
-                  onClick={handleAddToFavorites} 
-                  className="flex-1 bg-white border border-gold text-gold py-2 px-4 rounded flex items-center justify-center hover:bg-gold hover:text-white transition-colors duration-300"
-                >
-                  <span className="mr-2"><FiHeart /></span> Ajouter aux favoris
+              {isOwner ? (
+                <button className="px-4 py-2 bg-gold text-white hover:text-gold hover:bg-inherit transition-colors duration-300 ease-in-out border border-gold rounded">
+                  Modifier
                 </button>
-                <button 
-                  onClick={handleAddToCart} 
-                  className="flex-1 bg-white border border-gold text-gold py-2 px-4 rounded flex items-center justify-center hover:bg-gold hover:text-white transition-colors duration-300"
-                >
-                  <span className="mr-2"><MdAddShoppingCart /></span> Ajouter au panier
-                </button>
-              </div>
+              ) : (
+                <div className="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4 mb-6">
+                  <button 
+                    onClick={handleAddToFavorites} 
+                    className="flex-1 bg-white border border-gold text-gold py-2 px-4 rounded flex items-center justify-center hover:bg-gold hover:text-white transition-colors duration-300"
+                  >
+                    <span className="mr-2"><FiHeart /></span> Ajouter aux favoris
+                  </button>
+                  <button 
+                    onClick={handleAddToCart} 
+                    className="flex-1 bg-white border border-gold text-gold py-2 px-4 rounded flex items-center justify-center hover:bg-gold hover:text-white transition-colors duration-300"
+                  >
+                    <span className="mr-2"><MdAddShoppingCart /></span> Ajouter au panier
+                  </button>
+                </div>
+              )}
               <div className="text-sm text-gray-500 flex flex-col lg:flex-row justify-between">
                 <span className="mb-2">Expédié depuis : <span className="font-semibold">{user.city}</span></span>
                 <span>Date d'ajout : <span className="font-semibold">{new Date(article.date_added).toLocaleDateString()}</span></span>
