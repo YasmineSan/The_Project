@@ -92,7 +92,7 @@ const EditArticle = () => {
 
   return (
     <main className="bg-slate-100 min-h-[820px] pt-24 w-full flex justify-center items-center">
-      <div className="bg-white shadow-xl rounded-lg p-6 my-8 sm:p-8 w-11/12 md:w-2/3">
+      <div className="bg-white shadow-xl rounded-lg p-6 mb-8 mt-8 sm:p-8 w-11/12 md:w-2/3">
         <div className="flex flex-col items-center mb-4">
           <h1 className="text-2xl sm:text-3xl font-medium text-center pb-4">Détails de l'article</h1>
         </div>
