@@ -48,7 +48,7 @@ const AllArticles = () => {
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const response = await fetch('http://4.233.138.141:3001/api/articles/public/articles', {
+        const response = await fetch('http://4.233.138.141:3001/api/articles/available-articles', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json'
