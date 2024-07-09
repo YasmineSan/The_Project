@@ -27,7 +27,7 @@ export const JoinUsBanner = () => {
       <div className="text-center text-white relative">
         <h2 className='text-2xl lg:text-3xl font-semibold mb-4'>Commencez à vendre vos créations dès maintenant!</h2>
         <p className="mb-4 text-lg">Inscrivez-vous pour une expérience personnalisée</p>
-        <button onClick={handleJoinUs} className="py-3 px-7 hover:bg-white hover:text-gold rounded-full text-white border border-white">
+        <button onClick={handleJoinUs} className="py-3 px-7 hover:bg-white hover:text-gold rounded-full text-white border border-white duration-300">
           Rejoignez-nous
         </button>
       </div>
