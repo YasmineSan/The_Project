@@ -76,10 +76,10 @@ const OrderPage = () => {
                   </div>
                   <div className="flex flex-col flex-1">
                     <div className="mt-4">
+                      <img src={order.article_details.article_photo} />
                       {order.article_details[0] && (
                         <>
-                          <p className="text-gray-700 mb-2">
-                            <span className="font-semibold">Description :</span> 
+                            <span className="font-semibold text-gray-700 mb-2">Description :</span> 
                             {expandedDescriptions[order.order_id]
                               ? order.article_details[0].description
                               : order.article_details[0].description.slice(0, 100) + (order.article_details[0].description.length > 100 ? '...' : '')}
@@ -91,7 +91,6 @@ const OrderPage = () => {
                                 {expandedDescriptions[order.order_id] ? 'Voir moins' : 'Voir plus'}
                               </button>
                             )}
-                          </p>
                           <p className="text-gray-700 mb-2"><span className="font-semibold">Titre :</span> {order.article_details[0].title}</p>
                           <p className="text-gray-700 mb-2"><span className="font-semibold">Prix :</span> {order.article_details[0].price} €</p>
                         </>
