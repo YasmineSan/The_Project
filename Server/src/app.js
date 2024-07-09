@@ -35,7 +35,7 @@ app.use(express.json({
 
 // Importer et utiliser les routes
 app.use('/api/users', require('./routes/userRoutes'));
-app.use('/api/articles', require('./routes/articleRoutes'));
+app.use('/api/articles', require('./routes/articleRoutes')); // Cette ligne doit être présente
 app.use('/api/categories', require('./routes/categoryRoutes'));
 app.use('/api/orders', require('./routes/orderRoutes'));
 app.use('/api/favorites', require('./routes/favoriteRoutes'));
@@ -63,6 +63,11 @@ app.get('/profile', (req, res) => {
 
 app.get('/', (req, res) => {
   res.send('<h1>Welcome</h1><a href="/login">Login</a> or <a href="/register">Register</a>');
+});
+
+const PORT = process.env.PORT || 3001; // Assure-toi que c'est bien 3001 si c'est le port que tu utilises
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
 
 module.exports = app;
