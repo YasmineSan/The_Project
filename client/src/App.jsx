@@ -64,7 +64,7 @@ const router = createBrowserRouter([
 
       },
       {
-        path: 'addEvaluation/:userId',
+        path: 'addEvaluation/:sellerId',
         element: <AddComment />
       },
       {
