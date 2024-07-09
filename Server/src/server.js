@@ -8,10 +8,10 @@ const PORT = process.env.PORT || 3001;
 
 app.listen(PORT, async () => {
   try {
-      await poolPromise;
-      console.log(`Server is running on port ${PORT}`);
+    await poolPromise;
+    console.log(`Server is running on port ${PORT}`);
   } catch (err) {
-      console.error('Failed to connect to the database:', err);
-      process.exit(1);
+    console.error('Failed to connect to the database:', err);
+    process.exit(1);
   }
 });
