@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import Comment from '../components/Comment';
 
 const ShowComment = () => {
   const [comments, setComments] = useState([]);
   const navigate = useNavigate();
+  const { sellerId } = useParams();
 
   useEffect(() => {
     const fetchComments = async () => {
+      const id = sellerId[1];
       try {
-        const response = await fetch(`http://4.233.138.141:3001/api/evaluations`, {
+        const response = await fetch(`http://4.233.138.141:3001/api/evaluations/${id}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -62,11 +64,11 @@ const ShowComment = () => {
         <h3 className="text-lg mr-2">Note globale :</h3>
         <div className="flex items-center">
           <div className="flex">
-            {[...Array(Math.round(averageRating))].map((_, index) => (
+            {/* {[...Array(Math.round(averageRating))].map((_, index) => (
               <svg key={index} xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-yellow-500 fill-current" viewBox="0 0 20 20">
                 <path d="M10 1l2.1 6.4H18l-5.3 3.9 2.1 6.4-5.5-4-5.5 4 2.1-6.4L2 7.4h5.9L10 1z" />
               </svg>
-            ))}
+            ))} */}
           </div>
           <span className="ml-2">{formattedAverageRating} ({comments.length} avis)</span>
         </div>
@@ -76,7 +78,7 @@ const ShowComment = () => {
           <div key={comment.evaluation_id} className="mb-4">
             <Comment
               user={comment.user}
-              profileImage={comment.profileImage}
+              profileImage={comment.profile_image}
               rating={comment.evaluation_number}
               date={comment.date_added}
               content={comment.evaluation_description}
