@@ -111,6 +111,29 @@ export const UserProfile = () => {
       fetchUserArticles();
 
     }
+
+    const fetchUserEvaluation = async () => {//Récupérer les évaluations du profil actuel
+        try {
+          const response = await fetch(`http://4.233.138.141:3001/api/users/${id}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+            }
+          });
+
+          if (!response.ok) {
+            throw new Error('Failed to fetch user profile');
+          } else {
+            setUser(await response.json());
+          }
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      };
+
+      // fetchUserEvaluation();
+
   }, []);
 
   return (
