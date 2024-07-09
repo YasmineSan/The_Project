@@ -6,7 +6,8 @@ const AddComment = () => {
   const navigate = useNavigate();
   const [newComment, setNewComment] = useState('');
   const [rating, setRating] = useState(0);
-
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
@@ -27,15 +28,17 @@ const AddComment = () => {
       if (!response.ok) {
         const errorMessage = await response.text();
         console.error('Error response from server:', errorMessage);
+        setError('Erreur, commentaire non soumis');
+        setNewComment('');
+        setRating(0);
         throw new Error('Failed to submit comment');
+        
+      } else {
+        setSuccess('Commentaire ajouté!');
+        setTimeout(() => {
+            navigate(`/allEvaluation/${sellerId}`);
+          }, 2000);
       }
-
-      setNewComment('');
-      setRating(0);
-      
-      navigate(`/allEvaluation/${sellerId}`); 
-
-      // navigate(`/allEvaluation/${sellerId}`); 
     } catch (error) {
       console.error('Error submitting comment:', error);
     }
@@ -57,18 +60,21 @@ const AddComment = () => {
             className="w-full p-2 border border-gray-300 rounded-lg mb-4"
             rows="4"
           />
-          <div className="flex items-center mb-8">
+          <div className="flex items-center mb-6">
             <label htmlFor="rating" className="mr-2 font-medium">Note :</label>
             <input
               type="number"
               id="rating"
               value={rating}
-              onChange={(e) => setRating(parseInt(e.target.value))}
+              onChange={(e) => setRating(e.target.value)}
               className="border border-gray-300 rounded-lg p-2 w-16"
-              min="0"
+              min="1"
               max="5"
+              required
             />
           </div>
+          {error && <div className="bg-red-100 text-red-700 p-2 mb-4 rounded">{error}</div>}
+          {success && <div className="bg-green-100 text-green-700 p-2 mb-4 rounded">{success}</div>}
           <button type="submit" className="bg-gold text-white py-2 px-4 rounded-full shadow-md border border-gold hover:bg-white hover:text-gold hover:border hover:border-gold transition-all duration-300">
             Soumettre
           </button>
