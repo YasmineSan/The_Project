@@ -133,7 +133,7 @@ export const UserProfile = () => {
                 </div> */}
                  <Link
                   to={`/allEvaluation/${userId}`}
-                  className="hover:underline text-gold"
+                  className="hover:underline text-gold duration-300"
                 >
                   Toutes les évaluations
                 </Link>
