@@ -62,14 +62,17 @@ const AddArticlePage = () => {
 
       console.log(response)
       const data = await response.json();
+      console.log(data);
       if (response.ok) {
         setError(''); // Clear any previous error
         setSuccess("Article ajouté! Redirection vers votre profil...");
         window.scrollTo(0, 0); // Scroll to top
 
+        // Obtenir l'ID de l'article nouvellement créé
+        const articleId = data.article._id;
+
         // Redirection vers la page de confirmation avec les données du formulaire
-        
-        navigate('/articledetail', {
+        navigate(`/editArticle/${articleId}`, {
           state: {
             image: URL.createObjectURL(image),
             title,
