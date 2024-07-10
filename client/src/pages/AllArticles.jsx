@@ -28,8 +28,14 @@ const AllArticles = () => {
     const category = params.get('category');
     const search = params.get('search');
 
+    window.scrollTo(0, 0);
+
     if (category) {
-      setSelectedCategory(categoryMap[parseInt(category)] || 'Toutes');
+      if (category === 'all') {
+        setSelectedCategory('Toutes');
+      } else {
+        setSelectedCategory(categoryMap[parseInt(category)] || 'Toutes');
+      }
     } else {
       setSelectedCategory('Toutes'); 
     }
@@ -44,7 +50,7 @@ const AllArticles = () => {
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const response = await fetch('http://4.233.138.141:3001/api/articles/public/articles', {
+        const response = await fetch('http://4.233.138.141:3001/api/articles/available-articles', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json'
@@ -107,7 +113,7 @@ const AllArticles = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 pt-10 pb-10">
+    <div className="min-h-screen bg-gray-100 pt-10 pb-10">
       <div className="w-full max-w-[90%] mx-auto bg-white p-6 rounded-lg shadow-md mt-24 mb-10">
         <div className="md:hidden mb-4 flex justify-between items-center">
           <h2 className="text-2xl font-medium">Catégories</h2>

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import FavoriteCard from '../components/FavoriteCard';
+import { FiHeart } from 'react-icons/fi';
+import { NavLink } from 'react-router-dom';
 
 const FavoritePage = () => {
   const [favoriteArticles, setFavoriteArticles] = useState([]);
@@ -34,7 +36,7 @@ const FavoritePage = () => {
   };
 
   return (
-    <div className="min-h-screen pb-16 bg-slate-100 pt-14 sm:pt-20 px-14">
+    <div className="min-h-screen pb-16 bg-gray-100 pt-14 sm:pt-20 px-14">
       <div className='container mx-auto px-4 py-8'>
         <h2 className="text-2xl sm:text-3xl font-semibold text-center mb-12 mt-2">Favoris</h2>
 
@@ -51,7 +53,13 @@ const FavoritePage = () => {
               />
             ))
           ) : (
-            <p className="text-center text-gray-500">Aucun article dans les favoris</p>
+            <div className="flex flex-col col-start-1 col-end-4 items-center justify-center h-full w-full">
+              <FiHeart className="text-gray-300 text-9xl mb-4" />
+              <p className="text-center text-gray-400 text-xl mb-4">Aucun article dans les favoris</p>
+              <NavLink to="/articles" className="mt-4 bg-gold text-white py-2 px-4 rounded hover:bg-white border hover:text-gold hover:border hover:border-gold transition-colors duration-300">
+                Parcourir les articles
+              </NavLink>
+            </div>
           )}
         </div>
       </div>

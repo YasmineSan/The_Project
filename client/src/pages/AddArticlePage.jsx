@@ -1,5 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import FormField from '../components/loginInscription/FormField';
+import { NavLink, useNavigate } from 'react-router-dom';
 
 const AddArticlePage = () => {
   const [image, setImage] = useState(null);
@@ -12,6 +13,7 @@ const AddArticlePage = () => {
   const [success, setSuccess] = useState('');
 
   const formRef = useRef(null);
+  const navigate = useNavigate();
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -32,12 +34,12 @@ const AddArticlePage = () => {
     setImage(null);
   };
 
-   const debugFormData = (formData) => {
+  const debugFormData = (formData) => {
     for (let [key, value] of formData.entries()) {
       console.log(`${key}: ${value}`);
     }
   };
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -60,13 +62,26 @@ const AddArticlePage = () => {
 
       console.log(response)
       const data = await response.json();
+      console.log(data);
       if (response.ok) {
         setError(''); // Clear any previous error
         setSuccess("Article ajouté! Redirection vers votre profil...");
         window.scrollTo(0, 0); // Scroll to top
-        setTimeout(() => {
-          window.location.assign('/');
-        }, 2000);
+
+        // Obtenir l'ID de l'article nouvellement créé
+        const articleId = data.article._id;
+
+        // Redirection vers la page de confirmation avec les données du formulaire
+        navigate(`/editArticle/${articleId}`, {
+          state: {
+            image: URL.createObjectURL(image),
+            title,
+            description,
+            category,
+            price,
+            shippingCost
+          }
+        });
       } else {
         setSuccess(''); // Clear any previous success message
         setError(data.message || 'Une erreur est survenue, merci de réessayer.');
@@ -81,7 +96,7 @@ const AddArticlePage = () => {
   };
 
   return (
-    <main className="container mx-auto px-10 sm:px-12 py-28">
+    <main className="mx-auto px-10 sm:px-12 py-28 bg-gray-100">
       <div className='bg-white shadow-lg rounded-lg p-8 mb-12'>
         <div className="flex flex-col items-center mb-8">
           <h1 className="text-3xl font-semibold text-center py-6">Mise en vente d'un article</h1>
@@ -194,7 +209,9 @@ const AddArticlePage = () => {
           </div>
         </div>
         <div className="flex justify-end mt-6">
-          <a href="/profile" className="text-gold hover:underline">Retour au profil</a>
+          <NavLink to={`/userprofile`} className="text-gold hover:underline">
+              Retour au profil
+          </NavLink>
         </div>
       </div>
     </main>
@@ -202,3 +219,4 @@ const AddArticlePage = () => {
 };
 
 export default AddArticlePage;
+

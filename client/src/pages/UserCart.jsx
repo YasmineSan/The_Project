@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { FiX } from 'react-icons/fi';
+import { FiShoppingCart, FiEdit } from 'react-icons/fi';
 import { NavLink } from 'react-router-dom';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 
 const stripePromise = loadStripe('pk_test_51PWEtF2Kq8XatW7q7Vjga2elQagu6zi8Y3u1JM92VgXDSKqPpNNy0hx2muypSjci1rW6wumGMyzMSnEjFRrQnyY000VY8Zg9Ca');
 
-const CheckoutForm = ({ total }) => {
+const CheckoutForm = ({ total, cart, setCart, handleRemoveItem }) => {
   const stripe = useStripe();
   const elements = useElements();
   const [paymentMessage, setPaymentMessage] = useState('');
-  const [response , setResponse] = useState([]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -30,32 +30,38 @@ const CheckoutForm = ({ total }) => {
       setPaymentMessage(error.message);
     } else {
       setPaymentMessage('Paiement effectué avec succès !');
+      console.log(cart);
+
+      const body = cart.map(item => ({
+        article_id: item.article_id,
+        quantity: item.quantity,
+      }));
 
       // Ajoute une commande
       const handleAddOrder = async () => {
         try {
-          const response = await fetch('http://4.233.138.141:3001/api/payments/create-payment-intent', {
+          const response = await fetch('http://4.233.138.141:3001/orders', {
             method: 'POST',
             headers: {
               'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ total, "currency":'EUR' })
+            body: JSON.stringify({ "order_details": body })
           });
-  
+
           if (!response.ok) {
             throw new Error('Network response was not ok');
           }
-  
+
           const data = await response.json();
-          setResponse(data);
           console.log(data);
         } catch (error) {
           console.error('Error fetching articles:', error);
         }
       };
 
-      handleAddOrder();
+      await handleAddOrder();
+      cart.forEach(item => handleRemoveItem(item.article_id));
     }
   };
 
@@ -123,7 +129,6 @@ export const UserCart = () => {
     }
   };
 
-
   const subtotal = cart.reduce((acc, item) => acc + item.article_price * item.quantity, 0);
   const totalShipping = cart.reduce((acc, item) => acc + item.shipping_cost * item.quantity, 0);
   const totalCommission = cart.reduce((acc, item) => acc + (item.article_price * 0.1 * item.quantity), 0);
@@ -137,8 +142,20 @@ export const UserCart = () => {
     );
   }
 
+  if (cart.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+        <FiShoppingCart className="text-gray-300 text-9xl mb-4" />
+        <p className="text-center text-gray-400 text-xl mb-8">Votre panier est vide</p>
+        <NavLink to="/articles" className="bg-gold text-white py-2 px-4 rounded-sm border border-gold hover:bg-white hover:text-gold hover:border-gold transition-all duration-300">
+          Parcourir les articles
+        </NavLink>
+      </div>
+    );
+  }
+
   return (
-    <div className="bg-slate-100 min-h-screen">
+    <div className="bg-gray-100 min-h-screen">
       <main className='container mx-auto py-28 px-4 sm:px-6 lg:px-8'>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="col-span-2">
@@ -150,7 +167,7 @@ export const UserCart = () => {
                   </NavLink>
                   <div className="flex-1">
                     <div className="text-xl mb-2 font-medium">{item.article_price}€</div>
-                      <h2 className="text-lg font-semibold"><NavLink to={`/articles/${item.article_id}`} className="hover:text-gold">{item.title}</NavLink></h2>
+                    <h2 className="text-lg font-semibold"><NavLink to={`/articles/${item.article_id}`} className="hover:text-gold">{item.title}</NavLink></h2>
                     <p className="text-gray-600">{item.article_description.length > 100 ? item.article_description.slice(0, 100) + '...' : item.article_description}</p>
                     <div className="mt-2">
                       <span className="text-gray-500">Frais de livraison: </span>
@@ -158,7 +175,7 @@ export const UserCart = () => {
                     </div>
                     <div>
                       <span className="text-gray-500">Commission: </span>
-                      <span className="font-medium">{(item.article_price * 0.1).toFixed(2)}€ (10%)</span> 
+                      <span className="font-medium">{(item.article_price * 0.1).toFixed(2)}€ (10%)</span>
                     </div>
                   </div>
                 </div>
@@ -196,7 +213,7 @@ export const UserCart = () => {
               </div>
               <div className="mt-4 p-2 bg-slate-100 shadow-lg">
                 <Elements stripe={stripePromise}>
-                  <CheckoutForm total={total} />
+                  <CheckoutForm total={total} cart={cart} setCart={setCart} handleRemoveItem={handleRemoveItem} />
                 </Elements>
               </div>
             </div>

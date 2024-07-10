@@ -23,7 +23,7 @@ const SignupSection = ({ setIsLogin }) => {
 
     if (password && confirmPassword && password === confirmPassword) {
       try {
-        const response = await fetch('https://4.233.138.141:3001/api/users/register', {
+        const response = await fetch('http://4.233.138.141:3001/api/users/register', {
           method: 'POST',
           body: formData
         });
@@ -198,7 +198,7 @@ const SignupSection = ({ setIsLogin }) => {
           <FormField label="Ville" type="text" name="city" required />
         </div>
         <FormField label="Adresse PayPal" type="email" name="paypal_address" />
-        <FormField label="Bio" type="textarea" name="bio" />
+        <FormField label="Bio" type="textarea" name="biography" />
         <button type="submit" className="w-full bg-gold border border-gold text-white py-2 rounded hover:bg-white hover:text-gold">
           S'inscrire
         </button>

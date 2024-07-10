@@ -7,7 +7,7 @@ import { CategorySection } from '../components/home/CategorySection'
 
 const Home = () => {
   return (
-    <main className='mt-24 mx-auto py-4'>
+    <main className='mt-20 mx-auto py-4 bg-gray-100'>
       <CarouselBanner/>
       <ShowArticlesSection/>
       <JoinUsBanner/>

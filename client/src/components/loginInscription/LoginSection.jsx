@@ -62,14 +62,14 @@ const LoginSection = ({ setIsLogin }) => {
             </div>
           </div>
         </div>
-        <button type="submit" className="w-full bg-gold border border-gold text-white py-2 rounded hover:bg-white hover:text-gold hover:border hover:border-gold">
+        <button type="submit" className="w-full bg-gold border border-gold text-white py-2 rounded hover:bg-white hover:text-gold hover:border hover:border-gold duration-300">
           S'identifier
         </button>
       </form>
       <div className="text-center mt-4">
         <p>
           Pas encore inscrit ?{' '}
-          <span className="text-gold cursor-pointer hover:underline" onClick={() => setIsLogin(false)}>
+          <span className="text-gold cursor-pointer hover:underline duration-300" onClick={() => setIsLogin(false)}>
             Créez un compte
           </span>
         </p>
