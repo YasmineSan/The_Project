@@ -141,7 +141,7 @@ export const UserProfile = () => {
 
   return (
     <main className="w-full mx-auto px-10 sm:px-12 py-36 bg-gray-100">
-      <div className="bg-white shadow-lg rounded-lg p-8 mb-12 lg:mx-28">
+      <div className="bg-white shadow-lg rounded-lg p-8 mb-12 mx-auto md:max-w-[80%]">
         <div className="flex flex-col sm:flex-row items-center">
           <img src={user.profile_image} alt="Profile" className="w-40 h-40 rounded-full object-cover mb-4 sm:mr-10 shadow-md" />
           <div className="flex-1 flex flex-col items-center sm:items-start">
@@ -180,9 +180,9 @@ export const UserProfile = () => {
         </div>
       </div>
 
-      <div>
+      <div className='mx-auto max-w-[90%]'>
         <h2 className="text-2xl font-medium mb-6">{articles.length} articles</h2>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 lg:gap-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10">
           {!userId && (
             <NavLink to={`/addArticle`} className="transform transition duration-300 hover:scale-105 cursor-pointer bg-white rounded-lg border-4 border-dashed border-gray-300 flex flex-col items-center justify-center text-center p-6 shadow-lg hover:bg-gray-100">
               <div className="flex items-center justify-center text-gold mb-4">
