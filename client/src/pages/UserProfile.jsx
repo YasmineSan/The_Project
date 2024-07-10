@@ -1,22 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { FiMail, FiMapPin, FiSettings, FiPlus  } from 'react-icons/fi';
+import { FiMail, FiMapPin, FiSettings, FiPlus } from 'react-icons/fi';
 import CardArticle from '../components/CardArticle';
 import { useParams, Link, NavLink } from 'react-router-dom';
-import { IoConstructOutline } from 'react-icons/io5';
 
 export const UserProfile = () => {
   const { userId } = useParams();
   const [user, setUser] = useState({});
   const [articles, setArticles] = useState([]);
- 
+  const [currentPage, setCurrentPage] = useState(1);
+  const articlesPerPage = 16;
+
   useEffect(() => {
     window.scrollTo(0, 0); // Scroll to top
 
-    if (userId) {// Si c'est un autre utilisateur
+    if (userId) { // Si c'est un autre utilisateur
 
       const id = userId[1];
 
-      const fetchOtherUserProfile = async () => {//Récupérer le profil de l'autre utilisateur
+      const fetchOtherUserProfile = async () => { // Récupérer le profil de l'autre utilisateur
         try {
           const response = await fetch(`http://4.233.138.141:3001/api/users/${id}`, {
             method: 'GET',
@@ -38,7 +39,7 @@ export const UserProfile = () => {
 
       fetchOtherUserProfile();
 
-      const fetchOtherUserArticles = async () => {//Récupérer les articles d'un autre utilisateur'
+      const fetchOtherUserArticles = async () => { // Récupérer les articles d'un autre utilisateur
         try {
           const response = await fetch(`http://4.233.138.141:3001/api/articles/user/${id}/articles`, {
             method: 'GET',
@@ -61,9 +62,9 @@ export const UserProfile = () => {
 
       fetchOtherUserArticles();
 
-    } else {// Si c'est l'utilisateur en cours
+    } else { // Si c'est l'utilisateur en cours
 
-      const fetchCurrentUser = async () => {//Récupérer le profil de l'utilisateur en cours
+      const fetchCurrentUser = async () => { // Récupérer le profil de l'utilisateur en cours
         try {
           const response = await fetch(`http://4.233.138.141:3001/api/users/dashboard`, {
             method: 'GET',
@@ -86,7 +87,7 @@ export const UserProfile = () => {
 
       fetchCurrentUser();
 
-      const fetchUserArticles = async () => {//Récupérer les articles de l'utilisateur en cours
+      const fetchUserArticles = async () => { // Récupérer les articles de l'utilisateur en cours
         try {
           const response = await fetch(`http://4.233.138.141:3001/api/articles/user/articles`, {
             method: 'GET',
@@ -112,33 +113,35 @@ export const UserProfile = () => {
 
     }
 
-    const fetchUserEvaluation = async () => {//Récupérer les évaluations du profil actuel
-        try {
-          const response = await fetch(`http://4.233.138.141:3001/api/users/${id}`, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-            }
-          });
+  }, [userId]);
 
-          if (!response.ok) {
-            throw new Error('Failed to fetch user profile');
-          } else {
-            setUser(await response.json());
-          }
-        } catch (error) {
-          console.error('Error:', error);
-        }
-      };
+  const indexOfLastArticle = currentPage * articlesPerPage;
+  const indexOfFirstArticle = indexOfLastArticle - articlesPerPage;
+  const currentArticles = articles.slice(indexOfFirstArticle, indexOfLastArticle);
 
-      // fetchUserEvaluation();
+  const totalPages = Math.ceil(articles.length / articlesPerPage);
 
-  }, []);
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+      window.scrollTo(0, 0); // Scroll to top
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+      window.scrollTo(0, 0); // Scroll to top
+    }
+  };
+
+  const handlePageClick = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   return (
     <main className="w-full mx-auto px-10 sm:px-12 py-36 bg-gray-100">
-      <div className=" bg-white shadow-lg rounded-lg p-8 mb-12 lg:mx-28">
+      <div className="bg-white shadow-lg rounded-lg p-8 mb-12 lg:mx-28">
         <div className="flex flex-col sm:flex-row items-center">
           <img src={user.profile_image} alt="Profile" className="w-40 h-40 rounded-full object-cover mb-4 sm:mr-10 shadow-md" />
           <div className="flex-1 flex flex-col items-center sm:items-start">
@@ -146,15 +149,11 @@ export const UserProfile = () => {
               <div className='flex flex-col sm:items-start items-center'>
                 <h1 className="text-3xl font-medium mb-2">{user.username}</h1>
                 <p className="text-gray-500 mb-2 flex items-center">
-                  <FiMapPin className="inline mr-2"/>
+                  <FiMapPin className="inline mr-2" />
                   {user.city}</p>
               </div>
               <div className="text-right flex flex-col items-center sm:items-end mb-4">
-                {/* <div className="flex items-center sm:justify-end mb">
-                  <span className="text-yellow-400 ml-2">{'★'.repeat(Math.floor(10))}</span>
-                  <span className="text-gray-400">{'★'.repeat(5 - Math.floor(10))}</span>
-                </div> */}
-                 <Link
+                <Link
                   to={`/allEvaluation/${userId}`}
                   className="hover:underline text-gold duration-300"
                 >
@@ -162,7 +161,7 @@ export const UserProfile = () => {
                 </Link>
               </div>
             </div>
-            
+
             <p className="text-gray-700 mb-8">{user.biography}</p>
 
             {userId ? (
@@ -176,15 +175,15 @@ export const UserProfile = () => {
                 <FiSettings className="ml-2" />
               </NavLink>
             )}
-            
+
           </div>
         </div>
       </div>
-      
+
       <div>
         <h2 className="text-2xl font-medium mb-6">{articles.length} articles</h2>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 lg:gap-10">
-           {!userId && (
+          {!userId && (
             <NavLink to={`/addArticle`} className="transform transition duration-300 hover:scale-105 cursor-pointer bg-white rounded-lg border-4 border-dashed border-gray-300 flex flex-col items-center justify-center text-center p-6 shadow-lg hover:bg-gray-100">
               <div className="flex items-center justify-center text-gold mb-4">
                 <FiPlus className="text-6xl transition duration-300 transform hover:rotate-90" />
@@ -194,8 +193,8 @@ export const UserProfile = () => {
               </div>
             </NavLink>
           )}
-          {articles.length > 0 ? (
-            articles.map(article => (
+          {currentArticles.length > 0 ? (
+            currentArticles.map(article => (
               <CardArticle
                 key={article.article_id}
                 id={article.article_id}
@@ -209,7 +208,33 @@ export const UserProfile = () => {
           )}
         </div>
       </div>
-      
+
+      {/* Pagination */}
+      <div className="flex justify-center mt-12">
+        <button
+          onClick={handlePrevPage}
+          disabled={currentPage === 1}
+          className="mx-2 px-4 py-2 bg-gray-300 rounded"
+        >
+          Précédent
+        </button>
+        {Array.from({ length: totalPages }, (_, i) => (
+          <button
+            key={i}
+            onClick={() => handlePageClick(i + 1)}
+            className={`mx-2 px-4 py-2 rounded ${currentPage === i + 1 ? 'bg-gold text-white' : 'bg-gray-300'}`}
+          >
+            {i + 1}
+          </button>
+        ))}
+        <button
+          onClick={handleNextPage}
+          disabled={currentPage === totalPages}
+          className="mx-2 px-4 py-2 bg-gray-300 rounded"
+        >
+          Suivant
+        </button>
+      </div>
     </main>
   );
 };
