@@ -44,6 +44,7 @@ app.use('/api/cart', require('./routes/cartRoutes'));
 app.use('/api/payments', require('./routes/paymentRoutes'));
 app.use('/api/evaluations', require('./routes/evaluationRoutes'));
 app.use('/api', require('./routes/webhookRoutes'));
+app.use('/api/email', require('./routes/emailRoutes')); // Nouvelle route
 
 // Serve HTML files
 app.get('/login', (req, res) => {
