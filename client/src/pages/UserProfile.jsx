@@ -140,8 +140,8 @@ export const UserProfile = () => {
   };
 
   return (
-    <main className="w-full mx-auto px-10 sm:px-12 py-36 bg-gray-100">
-      <div className="bg-white shadow-lg rounded-lg p-8 mb-12 mx-auto md:max-w-[80%]">
+    <main className="w-full mx-auto px-10 sm:px-12 pt-36 pb-28 bg-gray-100">
+      <div className="bg-white shadow-lg rounded-lg p-8 mb-8 mx-auto md:max-w-[80%]">
         <div className="flex flex-col sm:flex-row items-center">
           <img src={user.profile_image} alt="Profile" className="w-40 h-40 rounded-full object-cover mb-4 sm:mr-10 shadow-md" />
           <div className="flex-1 flex flex-col items-center sm:items-start">
