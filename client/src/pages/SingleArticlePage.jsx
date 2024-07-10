@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useParams } from 'react-router-dom';
-import { FiHeart, FiEdit3 } from "react-icons/fi";
+import { FiHeart, FiEdit3, FiArrowRight } from "react-icons/fi";
 import { MdAddShoppingCart } from "react-icons/md";
 import CardArticle from '../components/CardArticle';
 
@@ -243,11 +243,11 @@ const SingleArticlePage = () => {
         </div>
       </div>
 
-      <div className="pt-10 mx-auto max-w-[80%] pb-10">
+      <div className="pt-10 mx-auto max-w-[80%] pb-10 flex flex-col">
         <h2 className="text-2xl font-medium mb-6">Autres articles de cette boutique</h2>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 lg:gap-10">
           {otherArticles.length > 0 ? (
-            otherArticles.map((article, i) => (
+            otherArticles.slice(0, 8).map((article, i) => (
               <CardArticle
                 key={i}
                 id={article.article_id}
@@ -259,6 +259,12 @@ const SingleArticlePage = () => {
           ) : (
             <p className="text-gray-500">Pas d'articles à afficher</p>
           )}
+        </div>
+        <div className="mt-8 self-end">
+          <NavLink to={`/userprofile/:${user.user_id}`} className="text-gold hover:underline flex items-center">
+              Plus d'articles
+              <FiArrowRight className='ml-2' />
+          </NavLink>
         </div>
       </div>
 
