@@ -1,14 +1,17 @@
 const { poolPromise } = require('../utils/db'); // Importe la connexion à la base de données
-const AWS = require('aws-sdk'); // Importe AWS SDK pour gérer le stockage des fichiers
+const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3'); // Importe les modules S3Client et PutObjectCommand
+const { getSignedUrl } = require('@aws-sdk/s3-request-presigner'); // Importe le module getSignedUrl
 const path = require('path'); // Importe le module path pour manipuler les chemins de fichiers
 const { v4: uuidv4 } = require('uuid'); // Importe la fonction uuidv4 pour générer des identifiants uniques
 
 // Configure AWS S3
-const spacesEndpoint = new AWS.Endpoint(process.env.DO_SPACES_ENDPOINT);
-const s3 = new AWS.S3({
-    endpoint: spacesEndpoint,
-    accessKeyId: process.env.DO_SPACES_KEY,
-    secretAccessKey: process.env.DO_SPACES_SECRET
+const s3 = new S3Client({
+    region: process.env.AWS_REGION,
+    endpoint: process.env.DO_SPACES_ENDPOINT,
+    credentials: {
+        accessKeyId: process.env.DO_SPACES_KEY,
+        secretAccessKey: process.env.DO_SPACES_SECRET
+    }
 });
 
 // Fonction pour vérifier si le type de fichier est valide
@@ -37,14 +40,15 @@ exports.addArticle = async (req, res) => {
         let article_photo_url = '';
         if (article_photo) {
             // Upload du fichier sur AWS S3
-            const uploadParams = {
+            const key = `${uuidv4()}${path.extname(article_photo.originalname)}`;
+            const command = new PutObjectCommand({
                 Bucket: process.env.DO_SPACES_BUCKET,
-                Key: `${uuidv4()}${path.extname(article_photo.originalname)}`,
+                Key: key,
                 Body: article_photo.buffer,
                 ACL: 'public-read'
-            };
-            const data = await s3.upload(uploadParams).promise();
-            article_photo_url = data.Location;
+            });
+            await s3.send(command);
+            article_photo_url = `https://${process.env.DO_SPACES_BUCKET}.${process.env.DO_SPACES_ENDPOINT}/${key}`;
         }
 
         // Vérifie si la catégorie existe ou doit être créée

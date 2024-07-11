@@ -1,16 +1,18 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { poolPromise } = require('../utils/db');
-const AWS = require('aws-sdk');
+const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 
 // Configure AWS S3
-const spacesEndpoint = new AWS.Endpoint(process.env.DO_SPACES_ENDPOINT);
-const s3 = new AWS.S3({
-    endpoint: spacesEndpoint,
-    accessKeyId: process.env.DO_SPACES_KEY,
-    secretAccessKey: process.env.DO_SPACES_SECRET
+const s3 = new S3Client({
+    region: process.env.AWS_REGION,
+    endpoint: process.env.DO_SPACES_ENDPOINT,
+    credentials: {
+        accessKeyId: process.env.DO_SPACES_KEY,
+        secretAccessKey: process.env.DO_SPACES_SECRET
+    }
 });
 
 const isValidFileType = (file) => {
@@ -65,14 +67,15 @@ exports.registerUser = async (req, res) => {
         let profile_image_url = '';
         if (profile_image) {
             console.log('Uploading image to AWS S3');
-            const uploadParams = {
+            const key = `${uuidv4()}${path.extname(profile_image.originalname)}`;
+            const command = new PutObjectCommand({
                 Bucket: process.env.DO_SPACES_BUCKET,
-                Key: `${uuidv4()}${path.extname(profile_image.originalname)}`,
+                Key: key,
                 Body: profile_image.buffer,
                 ACL: 'public-read'
-            };
-            const data = await s3.upload(uploadParams).promise();
-            profile_image_url = data.Location;
+            });
+            const data = await s3.send(command);
+            profile_image_url = `https://${process.env.DO_SPACES_BUCKET}.${process.env.DO_SPACES_ENDPOINT}/${key}`;
             console.log('Image uploaded. URL:', profile_image_url);
         }
 
