@@ -85,8 +85,7 @@ exports.createOrder = async (req, res) => {
     }
 };
 
-//désolé comment inutile
-
+// Récupère toutes les commandes d'un utilisateur
 exports.getUserOrders = async (req, res) => {
     try {
         const userId = req.user.id;
@@ -106,8 +105,6 @@ exports.getUserOrders = async (req, res) => {
         res.status(500).send({ message: err.message });
     }
 };
-
-
 
 exports.getOrderById = async (req, res) => {
     try {
@@ -133,7 +130,6 @@ exports.getOrderById = async (req, res) => {
         res.status(500).send({ message: err.message });
     }
 };
-
 
 exports.updateOrderStatus = async (req, res) => {
     try {

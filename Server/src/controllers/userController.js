@@ -1,9 +1,17 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { poolPromise } = require('../utils/db');
-const { BlobServiceClient } = require('@azure/storage-blob');
+const AWS = require('aws-sdk');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
+
+// Configure AWS S3
+const spacesEndpoint = new AWS.Endpoint(process.env.DO_SPACES_ENDPOINT);
+const s3 = new AWS.S3({
+    endpoint: spacesEndpoint,
+    accessKeyId: process.env.DO_SPACES_KEY,
+    secretAccessKey: process.env.DO_SPACES_SECRET
+});
 
 const isValidFileType = (file) => {
     const allowedTypes = ['image/webp', 'image/jpeg', 'image/jpg', 'image/png', 'image/svg+xml'];
@@ -56,13 +64,15 @@ exports.registerUser = async (req, res) => {
 
         let profile_image_url = '';
         if (profile_image) {
-            console.log('Uploading image to Azure Blob Storage');
-            const blobServiceClient = BlobServiceClient.fromConnectionString(process.env.AZURE_STORAGE_CONNECTION_STRING);
-            const containerClient = blobServiceClient.getContainerClient('user-images');
-            const blobName = uuidv4() + path.extname(profile_image.originalname);
-            const blockBlobClient = containerClient.getBlockBlobClient(blobName);
-            await blockBlobClient.uploadData(profile_image.buffer);
-            profile_image_url = blockBlobClient.url;
+            console.log('Uploading image to AWS S3');
+            const uploadParams = {
+                Bucket: process.env.DO_SPACES_BUCKET,
+                Key: `${uuidv4()}${path.extname(profile_image.originalname)}`,
+                Body: profile_image.buffer,
+                ACL: 'public-read'
+            };
+            const data = await s3.upload(uploadParams).promise();
+            profile_image_url = data.Location;
             console.log('Image uploaded. URL:', profile_image_url);
         }
 
@@ -238,12 +248,14 @@ exports.updateUser = async (req, res) => {
 
         let profile_image_url = '';
         if (profile_image) {
-            const blobServiceClient = BlobServiceClient.fromConnectionString(process.env.AZURE_STORAGE_CONNECTION_STRING);
-            const containerClient = blobServiceClient.getContainerClient('user-images');
-            const blobName = uuidv4() + path.extname(profile_image.originalname);
-            const blockBlobClient = containerClient.getBlockBlobClient(blobName);
-            await blockBlobClient.uploadData(profile_image.buffer);
-            profile_image_url = blockBlobClient.url;
+            const uploadParams = {
+                Bucket: process.env.DO_SPACES_BUCKET,
+                Key: `${uuidv4()}${path.extname(profile_image.originalname)}`,
+                Body: profile_image.buffer,
+                ACL: 'public-read'
+            };
+            const data = await s3.upload(uploadParams).promise();
+            profile_image_url = data.Location;
             request.input('profile_image', profile_image_url);
         }
 

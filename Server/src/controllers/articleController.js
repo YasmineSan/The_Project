@@ -1,7 +1,15 @@
 const { poolPromise } = require('../utils/db'); // Importe la connexion à la base de données
-const { BlobServiceClient } = require('@azure/storage-blob'); // Importe le service de Blob d'Azure pour gérer le stockage des fichiers
+const AWS = require('aws-sdk'); // Importe AWS SDK pour gérer le stockage des fichiers
 const path = require('path'); // Importe le module path pour manipuler les chemins de fichiers
 const { v4: uuidv4 } = require('uuid'); // Importe la fonction uuidv4 pour générer des identifiants uniques
+
+// Configure AWS S3
+const spacesEndpoint = new AWS.Endpoint(process.env.DO_SPACES_ENDPOINT);
+const s3 = new AWS.S3({
+    endpoint: spacesEndpoint,
+    accessKeyId: process.env.DO_SPACES_KEY,
+    secretAccessKey: process.env.DO_SPACES_SECRET
+});
 
 // Fonction pour vérifier si le type de fichier est valide
 const isValidFileType = (file) => {
@@ -28,13 +36,15 @@ exports.addArticle = async (req, res) => {
 
         let article_photo_url = '';
         if (article_photo) {
-            // Upload du fichier sur Azure Blob Storage
-            const blobServiceClient = BlobServiceClient.fromConnectionString(process.env.AZURE_STORAGE_CONNECTION_STRING);
-            const containerClient = blobServiceClient.getContainerClient('article-images');
-            const blobName = uuidv4() + path.extname(article_photo.originalname);
-            const blockBlobClient = containerClient.getBlockBlobClient(blobName);
-            await blockBlobClient.uploadData(article_photo.buffer);
-            article_photo_url = blockBlobClient.url;
+            // Upload du fichier sur AWS S3
+            const uploadParams = {
+                Bucket: process.env.DO_SPACES_BUCKET,
+                Key: `${uuidv4()}${path.extname(article_photo.originalname)}`,
+                Body: article_photo.buffer,
+                ACL: 'public-read'
+            };
+            const data = await s3.upload(uploadParams).promise();
+            article_photo_url = data.Location;
         }
 
         // Vérifie si la catégorie existe ou doit être créée
@@ -134,9 +144,10 @@ exports.getArticleByUser = async (req, res) => {
         }
         res.json(article);
     } catch (err) {
-        res.status(500).send({ message: err.message });
+        res.status (500).send({ message: err.message });
     }
 };
+
 // Récupère tous les articles qui ne sont pas vendus (solde = 0)
 exports.getAvailableArticles = async (req, res) => {
     try {
@@ -154,7 +165,6 @@ exports.getAvailableArticles = async (req, res) => {
         res.status(500).send({ message: err.message });
     }
 };
-
 
 // Met à jour un article
 exports.updateArticle = async (req, res) => {
@@ -178,12 +188,14 @@ exports.updateArticle = async (req, res) => {
 
         let article_photo_url = articleResult.recordset[0].article_photo;
         if (article_photo) {
-            const blobServiceClient = BlobServiceClient.fromConnectionString(process.env.AZURE_STORAGE_CONNECTION_STRING);
-            const containerClient = blobServiceClient.getContainerClient('article-images');
-            const blobName = uuidv4() + path.extname(article_photo.originalname);
-            const blockBlobClient = containerClient.getBlockBlobClient(blobName);
-            await blockBlobClient.uploadData(article_photo.buffer);
-            article_photo_url = blockBlobClient.url;
+            const uploadParams = {
+                Bucket: process.env.DO_SPACES_BUCKET,
+                Key: `${uuidv4()}${path.extname(article_photo.originalname)}`,
+                Body: article_photo.buffer,
+                ACL: 'public-read'
+            };
+            const data = await s3.upload(uploadParams).promise();
+            article_photo_url = data.Location;
         }
 
         await pool.request()
@@ -271,10 +283,7 @@ exports.getArticleById = async (req, res) => {
     }
 };
 
-
-
-
-// (modifier avec columns sold) Récupère tous les articles d'un utilisateur par user_id (public)
+// Récupère tous les articles d'un utilisateur par user_id (public)
 exports.getArticlesByUserId = async (req, res) => {
     try {
         const { userId } = req.params; // Récupère le user_id des paramètres de la requête
@@ -300,8 +309,6 @@ exports.getArticlesByUserId = async (req, res) => {
         res.status(500).send({ message: err.message });
     }
 };
-
-
 
 // Ajoute une évaluation à un article
 exports.addEvaluation = async (req, res) => {
@@ -406,7 +413,7 @@ exports.getAllEvaluationsByUser = async (req, res) => {
 
         const pool = await poolPromise;
         const result = await pool.request()
-            .input('user_id', sql.Int, parsedUserId) // Utilisation explicite de sql.Int
+            .input('user_id', parsedUserId) // Utilisation explicite de sql.Int
             .query('SELECT * FROM Evaluations WHERE user_id = @user_id');
 
         res.json(result.recordset);
@@ -489,7 +496,7 @@ exports.getArticlePrice = async (req, res) => {
 exports.getAllArticlePrices = async (req, res) => {
     try {
         const pool = await poolPromise;
-        console.log(`Fetching all article prices`); // Ajout de log
+        console.log('Fetching all article prices'); // Ajout de log
         const result = await pool.request().query('SELECT article_id, article_price FROM Articles');
         res.json(result.recordset);
     } catch (err) {

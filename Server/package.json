@@ -13,6 +13,7 @@
   "dependencies": {
     "@azure/identity": "^4.2.1",
     "@azure/storage-blob": "^12.23.0",
+    "aws-sdk": "^2.1658.0",
     "axios": "^1.7.2",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
