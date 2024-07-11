@@ -3,7 +3,7 @@
 - **Front-end** : Auréliane Gagliardi,  Thomas Thonnard;
 - **Back-end** : Yasmine Sanchez,  Samuel Sanchez;
 
-# Projet Artisans en Ligne (Craftify)
+## Portfolio du site
 
 https://craftify-project.myportfolio.com/contact-craftify
 
