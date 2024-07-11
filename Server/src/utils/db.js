@@ -1,4 +1,4 @@
-const sql = require('mssql');
+const mysql = require('mysql2/promise');
 const dotenv = require('dotenv');
 
 dotenv.config();
@@ -11,28 +11,15 @@ console.log('DB_PASSWORD:', process.env.DB_PASSWORD);
 console.log('DB_PORT:', process.env.DB_PORT);
 
 const config = {
+    host: process.env.DB_SERVER,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
-    server: process.env.DB_SERVER,
     database: process.env.DB_DATABASE,
-    port: parseInt(process.env.DB_PORT, 10), // Assure-toi que le port est bien défini
-    options: {
-        encrypt: true, // Changer à false si nécessaire
-        trustServerCertificate: true, // Change à true pour DigitalOcean
-    }
+    port: parseInt(process.env.DB_PORT, 10)
 };
 
-const poolPromise = new sql.ConnectionPool(config)
-    .connect()
-    .then(pool => {
-        console.log('Connected to the SQL Server database');
-        return pool;
-    })
-    .catch(err => {
-        console.error('Database Connection Failed! Bad Config: ', err);
-        process.exit(1);
-    });
+const poolPromise = mysql.createPool(config);
 
 module.exports = {
-    sql, poolPromise
+    poolPromise
 };
