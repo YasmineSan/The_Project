@@ -23,8 +23,6 @@ router.get('/', userController.getAllUsers);
 router.post('/register', upload.single('profile_image'), userController.registerUser);
 router.post('/login', userController.loginUser);
 router.get('/dashboard', authenticateToken, userController.getUserInfo);
-router.post('/update', authenticateToken, upload.single('profile_image'), userController.updateUser);
 router.get('/:userId', userController.getUserById); // Route publique pour obtenir un utilisateur par ID
-router.put('/:userId', authenticateToken, upload.single('profile_image'), userController.updateUser);
-
+router.put('/update/:userId', authenticateToken, upload.single('profile_image'), userController.updateUser);
 module.exports = router;
