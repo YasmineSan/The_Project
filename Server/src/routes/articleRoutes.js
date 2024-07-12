@@ -19,8 +19,8 @@ const upload = multer({
 
 // Routes publiques
 router.get('/public/articles', articleController.getAllArticles);
-router.get('/:id/price', articleController.getArticlePrice);
-router.get('/:id', articleController.getArticleById);
+router.get('/article/:id/price', articleController.getArticlePrice);
+router.get('/article/:id', articleController.getArticleById);
 router.get('/prices', articleController.getAllArticlePrices);
 router.get('/categories/:categoryId/prices', articleController.getCategoryArticlePrices);
 router.get('/user/:userId/articles', articleController.getArticlesByUserId);

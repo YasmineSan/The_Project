@@ -363,7 +363,7 @@ exports.getArticlePrice = async (req, res) => {
     }
 };
 
-exports.getAllArticlePrices = async (req, res) => {
+exports.getAllArticlePrices = async (_req, res) => {
     try {
         const connection = await pool.getConnection();
 
