@@ -12,6 +12,10 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// Importer et utiliser les routes
+app.use('/api/users', require('./routes/userRoutes'));
+// Ajoute les autres routes ici...
+
 const PORT = process.env.PORT || 3001;
 
 // Test database connection
@@ -25,4 +29,4 @@ app.listen(PORT, async () => {
   }
 });
 
-// Tes routes ici
+module.exports = app;
