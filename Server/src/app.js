@@ -27,6 +27,7 @@ app.use(express.json({
 
 // Importer et utiliser les routes
 app.use('/api/users', require('./routes/userRoutes'));
+app.use('/api/articles', require('./routes/articleRoutes'));
 // Ajoute les autres routes ici...
 
 // Serve HTML files

@@ -1,34 +1,63 @@
 const express = require('express');
-const bodyParser = require('body-parser');
+const path = require('path');
+const helmet = require('helmet');
+const cors = require('cors');
 const dotenv = require('dotenv');
-const { pool } = require('./utils/db');
+const bodyParser = require('body-parser');
 
-// Charger les variables d'environnement
 dotenv.config();
 
 const app = express();
 
-// Middlewares
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// Middleware pour sécuriser les en-têtes HTTP
+app.use(helmet());
+
+// Middleware pour gérer les CORS
+app.use(cors({
+  origin: 'http://localhost:5173' // Remplace par l'origine de ton frontend
+}));
+
+// Middleware pour parser les requêtes JSON et URL-encoded
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+
+// Middleware to capture raw request body
+app.use(bodyParser.json({
+  limit: '5mb',
+  verify: (req, _res, buf) => {
+      req.rawBody = buf.toString();
+  }
+}));
 
 // Importer et utiliser les routes
 app.use('/api/users', require('./routes/userRoutes'));
-// Ajoute les autres routes ici...
+app.use('/api/articles', require('./routes/articleRoutes'));
+
+// Serve HTML files
+app.get('/login', (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'login.html'));
+});
+
+app.get('/register', (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'register.html'));
+});
+
+app.get('/dashboard', (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'dashboard.html'));
+});
+
+app.get('/profile', (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'profile.html'));
+});
+
+app.get('/', (req, res) => {
+  res.send('<h1>Welcome</h1><a href="/login">Login</a> or <a href="/register">Register</a>');
+});
 
 const PORT = process.env.PORT || 3001;
 
-// Test database connection
 app.listen(PORT, async () => {
-  try {
-    const connection = await pool.getConnection(); // Utilisation correcte de pool pour MySQL
-    console.log(`Server is running on port ${PORT}`);
-    connection.release(); // Libération de la connexion après le test
-  } catch (err) {
-    console.error('Failed to connect to the database:', err);
-    process.exit(1);
-  }
+  console.log(`Server running on port ${PORT}`);
 });
-
 
 module.exports = app;

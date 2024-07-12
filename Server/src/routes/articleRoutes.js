@@ -19,25 +19,20 @@ const upload = multer({
 
 // Routes publiques
 router.get('/public/articles', articleController.getAllArticles);
-router.get('/:articleId/price', articleController.getArticlePrice);
-router.get('/articles/:id', articleController.getArticleById); // Assure-toi que cette route est publique
+router.get('/:id/price', articleController.getArticlePrice);
+router.get('/:id', articleController.getArticleById);
 router.get('/prices', articleController.getAllArticlePrices);
-router.get('/categories/:categoryId/prices', (req, res, next) => {
-    console.log(`Received request for category: ${req.params.categoryId}`);
-    next();
-}, articleController.getCategoryArticlePrices);
-router.get('/test/categories/:categoryId/prices', articleController.getCategoryArticlePrices);
-router.get('/user/:userId/articles', articleController.getArticlesByUserId); // Nouvelle route pour récupérer les articles par user_id
-// Route pour récupérer tous les articles sauf ceux vendus
+router.get('/categories/:categoryId/prices', articleController.getCategoryArticlePrices);
+router.get('/user/:userId/articles', articleController.getArticlesByUserId);
 router.get('/available-articles', articleController.getAvailableArticles);
 
 // Routes avec authentification
 router.get('/user/evaluations', authenticateToken, articleController.getAllEvaluationsByUser);
 router.get('/user/articles', authenticateToken, articleController.getAllArticlesByUser);
-router.get('/user', authenticateToken, articleController.getAllArticlesByUser);
 router.post('/', authenticateToken, upload.single('article_photo'), articleController.addArticle);
 router.post('/:id/evaluations', authenticateToken, articleController.addEvaluation);
 router.put('/:articleId', authenticateToken, upload.single('article_photo'), articleController.updateArticle);
+router.delete('/:id', authenticateToken, articleController.deleteArticle);
 router.delete('/:articleId/evaluations/:evaluationId', authenticateToken, articleController.deleteEvaluation);
 
 module.exports = router;
