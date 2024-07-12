@@ -75,7 +75,7 @@ exports.registerUser = async (req, res) => {
                 ACL: 'public-read'
             });
             const data = await s3.send(command);
-            profile_image_url = `https://${process.env.DO_SPACES_BUCKET}.${process.env.DO_SPACES_ENDPOINT}/${key}`;
+            profile_image_url = `https://${process.env.DO_SPACES_BUCKET}.${process.env.DO_SPACES_ENDPOINT.split('//')[1]}/${key}`;
             console.log('Image uploaded. URL:', profile_image_url);
         }
 
@@ -136,6 +136,7 @@ exports.registerUser = async (req, res) => {
     }
 };
 
+
 exports.loginUser = async (req, res) => {
     try {
         const { username, password } = req.body;
@@ -191,10 +192,9 @@ exports.getUserInfo = async (req, res) => {
     }
 };
 
-// Méthode pour récupérer les informations d'un utilisateur spécifique
 exports.getUserById = async (req, res) => {
     try {
-        const { userId } = req.params;  // Utilise l'ID de l'utilisateur passé en paramètre
+        const { userId } = req.params;
 
         const pool = await poolPromise;
         const result = await pool.request()
@@ -212,10 +212,9 @@ exports.getUserById = async (req, res) => {
     }
 };
 
-// Méthode pour mettre à jour les informations d'un utilisateur spécifique
 exports.updateUser = async (req, res) => {
     try {
-        const { userId } = req.params;  // Utilise l'ID de l'utilisateur passé en paramètre
+        const { userId } = req.params;
         const {
             biography,
             first_name,
