@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { poolPromise } = require('../utils/db');
+const { pool } = require('../utils/db');
 const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
@@ -49,24 +49,15 @@ exports.registerUser = async (req, res) => {
 
         const profile_image = req.file;
 
-        console.log('Received data:', req.body);
-        if (profile_image) {
-            console.log('Received file:', profile_image.originalname);
-        } else {
-            console.log('No file received');
-        }
-
         if (profile_image && !isValidFileType(profile_image)) {
             return res.status(400).send({ message: 'Invalid file type' });
         }
 
-        const pool = await poolPromise;
         const hashedPassword = await bcrypt.hash(password, 10);
         const registration_date = new Date();
 
         let profile_image_url = '';
         if (profile_image) {
-            console.log('Uploading image to AWS S3');
             const key = `${uuidv4()}${path.extname(profile_image.originalname)}`;
             const command = new PutObjectCommand({
                 Bucket: process.env.DO_SPACES_BUCKET,
@@ -74,67 +65,179 @@ exports.registerUser = async (req, res) => {
                 Body: profile_image.buffer,
                 ACL: 'public-read'
             });
-            const data = await s3.send(command);
-            profile_image_url = `https://${process.env.DO_SPACES_BUCKET}.${process.env.DO_SPACES_ENDPOINT.split('//')[1]}/${key}`;
-            console.log('Image uploaded. URL:', profile_image_url);
+            await s3.send(command);
+            profile_image_url = `https://${process.env.DO_SPACES_BUCKET}.${process.env.DO_SPACES_ENDPOINT}/${key}`;
         }
 
-        await pool.request()
-            .input('username', username)
-            .input('biography', biography)
-            .input('first_name', first_name)
-            .input('last_name', last_name)
-            .input('street', street)
-            .input('street_number', street_number)
-            .input('apartment', apartment)
-            .input('postal_code', postal_code)
-            .input('city', city)
-            .input('hashed_password', hashedPassword)
-            .input('email', email)
-            .input('registration_date', registration_date)
-            .input('paypal_address', paypal_address)
-            .input('profile_image', profile_image_url)
-            .query(`
-                INSERT INTO Users (
-                    username,
-                    biography,
-                    first_name,
-                    last_name,
-                    street,
-                    street_number,
-                    apartment,
-                    postal_code,
-                    city,
-                    hashed_password,
-                    email,
-                    registration_date,
-                    paypal_address,
-                    profile_image
-                ) VALUES (
-                    @username,
-                    @biography,
-                    @first_name,
-                    @last_name,
-                    @street,
-                    @street_number,
-                    @apartment,
-                    @postal_code,
-                    @city,
-                    @hashed_password,
-                    @email,
-                    @registration_date,
-                    @paypal_address,
-                    @profile_image
-                )
-            `);
+        const [result] = await pool.query(`
+            INSERT INTO Users (
+                username,
+                biography,
+                first_name,
+                last_name,
+                street,
+                street_number,
+                apartment,
+                postal_code,
+                city,
+                hashed_password,
+                email,
+                registration_date,
+                paypal_address,
+                profile_image
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `, [
+            username,
+            biography,
+            first_name,
+            last_name,
+            street,
+            street_number,
+            apartment,
+            postal_code,
+            city,
+            hashedPassword,
+            email,
+            registration_date,
+            paypal_address,
+            profile_image_url
+        ]);
 
-        console.log('User registered successfully');
         res.status(201).send({ message: 'User registered successfully' });
     } catch (err) {
         console.error('Error:', err);
         res.status(500).send({ message: err.message });
     }
 };
+
+exports.getAllUsers = async (req, res) => {
+    try {
+        const [rows] = await pool.query('SELECT * FROM Users');
+        res.json(rows);
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+};
+
+exports.loginUser = async (req, res) => {
+    try {
+        const { username, password } = req.body;
+
+        const [rows] = await pool.query('SELECT * FROM Users WHERE username = ?', [username]);
+
+        const user = rows[0];
+        if (!user) {
+            return res.status(400).send({ message: 'User not found' });
+        }
+
+        const isPasswordValid = await bcrypt.compare(password, user.hashed_password);
+        if (!isPasswordValid) {
+            return res.status(400).send({ message: 'Invalid password' });
+        }
+
+        const token = jwt.sign({ id: user.user_id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        res.json({ token });
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+};
+
+exports.getUserInfo = async (req, res) => {
+    try {
+        const userId = req.user.id;
+
+        const [rows] = await pool.query('SELECT * FROM Users WHERE user_id = ?', [userId]);
+
+        const user = rows[0];
+        if (!user) {
+            return res.status(404).send({ message: 'User not found' });
+        }
+
+        res.json(user);
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+};
+
+// Méthode pour récupérer les informations d'un utilisateur spécifique
+exports.getUserById = async (req, res) => {
+    try {
+        const { userId } = req.params;
+
+        const [rows] = await pool.query('SELECT * FROM Users WHERE user_id = ?', [userId]);
+
+        const user = rows[0];
+        if (!user) {
+            return res.status(404).send({ message: 'User not found' });
+        }
+
+        res.json(user);
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+};
+
+// Méthode pour mettre à jour les informations d'un utilisateur spécifique
+exports.updateUser = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const {
+            biography,
+            first_name,
+            last_name,
+            street,
+            street_number,
+            apartment,
+            postal_code,
+            city,
+            email,
+            paypal_address
+        } = req.body;
+
+        const profile_image = req.file;
+
+        if (profile_image && !isValidFileType(profile_image)) {
+            return res.status(400).send({ message: 'Invalid file type' });
+        }
+
+        let profile_image_url = '';
+        if (profile_image) {
+            const key = `${uuidv4()}${path.extname(profile_image.originalname)}`;
+            const command = new PutObjectCommand({
+                Bucket: process.env.DO_SPACES_BUCKET,
+                Key: key,
+                Body: profile_image.buffer,
+                ACL: 'public-read'
+            });
+            await s3.send(command);
+            profile_image_url = `https://${process.env.DO_SPACES_BUCKET}.${process.env.DO_SPACES_ENDPOINT}/${key}`;
+        }
+
+        const fields = {
+            biography,
+            first_name,
+            last_name,
+            street,
+            street_number,
+            apartment,
+            postal_code,
+            city,
+            email,
+            paypal_address,
+            profile_image: profile_image_url || null
+        };
+
+        const sql = 'UPDATE Users SET ' + Object.keys(fields).map(key => `${key} = ?`).join(', ') + ' WHERE user_id = ?';
+        const values = [...Object.values(fields).filter(value => value !== null), userId];
+
+        await pool.query(sql, values);
+
+        res.send({ message: 'User updated successfully' });
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+};
+
 
 
 exports.loginUser = async (req, res) => {

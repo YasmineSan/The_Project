@@ -20,7 +20,7 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 // Middleware to capture raw request body
 app.use(express.json({
   limit: '5mb',
-  verify: (req, res, buf) => {
+  verify: (req, _res, buf) => {
       req.rawBody = buf.toString();
   }
 }));
