@@ -1,443 +1,590 @@
+## Yo les front-end 🚀
 
-# Documentation de l'API pour les Frontends
-
-Pour que les développeurs front-end puissent utiliser efficacement votre API, voici une documentation détaillée des endpoints, y compris les méthodes HTTP, les URL, les descriptions, et les informations sur l'authentification.
-
-/!\ Les commandes lié à "order" ( les commandes ) ne fonctionnent pas encore... /!\
-
-## Utilisateur
-
-1. Inscription
-
-    - Méthode : POST
-    - URL : /api/users/register
-    - Description : Permet à un utilisateur de s'inscrire.
-    - Body :
-      ```json
-      {
-         "username": "string",
-         "biography": "string",
-         "first_name": "string",
-         "last_name": "string",
-         "street": "string",
-         "street_number": "string",
-         "apartment": "string",
-         "postal_code": "string",
-         "city": "string",
-         "password": "string",
-         "email": "string",
-         "paypal_address": "string",
-         "profile_image": "file"
-      }
-      ```
-    - Token : Non
-
-2. Connexion
-
-    - Méthode : POST
-    - URL : /api/users/login
-    - Description : Authentification de l'utilisateur.
-    - Body :
-      ```json
-      {
-         "username": "string",
-         "password": "string"
-      }
-      ```
-    - Token : Non
-
-3. Récupérer les informations d'un utilisateur
-
-    - Méthode : GET
-    - URL : /api/users/:userId
-    - Description : Permet de récupérer les informations d'un utilisateur spécifique.
-    - Token : Oui
-
-4. Mettre à jour les informations d'un utilisateur
-
-    - Méthode : PUT
-    - URL : /api/users/:userId
-    - Description : Permet de mettre à jour les informations d'un utilisateur spécifique.
-    - Body :
-      ```json
-      {
-         "username": "nouveau_nom",
-         "email": "nouveau_email"
-      }
-      ```
-    - Token : Oui
-
-5. Tableau de bord
-
-    - Méthode : GET
-    - URL : /api/users/dashboard
-    - Description : Récupère les informations de l'utilisateur connecté.
-    - Token : Oui
-
-## Articles
-
-1. Ajouter un article
-
-    - Méthode : POST
-    - URL : /api/articles
-    - Description : Permet d'ajouter un nouvel article.
-    - Body :
-      ```json
-
-      {
-        "article_photo":"file",
-        "title": "string",
-        "article_description":"string",
-        "article_price":"number",
-        "shipping_cost":"number",
-        "category_name":"string",
-        "date_added":"string"
-        }
-      ```
-    - Token : Oui
-
-2. Voir les articles de l'utilisateur
-
-    - Méthode : GET
-    - URL : /api/articles/user
-    - Description : Récupérer les articles d'un utilisateur spécifique.
-    - Token : Oui
-
-3. Modifier un article
-
-    - Méthode : PUT
-    - URL : /api/articles/:articleId
-    - Description : Mettre à jour un article spécifique.
-    - Body :
-      ```json
-      {
-         "title": "string",
-         "description": "string",
-         "price": "number",
-         "category": "string",
-         "article_photo": "file"
-      }
-      ```
-    - Token : Oui
-
-4. Supprimer un article
-
-    - Méthode : DELETE
-    - URL : /api/articles/:articleId
-    - Description : Supprimer un article spécifique.
-    - Token : Oui
-
-5. Récupérer un article par son ID
-
-    - Méthode : GET
-    - URL : /api/articles/:articleId
-    - Description : Récupérer les détails d'un article spécifique.
-    - Token : Non
-
-6. Ajouter une évaluation
-
-    - Méthode : POST
-    - URL : /api/articles/:id/evaluations
-    - Description : Ajouter une évaluation pour un article.
-    - Body :
-      ```json
-      {
-         "rating": "number",
-         "comment": "string"
-      }
-      ```
-    - Token : Oui
-
-7. Afficher tous les articles "public"
-
-    - Méthode : GET
-    - URL : /api/articles
-    - Description : Récupérer tous les articles publics.
-    - Token : Non
-
-8. Récupérer une évaluation
-
-    - Méthode : GET
-    - URL : /api/articles/:articleId/evaluations
-    - Description : Récupérer les évaluations d'un article spécifique.
-    - Token : Non
-
-9. Récupérer le prix d'un article spécifique
-
-    - Méthode : GET
-    - URL : /api/articles/:articleId/price
-    - Description : Récupérer le prix d'un article spécifique.
-    - Token : Non
-
-10. Récupérer les prix de tous les articles
-
-     - Méthode : GET
-     - URL : /api/articles/prices
-     - Description : Récupérer les prix de tous les articles.
-     - Token : Non
-
-11. Récupérer les articles et leurs prix dans une catégorie spécifique
-
-     - Méthode : GET
-     - URL : /api/categories/:categoryId/articles/prices
-     - Description : Récupérer les articles et leurs prix dans une catégorie spécifique.
-     - Token : Non
-
-## Catégories
-
-1. Ajouter une catégorie
-
-    - Méthode : POST
-    - URL : /api/categories
-    - Description : Ajouter une nouvelle catégorie.
-    - Body :
-      ```json
-      {
-        "category_name": "Bougies"
-        }
-      ```
-    - Token : Oui
-
-2. Afficher toutes les catégories
-
-    - Méthode : GET
-    - URL : /api/categories
-    - Description : Récupérer toutes les catégories.
-    - Token : Non
-
-3. Modifier le nom d'une catégorie
-
-    - Méthode : PUT
-    - URL : /api/categories/:categoryId
-    - Description : Mettre à jour une catégorie spécifique.
-    - Body :
-      ```json
-      {
-         "name": "nouveau_nom"
-      }
-      ```
-    - Token : Oui
-
-4. Supprimer une catégorie
-
-    - Méthode : DELETE
-    - URL : /api/categories/:categoryId
-    - Description : Supprimer une catégorie spécifique.
-    - Token : Oui
-
-## Favoris
-
-1. Ajouter un article aux favoris
-
-    - Méthode : POST
-    - URL : /api/favorites
-    - Description : Ajouter un article aux favoris de l'utilisateur.
-    - Body :
-      ```json
-      {
-         "articleId": "string"
-      }
-      ```
-    - Token : Oui
-
-2. Récupérer les favoris de l'utilisateur
-
-    - Méthode : GET
-    - URL : /api/favorites/user
-    - Description : Récupérer la liste des articles favoris de l'utilisateur.
-    - Token : Oui
-
-3. Supprimer un favori
-
-    - Méthode : DELETE
-    - URL : /api/favorites/:articleId
-    - Description : Supprimer un article des favoris de l'utilisateur.
-    - Token : Oui
-
-## Panier
-
-1. Ajouter un article au panier
-
-    - Méthode : POST
-    - URL : /api/cart
-    - Description : Ajouter un article au panier de l'utilisateur.
-    - Body :
-      ```json
-      {
-         "articleId": "string",
-         "quantity": "number"
-      }
-      ```
-    - Token : Oui
-
-2. Récupérer les articles du panier de l'utilisateur
-
-    - Méthode : GET
-    - URL : /api/cart/user
-    - Description : Récupérer la liste des articles dans le panier de l'utilisateur.
-    - Token : Oui
-
-3. Supprimer un article du panier
-
-    - Méthode : DELETE
-    - URL : /api/cart/:articleId
-    - Description : Supprimer un article du panier de l'utilisateur.
-    - Token : Oui
-
-## Commandes
-
-1. Créer une commande
-
-    - Méthode : POST
-    - URL : /api/orders
-    - Description : Permet de créer une nouvelle commande.
-    - Body :
-      ```json
-      {
-         "orderDetails": "détails_de_la_commande"
-      }
-      ```
-    - Token : Oui
-
-2. Récupérer les commandes d'un utilisateur
-
-    - Méthode : GET
-    - URL : /api/orders/user
-    - Description : Récupérer toutes les commandes passées par un utilisateur spécifique.
-    - Token : Oui
-
-3. Récupérer une commande par son ID
-
-    - Méthode : GET
-    - URL : /api/orders/:orderId
-    - Description : Récupérer les détails d'une commande spécifique.
-    - Token : Oui
-
-4. Mettre à jour le statut d'une commande
-
-    - Méthode : PUT
-    - URL : /api/orders/:orderId/status
-    - Description : Mettre à jour le statut d'une commande.
-    - Body :
-      ```json
-      {
-         "status": "nouveau_statut"
-      }
-      ```
-    - Token : Oui
-
-
-## Obtenir toutes les évaluations
-
-- Méthode : GET
-
-URL : http://localhost:3001/api/evaluations
-
-Exemple de réponse :
-
-json
-Copier le code
-[
+### Bon courage avec les nouveaux fetchs ! Pensez bien à remplacer localhost:3001 par l'IP du serveur avec le port 3001
+
+### Si vous avez des problèmes ou des questions, n'hésitez pas à envoyer un message aux deux back-end. On est là pour vous aider
+
+### À bientôt et bon code ! ✌️
+
+![Courage](https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExZXk3OHg4NTlpNTZvZGptMm84cWdhZGN1dG13bG85M3B3NjNuOWdsNiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/BPJmthQ3YRwD6QqcVD/giphy.webp)
+
+# Articles
+
+## 1. Ajouter un article
+
+### Méthode : POST
+
+### URL : <http://localhost:3001/api/articles/>
+
+### Headers
+
+### Authorization: Bearer token
+
+### Content-Type: multipart/form-data
+
+### Body
+
+```json
+{
+  "title": "Article Title",
+  "article_description": "Description de l'article",
+  "article_price": 1000,
+  "shipping_cost": 100,
+  "category_name": "Category",
+  "article_photo": "<Fichier image>"
+}
+```
+
+### Description : Ajoute un nouvel article pour l'utilisateur connecté
+
+## 2. Récupérer tous les articles de l'utilisateur connecté
+
+### Méthode : GET
+
+### URL : <http://localhost:3001/api/articles/user>
+
+### Headers
+
+### Authorization: Bearer token
+
+### Description : Récupère tous les articles ajoutés par l'utilisateur connecté
+
+## 3. Récupérer un article par ID
+
+### Méthode : GET
+
+### URL : <http://localhost:3001/api/articles/article/:id>
+
+### Description : Récupère les détails d'un article spécifique par son ID. ##
+
+## 4. Récupérer tous les articles disponibles (non vendus)
+
+### Méthode : GET
+
+### URL : <http://localhost:3001/api/articles/available-articles>
+
+### Description : Récupère tous les articles disponibles qui ne sont pas encore vendus. ##
+
+## 5. Mettre à jour un article
+
+### Méthode : PUT
+
+### URL : <http://localhost:3001/api/articles/:articleId>
+
+### Headers
+
+### Authorization: Bearer token
+
+### Content-Type: multipart/form-data
+
+### Body
+
+```json
+{
+  "title": "Updated Title",
+  "article_description": "Updated Description",
+  "article_price": 1500,
+  "shipping_cost": 150,
+  "category_name": "Updated Category",
+  "article_photo": "<Updated Image File>"
+}
+```
+
+### Description : Met à jour un article spécifique de l'utilisateur connecté
+
+## 6. Supprimer un article
+
+### Méthode : DELETE
+
+### URL : <http://localhost:3001/api/articles/:id>
+
+### Headers
+
+### Authorization: Bearer token
+
+### Description : Supprime un article spécifique par son ID
+
+## 7. Récupérer les articles d'un utilisateur spécifique
+
+### Méthode : GET
+
+### URL : <http://localhost:3001/api/articles/user/:userId/articles>
+
+### Description : Récupère tous les articles ajoutés par un utilisateur spécifique
+
+## 8. Récupérer le prix d'un article spécifique par son ID
+
+### Méthode : GET
+
+### URL : <http://localhost:3001/api/article/:id/price>
+
+### Description : Récupère le prix d'un article spécifique par son ID
+
+## 9. Récupérer tous les prix des articles
+
+### Méthode : GET
+
+### URL : <http://localhost:3001/api/articles/prices>
+
+### Description : Récupère les prix de tous les articles
+
+## 10. Récupérer les prix des articles d'une catégorie spécifique
+
+### Méthode : GET
+
+### URL : <http://localhost:3001/api/categories/:categoryId/prices>
+
+### Description : Récupère les prix des articles d'une catégorie spécifique
+
+# Évaluations
+
+## 11. Ajouter une évaluation
+
+### Méthode : POST
+
+### URL : <http://localhost:3001/api/evaluation/>
+
+### Headers
+
+### Authorization: Bearer token
+
+### Body
+
+```json
+{
+  "evaluation_number": 5,
+  "evaluation_description": "Très bon produit",
+  "user_id": 6,
+  "commented_user_id": 7
+}
+```
+
+### Description : Crée une nouvelle évaluation
+
+## 12. Mettre à jour une évaluation
+
+### Méthode : PUT
+
+### URL : <http://localhost:3001/api/evaluation/:id>
+
+### Headers
+
+### Authorization: Bearer token
+
+### Body
+
+```json
+{
+  "evaluation_number": 5,
+  "evaluation_description": "Mise à jour de l'évaluation",
+  "user_id": 6,
+  "commented_user_id": 7
+}
+```
+
+### Description : Met à jour une évaluation spécifique par son ID
+
+## 13. Supprimer une évaluation
+
+### Méthode : DELETE
+
+### URL : <http://localhost:3001/api/evaluation/:id>
+
+### Headers
+
+### Authorization: Bearer token
+
+### Description : Supprime une évaluation spécifique par son ID
+
+## 14. Récupérer toutes les évaluations
+
+### Méthode : GET
+
+### URL : <http://localhost:3001/api/evaluation/>
+
+### Description : Récupère toutes les évaluations
+
+## 15. Récupérer une évaluation par ID
+
+### Méthode : GET
+
+### URL : <http://localhost:3001/api/evaluation/:id>
+
+### Description : Récupère une évaluation spécifique par son ID
+
+# Catégories
+
+## 16. Ajouter une catégorie
+
+### Méthode : POST
+
+### URL : <http://localhost:3001/api/categories/>
+
+### Headers
+
+### Content-Type: application/json
+
+### Body
+
+```json
+{
+  "category_name": "Nouvelle catégorie"
+}
+```
+
+### Description : Ajoute une nouvelle catégorie
+
+## 17. Récupérer toutes les catégories
+
+### Méthode : GET
+
+### URL : <http://localhost:3001/api/categories/>
+
+### Description : Récupère toutes les catégories
+
+## 18. Mettre à jour une catégorie
+
+### Méthode : PUT
+
+### URL : <http://localhost:3001/api/categories/:categoryId>
+
+### Headers
+
+### Content-Type: application/json
+
+### Body
+
+```json
+{
+  "category_name": "Nom de catégorie mis à jour"
+}
+```
+
+### Description : Met à jour une catégorie spécifique par son ID
+
+## 19. Supprimer une catégorie
+
+### Méthode : DELETE
+
+### URL : <http://localhost:3001/api/categories/:categoryId>
+
+### Description : Supprime une catégorie spécifique par son ID
+
+# Favoris
+
+## 20. Ajouter aux favoris
+
+### Méthode : POST
+
+### URL : <http://localhost:3001/api/favorite/>
+
+### Headers
+
+### Authorization: Bearer token
+
+### Body
+
+```json
+{
+  "articleId": 1
+}
+```
+
+### Description : Ajoute un article aux favoris de l'utilisateur connecté
+
+## 21. Récupérer tous les favoris de l'utilisateur connecté
+
+### Méthode : GET
+
+### URL : <http://localhost:3001/api/favorite/user>
+
+### Headers
+
+### Authorization: Bearer token
+
+### Description : Récupère tous les articles favoris de l'utilisateur connecté
+
+## 22. Supprimer un favori
+
+### Méthode : DELETE
+
+### URL : <http://localhost:3001/api/favorite/:articleId>
+
+### Headers
+
+### Authorization: Bearer token
+
+### Description : Supprime un article des favoris de l'utilisateur connecté par l'ID de l'article
+
+# Commandes
+
+## 23. Créer une commande
+
+### Méthode : POST
+
+### URL : <http://localhost:3001/api/order/>
+
+### Headers
+
+### Authorization: Bearer token
+
+### Body
+
+```json
+{
+  "order_details": [
     {
-        "evaluation_id": 1,
-        "evaluation_number": 5,
-        "evaluation_description": "Je le veux !",
-        "user_id": 7,
-        "article_id": 9,
-        "date_added": "2023-07-01T00:00:00.000Z",
-        "commented_user_id": null
+      "article_id": 1,
+      "quantity": 2
+    },
+    {
+      "article_id": 2,
+      "quantity": 1
     }
-]
-
-## Obtenir une évaluation par ID
-
-Méthode : GET
-URL : http://localhost:3000/api/evaluations/:id
-Remplacez :id par l'ID de l'évaluation que vous souhaitez obtenir, par exemple 1.
-
-Exemple de réponse :
-
-json
-Copier le code
-{
-    "evaluation_id": 1,
-    "evaluation_number": 5,
-    "evaluation_description": "Je le veux !",
-    "user_id": 7,
-    "article_id": 9,
-    "date_added": "2023-07-01T00:00:00.000Z",
-    "commented_user_id": null
+  ]
 }
+```
 
-## Créer une nouvelle évaluation
+### Description : Crée une nouvelle commande pour l'utilisateur connecté
 
-Méthode : POST
-URL : http://localhost:3000/api/evaluations
-Body (JSON) :
+## 24. Récupérer les commandes de l'utilisateur connecté
 
-json
-Copier le code
+### Méthode : GET
+
+### URL : <http://localhost:3001/api/order/user>
+
+### Headers
+
+### Authorization: Bearer token
+
+### Description : Récupère toutes les commandes de l'utilisateur connecté
+
+## 25. Récupérer les détails d'une commande par ID
+
+### Méthode : GET
+
+### URL : <http://localhost:3001/api/order/:orderId>
+
+### Headers
+
+### Authorization: Bearer token
+
+### Description : Récupère les détails d'une commande spécifique par son ID
+
+## 26. Mettre à jour le statut d'une commande
+
+### Méthode : PUT
+
+### URL : <http://localhost:3001/api/order/:orderId/status>
+
+### Headers
+
+### Authorization: Bearer token
+
+### Body
+
+```json
 {
-    "evaluation_number": 4,
-    "evaluation_description": "Très bon produit",
-    "user_id": 8,
-    "article_id": 10
+  "status": "shipped"
 }
-Exemple de réponse :
+```
 
-json
-Copier le code
+### Description : Met à jour le statut d'une commande spécifique
+
+# Panier
+
+## 27. Ajouter un article au panier
+
+### Méthode : POST
+
+### URL : <http://localhost:3001/api/cart/>
+
+### Headers
+
+### Authorization: Bearer token
+
+### Body
+
+```json
 {
-    "evaluation_id": 2,
-    "evaluation_number": 4,
-    "evaluation_description": "Très bon produit",
-    "user_id": 8,
-    "article_id": 10,
-    "date_added": "2023-07-01T00:00:00.000Z",
-    "commented_user_id": null
+  "articleId": 1
 }
+```
 
-## Mettre à jour une évaluation
+### Description : Ajoute un article au panier de l'utilisateur connecté
 
-Méthode : PUT
-URL : http://localhost:3000/api/evaluations/:id
-Remplacez :id par l'ID de l'évaluation que vous souhaitez mettre à jour, par exemple 1.
+## 28. Récupérer le panier de l'utilisateur connecté
 
-Body (JSON) :
+### Méthode : GET
 
-json
-Copier le code
+### URL : <http://localhost:3001/api/cart/user>
+
+### Headers
+
+### Authorization: Bearer token
+
+### Description : Récupère le panier de l'utilisateur connecté
+
+## 29. Supprimer un article du panier
+
+### Méthode : DELETE
+
+### URL : <http://localhost:3001/api/cart/:articleId>
+
+### Headers
+
+### Authorization: Bearer token
+
+### Description : Supprime un article spécifique du panier de l'utilisateur connecté
+
+# Paiement
+
+## 30. Créer un Payment Intent
+
+### Méthode : POST
+
+### URL : <http://localhost:3001/api/payment/create-payment-intent>
+
+### Headers
+
+### Authorization: Bearer token
+
+### Body
+
+```json
 {
-    "evaluation_number": 3,
-    "evaluation_description": "Produit correct",
-    "user_id": 7,
-    "article_id": 9
+  "amount": 1000, // Le montant en centimes (par exemple, 1000 pour 10.00 USD)
+  "currency": "usd"
 }
-Exemple de réponse :
+```
 
-json
-Copier le code
+### Description : Crée un Payment Intent avec le montant et la devise spécifiés. Retourne le clientSecret et l'id du Payment Intent
+
+## 31. Gérer le succès du paiement
+
+### Méthode : POST
+
+### URL : <http://localhost:3001/api/payment/payment-success>
+
+### Headers
+
+### Authorization: Bearer token
+
+### Body
+
+```json
 {
-    "evaluation_id": 1,
-    "evaluation_number": 3,
-    "evaluation_description": "Produit correct",
-    "user_id": 7,
-    "article_id": 9,
-    "date_added": "2023-07-01T00:00:00.000Z",
-    "commented_user_id": null
+  "paymentIntentId": "pi_123456789",
+  "userId": 1,
+  "articleIds": [1, 2, 3]
 }
+```
 
-## Supprimer une évaluation
+### Description : Gère le succès du paiement en vérifiant le statut du Payment Intent et en mettant à jour les informations de commande et d'articles dans la base de données
 
-Méthode : DELETE
-URL : http://localhost:3000/api/evaluations/:id
-Remplacez :id par l'ID de l'évaluation que vous souhaitez supprimer, par exemple 1.
+# Utilisateurs
 
-Exemple de réponse :
+## 32. Enregistrer un utilisateur
 
-json
-Copier le code
-{}
- 
+### Méthode : POST
 
+### URL : <http://localhost:3001/api/users/register>
 
+### Headers
+
+### Content-Type: multipart/form-data
+
+### Body
+
+```json
+{
+  "username": "nom_utilisateur",
+  "password": "mot_de_passe",
+  "email": "email@domaine.com",
+  "first_name": "Prénom",
+  "last_name": "Nom",
+  "street": "Rue",
+  "street_number": "Numéro de rue",
+  "apartment": "Appartement",
+  "postal_code": "Code postal",
+  "city": "Ville",
+  "biography": "Biographie",
+  "paypal_address": "Adresse PayPal",
+  "profile_image": "<Fichier image>"
+}
+```
+
+### Description : Enregistre un nouvel utilisateur avec les informations spécifiées
+
+## 33. Connecter un utilisateur
+
+### Méthode : POST
+
+### URL : <http://localhost:3001/api/users/login>
+
+### Headers
+
+### Content-Type: application/json
+
+### Body
+
+```json
+{
+  "username": "nom_utilisateur",
+  "password": "mot_de_passe"
+}
+```
+
+### Description : Connecte un utilisateur et retourne untokenJWT
+
+## 34. Obtenir les informations de l'utilisateur connecté
+
+### Méthode : GET
+
+### URL : <http://localhost:3001/api/users/dashboard>
+
+### Headers
+
+### Authorization: Bearer token
+
+### Description : Récupère les informations de l'utilisateur connecté
+
+## 35. Obtenir un utilisateur par ID
+
+### Méthode : GET
+
+### URL : <http://localhost:3001/api/users/:userId>
+
+### Description : Récupère les informations d'un utilisateur spécifique par son ID
+
+## 36. Mettre à jour les informations de l'utilisateur
+
+### Méthode : PUT
+
+### URL : <http://localhost:3001/api/users/update/:userId>
+
+### Headers
+
+### Authorization: Bearer token
+
+### Content-Type: multipart/form-data
+
+### Body
+
+```json
+{
+  "biography": "Nouvelle biographie",
+  "first_name": "Nouveau prénom",
+  "last_name": "Nouveau nom",
+  "street": "Nouvelle rue",
+  "street_number": "Nouveau numéro de rue",
+  "apartment": "Nouvel appartement",
+  "postal_code": "Nouveau code postal",
+  "city": "Nouvelle ville",
+  "email": "nouvel_email@domaine.com",
+  "paypal_address": "Nouvelle adresse PayPal",
+  "profile_image": "<Nouveau fichier image>"
+}
+```
+
+### Description : Met à jour les informations de l'utilisateur connecté
