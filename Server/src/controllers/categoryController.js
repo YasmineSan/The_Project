@@ -54,34 +54,49 @@ exports.updateCategory = async (req, res) => {
   try {
     const { categoryId } = req.params;
     const { category_name } = req.body;
-    const pool = await poolPromise;
+    const connection = await pool.getConnection();
 
-    await pool
-      .request()
-      .input("category_id", categoryId)
-      .input("category_name", category_name)
-      .query(
-        "UPDATE Categories SET category_name = @category_name WHERE category_id = @category_id",
+    try {
+      const [result] = await connection.execute(
+        "UPDATE Categories SET category_name = ? WHERE category_id = ?",
+        [category_name, categoryId]
       );
 
-    res.send({ message: "Category updated successfully" });
+      if (result.affectedRows > 0) {
+        res.send({ message: "Category updated successfully" });
+      } else {
+        res.status(404).send({ message: "Category not found" });
+      }
+    } finally {
+      connection.release();
+    }
   } catch (err) {
     res.status(500).send({ message: err.message });
   }
 };
+
 
 exports.deleteCategory = async (req, res) => {
   try {
     const { categoryId } = req.params;
-    const pool = await poolPromise;
+    const connection = await pool.getConnection();
 
-    await pool
-      .request()
-      .input("category_id", categoryId)
-      .query("DELETE FROM Categories WHERE category_id = @category_id");
+    try {
+      const [result] = await connection.execute(
+        "DELETE FROM Categories WHERE category_id = ?",
+        [categoryId]
+      );
 
-    res.send({ message: "Category deleted successfully" });
+      if (result.affectedRows > 0) {
+        res.send({ message: "Category deleted successfully" });
+      } else {
+        res.status(404).send({ message: "Category not found" });
+      }
+    } finally {
+      connection.release();
+    }
   } catch (err) {
     res.status(500).send({ message: err.message });
   }
 };
+

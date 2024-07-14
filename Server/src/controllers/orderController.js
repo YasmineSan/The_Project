@@ -47,7 +47,6 @@ exports.createOrder = async (req, res) => {
 
       const insertQuery = `
         INSERT INTO Orders (user_id, total_price, article_details)
-        OUTPUT INSERTED.order_id
         VALUES (?, ?, ?)
       `;
 
@@ -57,7 +56,7 @@ exports.createOrder = async (req, res) => {
         JSON.stringify(detailedArticles),
       ]);
 
-      const orderId = result[0].order_id;
+      const orderId = result.insertId;
 
       const updateQuery = `
         UPDATE Articles 
@@ -67,13 +66,20 @@ exports.createOrder = async (req, res) => {
 
       await connection.execute(updateQuery);
 
-      const deleteQueries = `
-        DELETE FROM User_Article WHERE article_id IN (${articleIds.map((id) => `'${id}'`).join(",")});
-        DELETE FROM Favorites WHERE article_id IN (${articleIds.map((id) => `'${id}'`).join(",")});
-        DELETE FROM Cart WHERE article_id IN (${articleIds.map((id) => `'${id}'`).join(",")});
+      // Séparer les requêtes DELETE
+      const deleteUserArticleQuery = `
+        DELETE FROM User_Article WHERE article_id IN (${articleIds.map((id) => `'${id}'`).join(",")})
+      `;
+      const deleteFavoritesQuery = `
+        DELETE FROM Favorites WHERE article_id IN (${articleIds.map((id) => `'${id}'`).join(",")})
+      `;
+      const deleteCartQuery = `
+        DELETE FROM Cart WHERE article_id IN (${articleIds.map((id) => `'${id}'`).join(",")})
       `;
 
-      await connection.execute(deleteQueries);
+      await connection.execute(deleteUserArticleQuery);
+      await connection.execute(deleteFavoritesQuery);
+      await connection.execute(deleteCartQuery);
 
       res
         .status(201)
@@ -86,6 +92,7 @@ exports.createOrder = async (req, res) => {
     res.status(500).send({ message: err.message });
   }
 };
+
 
 // Fetch user orders
 exports.getUserOrders = async (req, res) => {
