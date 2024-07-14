@@ -30,7 +30,6 @@ app.use(
 );
 
 // Importer et utiliser les routes
-<<<<<<< HEAD
 app.use("/api/users", require("./routes/userRoutes"));
 app.use("/api/articles", require("./routes/articleRoutes"));
 app.use("/api/cart", require("./routes/cartRoutes"));
@@ -41,11 +40,6 @@ app.use("/api/favorite", require("./routes/favoriteRoutes"));
 app.use("/api/order", require("./routes/orderRoutes"));
 app.use("/api/payment", require("./routes/paymentRoutes"));
 app.use("/api/webhook", require("./routes/webhookRoutes"));
-=======
-app.use('/api/users', require('./routes/userRoutes'));
-app.use('/api/articles', require('./routes/articleRoutes'));
-// Ajoute les autres routes ici...
->>>>>>> b5dd53f0a3c6f86bbb7f4221a602e216cda2a095
 
 // Serve HTML files
 app.get("/login", (req, res) => {
