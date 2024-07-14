@@ -58,7 +58,7 @@ exports.getUserCart = async (req, res) => {
     try {
       const [result] = await connection.execute(
         `
-        SELECT c.cart_id, c.quantity, c.added_at, 
+        SELECT c.cart_id, c.added_at, 
                a.article_id, a.title, a.article_photo, a.article_description, a.article_price, a.shipping_cost, a.category_name
         FROM Cart c
         JOIN Articles a ON c.article_id = a.article_id

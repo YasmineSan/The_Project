@@ -33,7 +33,7 @@ app.use(
 app.use("/api/users", require("./routes/userRoutes"));
 app.use("/api/articles", require("./routes/articleRoutes"));
 app.use("/api/cart", require("./routes/cartRoutes"));
-app.use("/api/category", require("./routes/categoryRoutes"));
+app.use("/api/categories", require("./routes/categoryRoutes"));
 app.use("/api/email", require("./routes/emailRoutes"));
 app.use("/api/evaluation", require("./routes/evaluationRoutes"));
 app.use("/api/favorite", require("./routes/favoriteRoutes"));
