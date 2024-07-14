@@ -27,93 +27,88 @@ const isValidFileType = (file) => {
 
 exports.addArticle = async (req, res) => {
   try {
-    const {
-      title,
-      article_description,
-      article_price,
-      shipping_cost,
-      category_name,
-    } = req.body;
-    const article_photo = req.file;
-    const userId = req.user.id;
-
-    if (article_photo && !isValidFileType(article_photo)) {
-      return res.status(400).send({ message: "Invalid file type" });
-    }
-
-    let article_photo_url = "";
-    if (article_photo) {
-      const key = `${uuidv4()}${path.extname(article_photo.originalname)}`;
-      const command = new PutObjectCommand({
-        Bucket: process.env.DO_SPACES_BUCKET,
-        Key: key,
-        Body: article_photo.buffer,
-        ACL: "public-read",
-      });
-      await s3.send(command);
-      article_photo_url = `https://${process.env.DO_SPACES_BUCKET}.${process.env.DO_SPACES_ENDPOINT}/${key}`;
-    }
-
-    const connection = await pool.getConnection();
-
-    try {
-      await connection.beginTransaction();
-
-      let [categoryResult] = await connection.execute(
-        "SELECT category_id FROM Categories WHERE category_name = ?",
-        [category_name],
-      );
-
-      let category_id;
-      if (categoryResult.length > 0) {
-        category_id = categoryResult[0].category_id;
-      } else {
-        const [newCategoryResult] = await connection.execute(
-          "INSERT INTO Categories (category_name) VALUES (?)",
-          [category_name],
-        );
-        category_id = newCategoryResult.insertId;
-      }
-
-      const [articleResult] = await connection.execute(
-        `INSERT INTO Articles (
-                    title,
-                    article_description,
-                    article_price,
-                    shipping_cost,
-                    category_id,
-                    article_photo,
-                    date_added
-                ) VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        [
+      const {
           title,
           article_description,
           article_price,
           shipping_cost,
-          category_id,
-          article_photo_url,
-          new Date(),
-        ],
-      );
+          category_name
+      } = req.body;
+      const article_photo = req.file;
+      const userId = req.user.id; // Assurez-vous que req.user.id contient l'ID de l'utilisateur
 
-      const article_id = articleResult.insertId;
+      if (article_photo && !isValidFileType(article_photo)) {
+          return res.status(400).send({ message: 'Invalid file type' });
+      }
 
-      await connection.execute(
-        "INSERT INTO User_Article (user_id, article_id) VALUES (?, ?)",
-        [userId, article_id],
-      );
+      let article_photo_url = '';
+      if (article_photo) {
+          const key = `${uuidv4()}${path.extname(article_photo.originalname)}`;
+          const command = new PutObjectCommand({
+              Bucket: process.env.DO_SPACES_BUCKET,
+              Key: key,
+              Body: article_photo.buffer,
+              ACL: 'public-read'
+          });
+          await s3.send(command);
+          article_photo_url = `https://${process.env.DO_SPACES_BUCKET}.${process.env.DO_SPACES_ENDPOINT}/${key}`;
+      }
 
-      await connection.commit();
-      res.status(201).send({ message: "Article added successfully" });
-    } catch (err) {
-      await connection.rollback();
-      throw err;
-    } finally {
-      connection.release();
-    }
+      const connection = await pool.getConnection();
+
+      try {
+          await connection.beginTransaction();
+
+          let [categoryResult] = await connection.execute(
+              'SELECT category_id FROM Categories WHERE category_name = ?',
+              [category_name]
+          );
+
+          let category_id;
+          if (categoryResult.length > 0) {
+              category_id = categoryResult[0].category_id;
+          } else {
+              const [newCategoryResult] = await connection.execute(
+                  'INSERT INTO Categories (category_name) VALUES (?)',
+                  [category_name]
+              );
+              category_id = newCategoryResult.insertId;
+          }
+
+          const [articleResult] = await connection.execute(
+              `INSERT INTO Articles (
+                  title,
+                  article_description,
+                  article_price,
+                  shipping_cost,
+                  category_id,
+                  article_photo,
+                  date_added,
+                  user_id
+              ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+              [
+                  title,
+                  article_description,
+                  article_price,
+                  shipping_cost,
+                  category_id,
+                  article_photo_url,
+                  new Date(),
+                  userId // Ajoutez userId ici
+              ]
+          );
+
+          await connection.commit();
+          res.status(201).send({ message: 'Article added successfully' });
+      } catch (err) {
+          await connection.rollback();
+          throw err;
+      } finally {
+          connection.release();
+      }
   } catch (err) {
-    console.error("Error:", err);
-    res.status(500).send({ message: err.message });
+      console.error('Error:', err);
+      res.status(500).send({ message: err.message });
   }
 };
 

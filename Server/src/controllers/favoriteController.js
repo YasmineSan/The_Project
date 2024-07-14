@@ -5,13 +5,18 @@ exports.addFavorite = async (req, res) => {
     const { articleId } = req.body;
     const userId = req.user.id;
 
+    if (!articleId || !userId) {
+      return res.status(400).send({ message: "Article ID and User ID are required" });
+    }
+
+    console.log("Adding favorite:", { articleId, userId });
+
     const connection = await pool.getConnection();
 
     try {
-      // Check if the article belongs to the user
       const [articleResult] = await connection.execute(
         "SELECT user_id FROM User_Article WHERE article_id = ?",
-        [articleId],
+        [articleId]
       );
 
       if (articleResult.length === 0) {
@@ -26,7 +31,7 @@ exports.addFavorite = async (req, res) => {
 
       await connection.execute(
         "INSERT INTO Favorites (user_id, article_id) VALUES (?, ?)",
-        [userId, articleId],
+        [userId, articleId]
       );
 
       res.status(201).send({ message: "Favorite added successfully" });
@@ -42,6 +47,13 @@ exports.addFavorite = async (req, res) => {
 exports.getUserFavorites = async (req, res) => {
   try {
     const userId = req.user.id;
+
+    if (!userId) {
+      return res.status(400).send({ message: "User ID is required" });
+    }
+
+    console.log("Fetching favorites for user:", userId);
+
     const connection = await pool.getConnection();
 
     try {
@@ -52,7 +64,7 @@ exports.getUserFavorites = async (req, res) => {
         JOIN Articles a ON f.article_id = a.article_id
         WHERE f.user_id = ?
       `,
-        [userId],
+        [userId]
       );
 
       res.json(result);
@@ -69,12 +81,19 @@ exports.deleteFavorite = async (req, res) => {
   try {
     const { articleId } = req.params;
     const userId = req.user.id;
+
+    if (!articleId || !userId) {
+      return res.status(400).send({ message: "Article ID and User ID are required" });
+    }
+
+    console.log("Deleting favorite:", { articleId, userId });
+
     const connection = await pool.getConnection();
 
     try {
       await connection.execute(
         "DELETE FROM Favorites WHERE user_id = ? AND article_id = ?",
-        [userId, articleId],
+        [userId, articleId]
       );
 
       res.send({ message: "Favorite deleted successfully" });
