@@ -1,72 +1,88 @@
-const { poolPromise } = require('../utils/db');
+const { pool } = require("../utils/db");
 
 exports.addFavorite = async (req, res) => {
+  try {
+    const { articleId } = req.body;
+    const userId = req.user.id;
+
+    const connection = await pool.getConnection();
+
     try {
-        const { articleId } = req.body;
-        const userId = req.user.id;
-        const pool = await poolPromise;
+      // Check if the article belongs to the user
+      const [articleResult] = await connection.execute(
+        "SELECT user_id FROM User_Article WHERE article_id = ?",
+        [articleId],
+      );
 
-        // Vérifier si l'article appartient à l'utilisateur en utilisant la table User_Article
-        const articleResult = await pool.request()
-            .input('article_id', articleId)
-            .query('SELECT user_id FROM User_Article WHERE article_id = @article_id');
-        
-        if (articleResult.recordset.length === 0) {
-            return res.status(404).send({ message: 'Article not found.' });
-        }
+      if (articleResult.length === 0) {
+        return res.status(404).send({ message: "Article not found." });
+      }
 
-        if (articleResult.recordset[0].user_id === userId) {
-            return res.status(403).send({ message: 'Tu ne peux pas ajouter ton propre article en favori.' });
-        }
+      if (articleResult[0].user_id === userId) {
+        return res.status(403).send({
+          message: "You cannot add your own article to favorites.",
+        });
+      }
 
-        await pool.request()
-            .input('user_id', userId)
-            .input('article_id', articleId)
-            .query('INSERT INTO Favorites (user_id, article_id) VALUES (@user_id, @article_id)');
+      await connection.execute(
+        "INSERT INTO Favorites (user_id, article_id) VALUES (?, ?)",
+        [userId, articleId],
+      );
 
-        res.status(201).send({ message: 'Favorite added successfully' });
-    } catch (err) {
-        console.error('Error adding favorite:', err);
-        res.status(500).send({ message: err.message });
+      res.status(201).send({ message: "Favorite added successfully" });
+    } finally {
+      connection.release();
     }
+  } catch (err) {
+    console.error("Error adding favorite:", err);
+    res.status(500).send({ message: err.message });
+  }
 };
 
 exports.getUserFavorites = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const connection = await pool.getConnection();
+
     try {
-        const userId = req.user.id;
-        const pool = await poolPromise;
+      const [result] = await connection.execute(
+        `
+        SELECT a.*
+        FROM Favorites f
+        JOIN Articles a ON f.article_id = a.article_id
+        WHERE f.user_id = ?
+      `,
+        [userId],
+      );
 
-        // Jointure pour récupérer les détails des articles
-        const result = await pool.request()
-            .input('user_id', userId)
-            .query(`
-                SELECT a.*
-                FROM Favorites f
-                JOIN Articles a ON f.article_id = a.article_id
-                WHERE f.user_id = @user_id
-            `);
-
-        res.json(result.recordset);
-    } catch (err) {
-        console.error('Error fetching user favorites:', err);
-        res.status(500).send({ message: err.message });
+      res.json(result);
+    } finally {
+      connection.release();
     }
+  } catch (err) {
+    console.error("Error fetching user favorites:", err);
+    res.status(500).send({ message: err.message });
+  }
 };
 
 exports.deleteFavorite = async (req, res) => {
+  try {
+    const { articleId } = req.params;
+    const userId = req.user.id;
+    const connection = await pool.getConnection();
+
     try {
-        const { articleId } = req.params;
-        const userId = req.user.id;
-        const pool = await poolPromise;
+      await connection.execute(
+        "DELETE FROM Favorites WHERE user_id = ? AND article_id = ?",
+        [userId, articleId],
+      );
 
-        await pool.request()
-            .input('user_id', userId)
-            .input('article_id', articleId)
-            .query('DELETE FROM Favorites WHERE user_id = @user_id AND article_id = @article_id');
-
-        res.send({ message: 'Favorite deleted successfully' });
-    } catch (err) {
-        console.error('Error deleting favorite:', err);
-        res.status(500).send({ message: err.message });
+      res.send({ message: "Favorite deleted successfully" });
+    } finally {
+      connection.release();
     }
+  } catch (err) {
+    console.error("Error deleting favorite:", err);
+    res.status(500).send({ message: err.message });
+  }
 };

@@ -1,45 +1,54 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
+  <head>
     <title>Login</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
-</head>
-<body>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css"
+    />
+  </head>
+  <body>
     <h1>Login</h1>
     <form id="loginForm">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required><br><br>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required><br><br>
-        <button type="submit">Login</button>
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" required /><br /><br />
+      <label for="password">Password:</label>
+      <input
+        type="password"
+        id="password"
+        name="password"
+        required
+      /><br /><br />
+      <button type="submit">Login</button>
     </form>
     <a href="/register">Don't have an account? Register here</a>
 
     <script>
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const username = document.getElementById("username").value;
+          const password = document.getElementById("password").value;
 
-            const response = await fetch('/api/users/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ username, password })
-            });
+          const response = await fetch("/api/users/login", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ username, password }),
+          });
 
-            const data = await response.json();
-            if (response.ok) {
-                // Stocker le jeton dans le localStorage
-                localStorage.setItem('token', data.token);
-                // Rediriger vers le tableau de bord
-                window.location.href = '/dashboard';
-            } else {
-                alert('Login failed: ' + data.message);
-            }
+          const data = await response.json();
+          if (response.ok) {
+            // Stocker le jeton dans le localStorage
+            localStorage.setItem("token", data.token);
+            // Rediriger vers le tableau de bord
+            window.location.href = "/dashboard";
+          } else {
+            alert("Login failed: " + data.message);
+          }
         });
     </script>
-</body>
+  </body>
 </html>
-

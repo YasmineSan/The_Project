@@ -1,12 +1,20 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
+  <head>
     <title>Profile</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
-</head>
-<body>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css"
+    />
+  </head>
+  <body>
     <h1>Profile</h1>
-    <img id="profile_image" src="" alt="Profile Image" style="width: 150px; height: 150px; border-radius: 50%;"><br><br>
+    <img
+      id="profile_image"
+      src=""
+      alt="Profile Image"
+      style="width: 150px; height: 150px; border-radius: 50%"
+    /><br /><br />
     <p><strong>Username:</strong> <span id="username"></span></p>
     <p><strong>Biography:</strong> <span id="biography"></span></p>
     <p><strong>First Name:</strong> <span id="first_name"></span></p>
@@ -22,126 +30,157 @@
 
     <h2>Add Article</h2>
     <form id="addArticleForm" enctype="multipart/form-data">
-        <label for="article_description">Description:</label>
-        <input type="text" id="article_description" name="article_description" required><br><br>
+      <label for="article_description">Description:</label>
+      <input
+        type="text"
+        id="article_description"
+        name="article_description"
+        required
+      /><br /><br />
 
-        <label for="article_price">Price:</label>
-        <input type="number" id="article_price" name="article_price" required><br><br>
+      <label for="article_price">Price:</label>
+      <input
+        type="number"
+        id="article_price"
+        name="article_price"
+        required
+      /><br /><br />
 
-        <label for="shipping_cost">Shipping Cost:</label>
-        <input type="number" id="shipping_cost" name="shipping_cost"><br><br>
+      <label for="shipping_cost">Shipping Cost:</label>
+      <input
+        type="number"
+        id="shipping_cost"
+        name="shipping_cost"
+      /><br /><br />
 
-        <label for="category_name">Category:</label>
-        <input type="text" id="category_name" name="category_name" required><br><br>
+      <label for="category_name">Category:</label>
+      <input
+        type="text"
+        id="category_name"
+        name="category_name"
+        required
+      /><br /><br />
 
-        <label for="article_photo">Photo:</label>
-        <input type="file" id="article_photo" name="article_photo" accept=".webp, .jpeg, .jpg, .png, .svg" required><br><br>
+      <label for="article_photo">Photo:</label>
+      <input
+        type="file"
+        id="article_photo"
+        name="article_photo"
+        accept=".webp, .jpeg, .jpg, .png, .svg"
+        required
+      /><br /><br />
 
-        <button type="submit">Add Article</button>
+      <button type="submit">Add Article</button>
     </form>
 
     <h2>Articles</h2>
     <ul id="articlesList"></ul>
 
     <script>
-        async function getUserProfile() {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                window.location.href = '/login';
-                return;
-            }
-
-            const response = await fetch('/api/users/dashboard', {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-
-            if (response.ok) {
-                const user = await response.json();
-                document.getElementById('username').textContent = user.username;
-                document.getElementById('biography').textContent = user.biography;
-                document.getElementById('first_name').textContent = user.first_name;
-                document.getElementById('last_name').textContent = user.last_name;
-                document.getElementById('street').textContent = user.street;
-                document.getElementById('street_number').textContent = user.street_number;
-                document.getElementById('apartment').textContent = user.apartment;
-                document.getElementById('postal_code').textContent = user.postal_code;
-                document.getElementById('city').textContent = user.city;
-                document.getElementById('email').textContent = user.email;
-                document.getElementById('paypal_address').textContent = user.paypal_address;
-
-                if (user.profile_image) {
-                    document.getElementById('profile_image').src = user.profile_image;
-                }
-            } else {
-                alert('Failed to fetch user profile');
-            }
+      async function getUserProfile() {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          window.location.href = "/login";
+          return;
         }
 
-        document.getElementById('addArticleForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const token = localStorage.getItem('token');
-            if (!token) {
-                window.location.href = '/login';
-                return;
-            }
-
-            const formData = new FormData(document.getElementById('addArticleForm'));
-
-            const response = await fetch('/api/users/articles', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                },
-                body: formData
-            });
-
-            if (response.ok) {
-                alert('Article added successfully');
-                loadArticles();
-            } else {
-                const data = await response.json();
-                alert('Failed to add article: ' + data.message);
-            }
+        const response = await fetch("/api/users/dashboard", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         });
 
-        async function loadArticles() {
-            const token = localStorage.getItem('token');
-            const response = await fetch('/api/users/articles', {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
+        if (response.ok) {
+          const user = await response.json();
+          document.getElementById("username").textContent = user.username;
+          document.getElementById("biography").textContent = user.biography;
+          document.getElementById("first_name").textContent = user.first_name;
+          document.getElementById("last_name").textContent = user.last_name;
+          document.getElementById("street").textContent = user.street;
+          document.getElementById("street_number").textContent =
+            user.street_number;
+          document.getElementById("apartment").textContent = user.apartment;
+          document.getElementById("postal_code").textContent = user.postal_code;
+          document.getElementById("city").textContent = user.city;
+          document.getElementById("email").textContent = user.email;
+          document.getElementById("paypal_address").textContent =
+            user.paypal_address;
 
-            const articlesList = document.getElementById('articlesList');
-            articlesList.innerHTML = '';
-            if (response.ok) {
-                const articles = await response.json();
-                articles.forEach(article => {
-                    const li = document.createElement('li');
-                    li.textContent = `${article.article_description} - ${article.category_name} - ${article.article_price}€`;
-                    if (article.article_photo) {
-                        const img = document.createElement('img');
-                        img.src = article.article_photo;
-                        img.alt = article.article_description;
-                        img.style.width = '100px';
-                        img.style.height = '100px';
-                        li.appendChild(img);
-                    }
-                    articlesList.appendChild(li);
-                });
-            } else {
-                alert('Failed to load articles');
-            }
+          if (user.profile_image) {
+            document.getElementById("profile_image").src = user.profile_image;
+          }
+        } else {
+          alert("Failed to fetch user profile");
         }
+      }
 
-        window.onload = () => {
-            getUserProfile();
+      document
+        .getElementById("addArticleForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const token = localStorage.getItem("token");
+          if (!token) {
+            window.location.href = "/login";
+            return;
+          }
+
+          const formData = new FormData(
+            document.getElementById("addArticleForm"),
+          );
+
+          const response = await fetch("/api/users/articles", {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            body: formData,
+          });
+
+          if (response.ok) {
+            alert("Article added successfully");
             loadArticles();
-        };
+          } else {
+            const data = await response.json();
+            alert("Failed to add article: " + data.message);
+          }
+        });
+
+      async function loadArticles() {
+        const token = localStorage.getItem("token");
+        const response = await fetch("/api/users/articles", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const articlesList = document.getElementById("articlesList");
+        articlesList.innerHTML = "";
+        if (response.ok) {
+          const articles = await response.json();
+          articles.forEach((article) => {
+            const li = document.createElement("li");
+            li.textContent = `${article.article_description} - ${article.category_name} - ${article.article_price}€`;
+            if (article.article_photo) {
+              const img = document.createElement("img");
+              img.src = article.article_photo;
+              img.alt = article.article_description;
+              img.style.width = "100px";
+              img.style.height = "100px";
+              li.appendChild(img);
+            }
+            articlesList.appendChild(li);
+          });
+        } else {
+          alert("Failed to load articles");
+        }
+      }
+
+      window.onload = () => {
+        getUserProfile();
+        loadArticles();
+      };
     </script>
-</body>
+  </body>
 </html>

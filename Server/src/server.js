@@ -11,8 +11,7 @@ const app = require("./app"); // Make sure this points to the correct app.js fil
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3002; // Use a different port to avoid conflicts
 
 // Test database connection
 app.listen(PORT, async () => {
@@ -27,5 +26,3 @@ app.listen(PORT, async () => {
 });
 
 module.exports = app;
-
-
