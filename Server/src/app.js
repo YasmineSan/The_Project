@@ -12,7 +12,7 @@ app.use(helmet());
 app.use(
   cors({
     origin: "http://localhost:5173", // Remplace par l'origine de ton frontend
-  })
+  }),
 );
 
 // Middleware pour parser les requêtes JSON et URL-encoded
@@ -26,7 +26,7 @@ app.use(
     verify: (req, _res, buf) => {
       req.rawBody = buf.toString();
     },
-  })
+  }),
 );
 
 // Importer et utiliser les routes
@@ -60,7 +60,7 @@ app.get("/profile", (req, res) => {
 
 app.get("/", (req, res) => {
   res.send(
-    '<h1>Welcome</h1><a href="/login">Login</a> or <a href="/register">Register</a>'
+    '<h1>Welcome</h1><a href="/login">Login</a> or <a href="/register">Register</a>',
   );
 });
 
