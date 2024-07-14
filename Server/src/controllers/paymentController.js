@@ -1,5 +1,5 @@
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
-const { poolPromise } = require("../utils/db");
+const { pool } = require("../utils/db");
 
 exports.createPaymentIntent = async (req, res) => {
   try {
@@ -22,7 +22,6 @@ exports.createPaymentIntent = async (req, res) => {
 exports.handlePaymentSuccess = async (req, res) => {
   try {
     const { paymentIntentId, userId, articleIds } = req.body;
-    const pool = await poolPromise;
 
     // Récupérer le Payment Intent depuis Stripe
     const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
@@ -32,75 +31,63 @@ exports.handlePaymentSuccess = async (req, res) => {
 
     // Vérifier l'état du Payment Intent
     if (paymentIntent.status === "succeeded") {
-      const transaction = await pool.transaction();
+      const connection = await pool.getConnection();
       try {
-        await transaction.begin();
+        await connection.beginTransaction();
 
         // Insérer une nouvelle commande dans la table Orders
-        const orderResult = await transaction
-          .request()
-          .input("user_id", userId)
-          .query(
-            "INSERT INTO Orders (user_id, order_date, total_price) OUTPUT INSERTED.order_id VALUES (@user_id, GETDATE(), 0)",
-          );
+        const [orderResult] = await connection.execute(
+          "INSERT INTO Orders (user_id, order_date, total_price) VALUES (?, NOW(), 0)",
+          [userId]
+        );
 
-        const orderId = orderResult.recordset[0].order_id;
+        const orderId = orderResult.insertId;
 
         let totalPrice = 0;
 
         // Mettre à jour les tables Articles, User_Article, et Article_Order
         for (const articleId of articleIds) {
           // Récupérer le prix de l'article avant de le supprimer
-          const articleResult = await transaction
-            .request()
-            .input("article_id", articleId)
-            .query(
-              "SELECT article_price FROM Articles WHERE article_id = @article_id",
-            );
+          const [articleResult] = await connection.execute(
+            "SELECT article_price FROM Articles WHERE article_id = ?",
+            [articleId]
+          );
 
-          const articlePrice = articleResult.recordset[0].article_price;
+          const articlePrice = articleResult[0].article_price;
           totalPrice += articlePrice;
 
           // Supprimer l'article de la table Articles
-          await transaction
-            .request()
-            .input("article_id", articleId)
-            .query("DELETE FROM Articles WHERE article_id = @article_id");
+          await connection.execute(
+            "DELETE FROM Articles WHERE article_id = ?",
+            [articleId]
+          );
 
           // Supprimer la relation de l'article avec l'utilisateur dans User_Article
-          await transaction
-            .request()
-            .input("article_id", articleId)
-            .input("user_id", userId)
-            .query(
-              "DELETE FROM User_Article WHERE article_id = @article_id AND user_id = @user_id",
-            );
+          await connection.execute(
+            "DELETE FROM User_Article WHERE article_id = ? AND user_id = ?",
+            [articleId, userId]
+          );
 
           // Ajouter l'article à la table de liaison Article_Order
-          await transaction
-            .request()
-            .input("article_id", articleId)
-            .input("order_id", orderId)
-            .input("quantity", 1) // Supposons une quantité de 1 pour cet exemple
-            .query(
-              "INSERT INTO Article_Order (article_id, order_id, quantity) VALUES (@article_id, @order_id, @quantity)",
-            );
+          await connection.execute(
+            "INSERT INTO Article_Order (article_id, order_id, quantity) VALUES (?, ?, ?)",
+            [articleId, orderId, 1] // Supposons une quantité de 1 pour cet exemple
+          );
         }
 
         // Mettre à jour le prix total de la commande
-        await transaction
-          .request()
-          .input("order_id", orderId)
-          .input("total_price", totalPrice)
-          .query(
-            "UPDATE Orders SET total_price = @total_price WHERE order_id = @order_id",
-          );
+        await connection.execute(
+          "UPDATE Orders SET total_price = ? WHERE order_id = ?",
+          [totalPrice, orderId]
+        );
 
-        await transaction.commit();
+        await connection.commit();
         res.send({ message: "Payment successful and order updated" });
       } catch (err) {
-        await transaction.rollback();
+        await connection.rollback();
         throw err;
+      } finally {
+        connection.release();
       }
     } else {
       console.log("Payment Intent not successful:", paymentIntent);

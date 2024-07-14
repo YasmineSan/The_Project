@@ -7,12 +7,12 @@ const authenticateToken = require("../middleware/authenticateToken");
 router.post(
   "/create-payment-intent",
   authenticateToken,
-  paymentController.createPaymentIntent,
+  paymentController.createPaymentIntent
 );
 router.post(
   "/payment-success",
   authenticateToken,
-  paymentController.handlePaymentSuccess,
+  paymentController.handlePaymentSuccess
 );
 
 module.exports = router;
