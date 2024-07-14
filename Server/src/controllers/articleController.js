@@ -94,8 +94,16 @@ exports.addArticle = async (req, res) => {
                   category_id,
                   article_photo_url,
                   new Date(),
-                  userId // Ajoutez userId ici
+                  userId 
               ]
+          );
+
+          const article_id = articleResult.insertId;
+
+          // Créer la liaison dans User_Article
+          await connection.execute(
+              'INSERT INTO User_Article (user_id, article_id) VALUES (?, ?)',
+              [userId, article_id]
           );
 
           await connection.commit();
