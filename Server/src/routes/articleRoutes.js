@@ -34,6 +34,9 @@ router.get(
 ); // Make sure getCategoryArticlePrices exists
 router.get("/user/:userId/articles", articleController.getArticlesByUserId); // Make sure getArticlesByUserId exists
 router.get("/available-articles", articleController.getAvailableArticles); // Make sure getAvailableArticles exists
+router.get("/article/:articleId/price", articleController.getArticlePrice);
+router.get("/article/:id/price", articleController.getArticlePrice);
+
 
 // Routes avec authentification
 router.get(

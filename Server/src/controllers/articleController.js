@@ -27,98 +27,106 @@ const isValidFileType = (file) => {
 
 exports.addArticle = async (req, res) => {
   try {
-      const {
+    const {
+      title,
+      article_description,
+      article_price,
+      shipping_cost,
+      category_name
+    } = req.body;
+    const article_photo = req.file;
+    const userId = req.user.id; // Assurez-vous que req.user.id contient l'ID de l'utilisateur
+
+    if (article_photo && !isValidFileType(article_photo)) {
+      return res.status(400).send({ message: 'Invalid file type' });
+    }
+
+    let article_photo_url = '';
+    if (article_photo) {
+      const key = `${uuidv4()}${path.extname(article_photo.originalname)}`;
+      const command = new PutObjectCommand({
+        Bucket: process.env.DO_SPACES_BUCKET,
+        Key: key,
+        Body: article_photo.buffer,
+        ACL: 'public-read'
+      });
+      await s3.send(command);
+      article_photo_url = `https://${process.env.DO_SPACES_BUCKET}.${process.env.DO_SPACES_ENDPOINT}/${key}`;
+    }
+
+    const connection = await pool.getConnection();
+
+    try {
+      await connection.beginTransaction();
+
+      let [categoryResult] = await connection.execute(
+        'SELECT category_id FROM Categories WHERE category_name = ?',
+        [category_name]
+      );
+
+      let category_id;
+      if (categoryResult.length > 0) {
+        category_id = categoryResult[0].category_id;
+      } else {
+        const [newCategoryResult] = await connection.execute(
+          'INSERT INTO Categories (category_name) VALUES (?)',
+          [category_name]
+        );
+        category_id = newCategoryResult.insertId;
+      }
+
+      console.log('Category ID:', category_id); // Log category ID
+
+      const [articleResult] = await connection.execute(
+        `INSERT INTO Articles (
           title,
           article_description,
           article_price,
           shipping_cost,
-          category_name
-      } = req.body;
-      const article_photo = req.file;
-      const userId = req.user.id; // Assurez-vous que req.user.id contient l'ID de l'utilisateur
+          category_id,
+          article_photo,
+          date_added,
+          user_id
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+        [
+          title,
+          article_description,
+          article_price,
+          shipping_cost,
+          category_id,
+          article_photo_url,
+          new Date(),
+          userId 
+        ]
+      );
 
-      if (article_photo && !isValidFileType(article_photo)) {
-          return res.status(400).send({ message: 'Invalid file type' });
-      }
+      const article_id = articleResult.insertId;
 
-      let article_photo_url = '';
-      if (article_photo) {
-          const key = `${uuidv4()}${path.extname(article_photo.originalname)}`;
-          const command = new PutObjectCommand({
-              Bucket: process.env.DO_SPACES_BUCKET,
-              Key: key,
-              Body: article_photo.buffer,
-              ACL: 'public-read'
-          });
-          await s3.send(command);
-          article_photo_url = `https://${process.env.DO_SPACES_BUCKET}.${process.env.DO_SPACES_ENDPOINT}/${key}`;
-      }
+      console.log('Article ID:', article_id); // Log article ID
 
-      const connection = await pool.getConnection();
+      // Créer la liaison dans User_Article
+      const [userArticleResult] = await connection.execute(
+        'INSERT INTO User_Article (user_id, article_id) VALUES (?, ?)',
+        [userId, article_id]
+      );
 
-      try {
-          await connection.beginTransaction();
+      console.log('User_Article Result:', userArticleResult); // Log user-article insertion result
 
-          let [categoryResult] = await connection.execute(
-              'SELECT category_id FROM Categories WHERE category_name = ?',
-              [category_name]
-          );
-
-          let category_id;
-          if (categoryResult.length > 0) {
-              category_id = categoryResult[0].category_id;
-          } else {
-              const [newCategoryResult] = await connection.execute(
-                  'INSERT INTO Categories (category_name) VALUES (?)',
-                  [category_name]
-              );
-              category_id = newCategoryResult.insertId;
-          }
-
-          const [articleResult] = await connection.execute(
-              `INSERT INTO Articles (
-                  title,
-                  article_description,
-                  article_price,
-                  shipping_cost,
-                  category_id,
-                  article_photo,
-                  date_added,
-                  user_id
-              ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-              [
-                  title,
-                  article_description,
-                  article_price,
-                  shipping_cost,
-                  category_id,
-                  article_photo_url,
-                  new Date(),
-                  userId 
-              ]
-          );
-
-          const article_id = articleResult.insertId;
-
-          // Créer la liaison dans User_Article
-          await connection.execute(
-              'INSERT INTO User_Article (user_id, article_id) VALUES (?, ?)',
-              [userId, article_id]
-          );
-
-          await connection.commit();
-          res.status(201).send({ message: 'Article added successfully' });
-      } catch (err) {
-          await connection.rollback();
-          throw err;
-      } finally {
-          connection.release();
-      }
+      await connection.commit();
+      res.status(201).send({ message: 'Article added successfully' });
+    } catch (err) {
+      await connection.rollback();
+      throw err;
+    } finally {
+      connection.release();
+    }
   } catch (err) {
-      console.error('Error:', err);
-      res.status(500).send({ message: err.message });
+    console.error('Error:', err);
+    res.status(500).send({ message: err.message });
   }
 };
+
+
 
 exports.getAllArticlesByUser = async (req, res) => {
   try {
@@ -149,11 +157,12 @@ exports.getArticleById = async (req, res) => {
 
     try {
       const [result] = await connection.execute(
-        `SELECT a.*, u.profile_image as user_photo, u.user_id, u.username, u.biography
-                FROM Articles a
-                INNER JOIN User_Article ua ON a.article_id = ua.article_id
-                INNER JOIN Users u ON ua.user_id = u.user_id
-                WHERE a.article_id = ?`,
+        `SELECT a.*, u.profile_image as user_photo, u.user_id, u.username, u.biography, c.category_name
+         FROM Articles a
+         INNER JOIN User_Article ua ON a.article_id = ua.article_id
+         INNER JOIN Users u ON ua.user_id = u.user_id
+         LEFT JOIN Categories c ON a.category_id = c.category_id
+         WHERE a.article_id = ?`,
         [id],
       );
 
@@ -171,6 +180,7 @@ exports.getArticleById = async (req, res) => {
   }
 };
 
+
 exports.getAvailableArticles = async (req, res) => {
   try {
     const connection = await pool.getConnection();
@@ -178,18 +188,19 @@ exports.getAvailableArticles = async (req, res) => {
     try {
       const [result] = await connection.execute(
         `SELECT a.*, ua.user_id
-                FROM Articles a
-                LEFT JOIN User_Article ua ON a.article_id = ua.article_id
-                WHERE a.sold = 0`,
+         FROM Articles a
+         LEFT JOIN User_Article ua ON a.article_id = ua.article_id
+         WHERE a.sold IS NULL OR a.sold = 0`
       );
       res.json(result);
     } finally {
       connection.release();
     }
   } catch (err) {
-    res.status500().send({ message: err.message });
+    res.status(500).send({ message: err.message });
   }
 };
+
 
 exports.updateArticle = async (req, res) => {
   try {
@@ -274,6 +285,13 @@ exports.deleteArticle = async (req, res) => {
           .send({ message: "Article not found or not owned by user" });
       }
 
+      // Supprimer les entrées dans User_Article
+      await connection.execute(
+        "DELETE FROM User_Article WHERE article_id = ?",
+        [id],
+      );
+
+      // Supprimer l'article de la table Articles
       await connection.execute("DELETE FROM Articles WHERE article_id = ?", [
         id,
       ]);
@@ -287,20 +305,26 @@ exports.deleteArticle = async (req, res) => {
   }
 };
 
+
 exports.getArticlesByUserId = async (req, res) => {
   try {
     const { userId } = req.params;
     const connection = await pool.getConnection();
 
     try {
+      console.log('Fetching articles for user ID:', userId); // Log userId
+
       const [result] = await connection.execute(
-        `SELECT a.*, u.profile_image as user_photo, u.user_id
-                FROM Articles a
-                INNER JOIN User_Article ua ON a.article_id = ua.article_id
-                INNER JOIN Users u ON ua.user_id = u.user_id
-                WHERE ua.user_id = ? AND a.sold = 0`,
+        `SELECT a.*, u.profile_image as user_photo, u.user_id, c.category_name
+         FROM Articles a
+         INNER JOIN User_Article ua ON a.article_id = ua.article_id
+         INNER JOIN Users u ON ua.user_id = u.user_id
+         LEFT JOIN Categories c ON a.category_id = c.category_id
+         WHERE ua.user_id = ? AND (a.sold IS NULL OR a.sold = 0)`,
         [userId],
       );
+
+      console.log('Query result:', result); // Log the result
 
       if (result.length === 0) {
         return res
@@ -313,9 +337,11 @@ exports.getArticlesByUserId = async (req, res) => {
       connection.release();
     }
   } catch (err) {
+    console.error('Error:', err); // Log the error
     res.status(500).send({ message: err.message });
   }
 };
+
 
 exports.addEvaluation = async (req, res) => {
   try {
@@ -385,13 +411,22 @@ exports.deleteEvaluation = async (req, res) => {
 
 exports.getArticlePrice = async (req, res) => {
   try {
-    const { articleId } = req.params;
+    const { id } = req.params; // Utilise 'id' ici
+
+    // Ajout de logs pour diagnostiquer
+    console.log("Params:", req.params);
+    console.log("articleId:", id);
+
+    if (!id) {
+      return res.status(400).send({ message: "Article ID is required" });
+    }
+
     const connection = await pool.getConnection();
 
     try {
       const [result] = await connection.execute(
         "SELECT article_price FROM Articles WHERE article_id = ?",
-        [articleId],
+        [id], // Utilisation correcte du paramètre
       );
 
       const article = result[0];
@@ -399,7 +434,7 @@ exports.getArticlePrice = async (req, res) => {
         return res.status(404).send({ message: "Article not found" });
       }
 
-      res.json({ article_id: articleId, price: article.article_price });
+      res.json({ article_id: id, price: article.article_price });
     } finally {
       connection.release();
     }
@@ -407,6 +442,9 @@ exports.getArticlePrice = async (req, res) => {
     res.status(500).send({ message: err.message });
   }
 };
+
+
+
 
 exports.getAllArticlePrices = async (_req, res) => {
   try {
@@ -506,7 +544,11 @@ exports.getAllArticles = async (req, res) => {
   try {
     const connection = await pool.getConnection();
     try {
-      const [result] = await connection.execute("SELECT * FROM Articles");
+      const [result] = await connection.execute(
+        `SELECT a.*, c.category_name
+         FROM Articles a
+         LEFT JOIN Categories c ON a.category_id = c.category_id`
+      );
       res.json(result);
     } finally {
       connection.release();
@@ -515,6 +557,7 @@ exports.getAllArticles = async (req, res) => {
     res.status(500).send({ message: err.message });
   }
 };
+
 
 // Get all evaluations by user (example definition, adjust as needed)
 exports.getAllEvaluationsByUser = async (req, res) => {
