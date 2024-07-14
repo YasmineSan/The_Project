@@ -1,22 +1,17 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const dotenv = require('dotenv');
-const { pool } = require('./utils/db');
+const express = require("express");
+const bodyParser = require("body-parser");
+const dotenv = require("dotenv");
+const { pool } = require("./utils/db");
 
-// Charger les variables d'environnement
 dotenv.config();
 
-const app = express();
+const app = require("./app"); // Make sure this points to the correct app.js file
 
 // Middlewares
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Importer et utiliser les routes
-app.use('/api/users', require('./routes/userRoutes'));
-// Ajoute les autres routes ici...
-
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3002; // Use a different port to avoid conflicts
 
 // Test database connection
 app.listen(PORT, async () => {
@@ -25,10 +20,11 @@ app.listen(PORT, async () => {
     console.log(`Server is running on port ${PORT}`);
     connection.release(); // Libération de la connexion après le test
   } catch (err) {
-    console.error('Failed to connect to the database:', err);
+    console.error("Failed to connect to the database:", err);
     process.exit(1);
   }
 });
 
-
 module.exports = app;
+
+
