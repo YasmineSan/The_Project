@@ -38,9 +38,13 @@ exports.addCategory = async (req, res) => {
 
 exports.getAllCategories = async (req, res) => {
   try {
-    const pool = await poolPromise;
-    const result = await pool.request().query("SELECT * FROM Categories");
-    res.json(result.recordset);
+    const connection = await pool.getConnection();
+    try {
+      const [rows] = await connection.execute('SELECT * FROM Categories');
+      res.json(rows);
+    } finally {
+      connection.release();
+    }
   } catch (err) {
     res.status(500).send({ message: err.message });
   }
