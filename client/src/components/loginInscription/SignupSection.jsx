@@ -9,8 +9,11 @@ const SignupSection = ({ setIsLogin }) => {
   const [success, setSuccess] = useState('');
   const [isHovered, setIsHovered] = useState(false);
   const [profileImage, setProfileImage] = useState(null);
+  const [passwordStrength, setPasswordStrength] = useState(0);
 
   const formRef = useRef(null);
+
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
   const handleSignup = async (e) => {
     e.preventDefault();
@@ -22,6 +25,12 @@ const SignupSection = ({ setIsLogin }) => {
     const confirmPassword = formData.get('confirm_password');
 
     if (password && confirmPassword && password === confirmPassword) {
+      if (!passwordRegex.test(password)) {
+        setError('Le mot de passe doit contenir au moins 8 caractères, une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial.');
+        window.scrollTo(0, 0); // Scroll to top
+        return;
+      }
+
       try {
         const response = await fetch('http://167.172.38.235:3001/api/users/register', {
           method: 'POST',
@@ -111,6 +120,22 @@ const SignupSection = ({ setIsLogin }) => {
     setIsHovered(false);
   };
 
+  const handlePasswordChange = (e) => {
+    const password = e.target.value;
+    const strength = calculatePasswordStrength(password);
+    setPasswordStrength(strength);
+  };
+
+  const calculatePasswordStrength = (password) => {
+    let strength = 0;
+    if (password.length >= 8) strength += 1;
+    if (/[A-Z]/.test(password)) strength += 1;
+    if (/[a-z]/.test(password)) strength += 1;
+    if (/\d/.test(password)) strength += 1;
+    if (/[@$!%*?&.\])(\\\[\/]/.test(password)) strength += 1;
+    return strength;
+  };
+
   return (
     <>
       <h2 className="text-2xl font-semibold mb-6 text-center">Inscription</h2>
@@ -162,6 +187,7 @@ const SignupSection = ({ setIsLogin }) => {
               name="password"
               className="w-full px-3 py-2 border rounded pr-10"
               required
+              onChange={handlePasswordChange}
             />
             <div
               className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
@@ -169,6 +195,13 @@ const SignupSection = ({ setIsLogin }) => {
             >
               {showPassword ? <FiEyeOff className="text-gray-700" /> : <FiEye className="text-gray-700" />}
             </div>
+          </div>
+          {passwordStrength < 5 && passwordStrength > 0 && <div className="text-red-600 text-sm mt-1">Le mot de passe doit contenir au moins 8 caractères, une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial.</div>}
+          <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+            <div
+              className={`h-2 rounded-full ${passwordStrength >= 5 ? 'bg-green-500' : passwordStrength >= 2 ? 'bg-yellow-500' : 'bg-red-500'}`}
+              style={{ width: `${(passwordStrength / 5) * 100}%` }}
+            ></div>
           </div>
         </div>
         <div className="mb-6 relative">
