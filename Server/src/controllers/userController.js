@@ -260,16 +260,25 @@ exports.updateUser = async (req, res) => {
       profile_image: profile_image_url || null,
     };
 
+    // Filtrer les champs non nuls ou non indéfinis
+    const filteredFields = Object.entries(fields).reduce((acc, [key, value]) => {
+      if (value !== undefined && value !== null) {
+        acc[key] = value;
+      }
+      return acc;
+    }, {});
+
+    if (Object.keys(filteredFields).length === 0) {
+      return res.status(400).send({ message: "No fields to update" });
+    }
+
     const sql =
       "UPDATE Users SET " +
-      Object.keys(fields)
+      Object.keys(filteredFields)
         .map((key) => `${key} = ?`)
         .join(", ") +
       " WHERE user_id = ?";
-    const values = [
-      ...Object.values(fields).filter((value) => value !== null),
-      userId,
-    ];
+    const values = [...Object.values(filteredFields), userId];
 
     await connection.query(sql, values);
 
@@ -280,3 +289,4 @@ exports.updateUser = async (req, res) => {
     if (connection) connection.release();
   }
 };
+
