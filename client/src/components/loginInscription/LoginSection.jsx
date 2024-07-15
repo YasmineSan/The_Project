@@ -11,7 +11,7 @@ const LoginSection = ({ setIsLogin }) => {
 
   const handleLogin = () => {
     console.log({username,password})
-    fetch('http://4.233.138.141:3001/api/users/login', {
+    fetch('http://167.172.38.235:3001/api/users/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

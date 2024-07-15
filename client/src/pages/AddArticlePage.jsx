@@ -52,7 +52,7 @@ const AddArticlePage = () => {
     debugFormData(formData);
 
     try {
-      const response = await fetch('http://4.233.138.141:3001/api/articles', {
+      const response = await fetch('http://167.172.38.235:3001/api/articles', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}` // Ajouter le token dans les en-têtes de la requête
@@ -67,21 +67,22 @@ const AddArticlePage = () => {
         setError(''); // Clear any previous error
         setSuccess("Article ajouté! Redirection vers votre profil...");
         window.scrollTo(0, 0); // Scroll to top
+        navigate(`/userProfile`)
 
         // Obtenir l'ID de l'article nouvellement créé
-        const articleId = data.article._id;
+        // const articleId = data.article._id;
 
-        // Redirection vers la page de confirmation avec les données du formulaire
-        navigate(`/editArticle/${articleId}`, {
-          state: {
-            image: URL.createObjectURL(image),
-            title,
-            description,
-            category,
-            price,
-            shippingCost
-          }
-        });
+        // // Redirection vers la page de confirmation avec les données du formulaire
+        // navigate(`/editArticle/${articleId}`, {
+        //   state: {
+        //     image: URL.createObjectURL(image),
+        //     title,
+        //     description,
+        //     category,
+        //     price,
+        //     shippingCost
+        //   }
+        // });
       } else {
         setSuccess(''); // Clear any previous success message
         setError(data.message || 'Une erreur est survenue, merci de réessayer.');

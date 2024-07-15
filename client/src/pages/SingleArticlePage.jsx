@@ -19,7 +19,7 @@ const SingleArticlePage = () => {
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
-        const response = await fetch('http://4.233.138.141:3001/api/users/dashboard', {
+        const response = await fetch('http://167.172.38.235:3001/api/users/dashboard', {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('authToken')}`
           }
@@ -40,7 +40,7 @@ const SingleArticlePage = () => {
     window.scrollTo(0, 0); // Scroll to top
     const fetchOneArticle = async () => {
       try {
-        const response = await fetch(`http://4.233.138.141:3001/api/articles/articles/${articleId}`, {
+        const response = await fetch(`http://167.172.38.235:3001/api/articles/article/${articleId}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -69,7 +69,7 @@ const SingleArticlePage = () => {
 
     const fetchArticles = async (userId) => {
       try {
-        const response = await fetch(`http://4.233.138.141:3001/api/articles/user/${userId}/articles`, {
+        const response = await fetch(`http://167.172.38.235:3001/api/articles/user/${userId}/articles`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json'
@@ -89,7 +89,7 @@ const SingleArticlePage = () => {
 
     const fetchUser = async (userId) => {
       try {
-        const response = await fetch(`http://4.233.138.141:3001/api/users/${userId}`, {
+        const response = await fetch(`http://167.172.38.235:3001/api/users/${userId}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -118,7 +118,7 @@ const SingleArticlePage = () => {
 
     if (isAuthenticated) {
       try {
-        const response = await fetch('http://4.233.138.141:3001/api/cart', {
+        const response = await fetch('http://167.172.38.235:3001/api/cart', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -147,7 +147,7 @@ const SingleArticlePage = () => {
 
   const handleAddToFavorites = async () => {
     try {
-      const response = await fetch('http://4.233.138.141:3001/api/favorites', {
+      const response = await fetch('http://167.172.38.235:3001/api/favorite', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

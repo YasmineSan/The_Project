@@ -8,7 +8,7 @@ const FavoriteCard = ({ id, image, title, price, onRemoveFromFavorites }) => {
 
   const handleRemoveClick = async () => {
     try {
-      const response = await fetch(`http://4.233.138.141:3001/api/favorites/${id}`, {
+      const response = await fetch(`http://167.172.38.235:3001/api/favorite/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
