@@ -1,27 +1,33 @@
-# Projet Artisans en Ligne ( Craftify )
 
-- **Front-end** : Auréliane Gagliardi,  Thomas Thonnard;
-- **Back-end** : Yasmine Sanchez,  Samuel Sanchez;
+# 🎨 Projet Artisans en Ligne (Craftify)
 
-## Portfolio du site
+Bienvenue dans le repository de Craftify, une plateforme dédiée aux artisans pour créer et gérer leur boutique en ligne.
 
-https://craftify-project.myportfolio.com/contact-craftify
+## 👥 Équipe du Projet
 
-## Table des Matières
+- **Front-end** : Auréliane Gagliardi, Thomas Thonnard
+- **Back-end** : Yasmine Sanchez, Samuel Sanchez
+
+## 🌐 Portfolio du Site
+
+Découvrez notre portfolio pour une présentation visuelle des pages du site: [Craftify Portfolio](https://craftify-project.myportfolio.com)
+
+[![Portfolio Screenshot](https://github.com/YasmineSan/The_Project/blob/29c26acee1804b9eed3080709692c47c86cb26d0/Homepage_portfolio.png)](https://craftify-project.myportfolio.com)
+
+## 📋 Table des Matières
 
 1. [Description](#description)
 2. [Technologies Utilisées](#technologies-utilisées)
 3. [Fonctionnalités](#fonctionnalités)
 4. [Installation et Configuration](#installation-et-configuration)
 5. [Structure du Projet](#structure-du-projet)
-6. [Contribuer](#contribuer)
-7. [Licence](#licence)
 
-## Description
+
+## 📖 Description
 
 Ce projet vise à offrir aux artisans une plateforme leur permettant de créer et gérer facilement leur boutique en ligne. Avec l'utilisation de technologies modernes, nous avons développé une solution complète qui comprend un backend robuste et un frontend réactif.
 
-## Technologies Utilisées
+## 💻 Technologies Utilisées
 
 ### Backend
 
@@ -35,15 +41,15 @@ Ce projet vise à offrir aux artisans une plateforme leur permettant de créer e
 - **React** : Bibliothèque JavaScript pour construire des interfaces utilisateur.
 - **Tailwind CSS** : Framework CSS utilitaire pour un design moderne et réactif.
 
-## Fonctionnalités
+## 🚀 Fonctionnalités
 
-- **Boutique en ligne** : Profil utilisateur / artisans.
+- **Boutique en ligne** : Profil utilisateur/artisans.
 - **Gestion des Produits** : Ajout, modification et suppression de produits.
 - **Panier d'Achat** : Gestion des articles dans le panier (ajout/suppression), possibilité d'ajouter des produits en favori.
-- **Paiement Sécurisé** : Intégration avec des services de paiement (Fake payement API).
+- **Paiement Sécurisé** : Intégration avec des services de paiement (Fake payment API).
 - **Tableau de Bord** : Interface pour que les artisans gèrent leur boutique et leurs profils en ligne.
 
-## Installation et Configuration
+## ⚙️ Installation et Configuration
 
 ### Prérequis
 
@@ -69,8 +75,7 @@ Ce projet vise à offrir aux artisans une plateforme leur permettant de créer e
 
 3. **Configurer les variables d'environnement**
 
-    Créez un fichier `.env` à la racine du projet et ajoutez les informations.
-
+    Créez un fichier `.env` à la racine du projet et ajoutez les informations nécessaires.
 
 4. **Démarrer l'application**
 
@@ -78,7 +83,7 @@ Ce projet vise à offrir aux artisans une plateforme leur permettant de créer e
     npm start
     ```
 
-## Structure du Projet
+## 📂 Structure du Projet
 
 ```plaintext
 root
@@ -98,4 +103,9 @@ root
 ├── .gitignore
 ├── package.json
 └── README.md
+```
 
+
+---
+
+Merci d'avoir visité le repository de Craftify. Si vous avez des questions ou des suggestions, n'hésitez pas à nous contacter !
