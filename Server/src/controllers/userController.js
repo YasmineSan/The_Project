@@ -64,7 +64,10 @@ exports.registerUser = async (req, res) => {
         ACL: "public-read",
       });
       await s3.send(command);
-      profile_image_url = `https://${process.env.DO_SPACES_BUCKET}.${process.env.DO_SPACES_ENDPOINT}/${key}`;
+
+      // Assure-toi que l'URL est correctement formée
+      const endpoint = process.env.DO_SPACES_ENDPOINT.replace('https://', '');
+      profile_image_url = `https://${process.env.DO_SPACES_BUCKET}.${endpoint}/${key}`;
     }
 
     const [result] = await connection.query(
@@ -112,6 +115,7 @@ exports.registerUser = async (req, res) => {
     if (connection) connection.release();
   }
 };
+
 
 exports.getAllUsers = async (req, res) => {
   let connection;
@@ -243,7 +247,10 @@ exports.updateUser = async (req, res) => {
         ACL: "public-read",
       });
       await s3.send(command);
-      profile_image_url = `https://${process.env.DO_SPACES_BUCKET}.${process.env.DO_SPACES_ENDPOINT}/${key}`;
+
+      // Assure-toi que l'URL est correctement formée
+      const endpoint = process.env.DO_SPACES_ENDPOINT.replace('https://', '');
+      profile_image_url = `https://${process.env.DO_SPACES_BUCKET}.${endpoint}/${key}`;
     }
 
     const fields = {
@@ -289,4 +296,5 @@ exports.updateUser = async (req, res) => {
     if (connection) connection.release();
   }
 };
+
 
