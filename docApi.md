@@ -2,6 +2,8 @@
 
 ### Bon courage avec les nouveaux fetchs ! Pensez bien à remplacer localhost:3001 par l'IP du serveur avec le port 3001
 
+## 167.172.38.235 IP du serveur!
+
 ### Si vous avez des problèmes ou des questions, n'hésitez pas à envoyer un message aux deux back-end. On est là pour vous aider
 
 ### À bientôt et bon code ! ✌️
