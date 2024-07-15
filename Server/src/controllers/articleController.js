@@ -51,7 +51,10 @@ exports.addArticle = async (req, res) => {
         ACL: 'public-read'
       });
       await s3.send(command);
-      article_photo_url = `https://${process.env.DO_SPACES_BUCKET}.${process.env.DO_SPACES_ENDPOINT}/${key}`;
+      
+      // Assure-toi que l'URL est correctement formée
+      const endpoint = process.env.DO_SPACES_ENDPOINT.replace('https://', '');
+      article_photo_url = `https://${process.env.DO_SPACES_BUCKET}.${endpoint}/${key}`;
     }
 
     const connection = await pool.getConnection();
@@ -125,6 +128,7 @@ exports.addArticle = async (req, res) => {
     res.status(500).send({ message: err.message });
   }
 };
+
 
 
 
@@ -239,7 +243,10 @@ exports.updateArticle = async (req, res) => {
           ACL: "public-read",
         });
         await s3.send(command);
-        article_photo_url = `https://${process.env.DO_SPACES_BUCKET}.${process.env.DO_SPACES_ENDPOINT}/${key}`;
+
+        // Assure-toi que l'URL est correctement formée
+        const endpoint = process.env.DO_SPACES_ENDPOINT.replace('https://', '');
+        article_photo_url = `https://${process.env.DO_SPACES_BUCKET}.${endpoint}/${key}`;
       }
 
       await connection.execute(
@@ -265,6 +272,7 @@ exports.updateArticle = async (req, res) => {
     res.status(500).send({ message: err.message });
   }
 };
+
 
 exports.deleteArticle = async (req, res) => {
   try {
