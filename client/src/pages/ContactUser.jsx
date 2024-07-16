@@ -37,7 +37,7 @@ const ContactUser = () => {
 
   const fetchOtherUserProfile = async () => {//Récupérer le profil de l'autre utilisateur
     try {
-      const response = await fetch(`https://167.172.38.235:3001/api/users/${userId}`, {
+      const response = await fetch(`/api/users/${userId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

@@ -10,7 +10,7 @@ const FavoritePage = () => {
     window.scrollTo(0, 0); // Scroll to top
     const fetchFavoriteArticles = async () => {
       try {
-        const response = await fetch('https://167.172.38.235:3001/api/favorite/user', {
+        const response = await fetch('/api/favorite/user', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

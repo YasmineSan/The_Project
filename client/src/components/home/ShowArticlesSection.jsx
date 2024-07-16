@@ -8,7 +8,7 @@ export const ShowArticlesSection = () => {
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const response = await fetch('https://167.172.38.235:3001/api/articles/available-articles', {
+        const response = await fetch('/api/articles/available-articles', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json'
