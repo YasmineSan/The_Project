@@ -216,7 +216,7 @@ const SettingsPage = () => {
                 <div className="grid grid-cols-2 gap-4">
                   <input
                     type="text"
-                    name="firstName"
+                    name="first_name"
                     value={formData.first_name}
                     onChange={handleChange}
                     className="border border-gray-300 focus:outline-none focus:border-gold rounded-md px-4 py-2 w-full transition-all duration-300 ease-in-out transform focus:scale-105"
@@ -224,7 +224,7 @@ const SettingsPage = () => {
                   />
                   <input
                     type="text"
-                    name="lastName"
+                    name="last_name"
                     value={formData.last_name}
                     onChange={handleChange}
                     className="border border-gray-300 focus:outline-none focus:border-gold rounded-md px-4 py-2 w-full transition-all duration-300 ease-in-out transform focus:scale-105"
@@ -415,7 +415,7 @@ const SettingsPage = () => {
                     <label className="text-gray-500 font-medium mb-2">Numéro</label>
                     <input
                       type="text"
-                      name="number"
+                      name="street_number"
                       value={formData.street_number}
                       onChange={handleChange}
                       className="border border-gray-300 focus:outline-none focus:border-gold rounded-md px-4 py-2 w-full transition-all duration-300 ease-in-out transform focus:scale-105"
@@ -435,7 +435,7 @@ const SettingsPage = () => {
                     <label className="text-gray-500 font-medium mb-2">Code postal</label>
                     <input
                       type="text"
-                      name="postalCode"
+                      name="postal_code"
                       value={formData.postal_code}
                       onChange={handleChange}
                       className="border border-gray-300 focus:outline-none focus:border-gold rounded-md px-4 py-2 w-full transition-all duration-300 ease-in-out transform focus:scale-105"
@@ -454,7 +454,7 @@ const SettingsPage = () => {
                 </div>
               ) : (
                 <div>
-                  <p className="text-gray-700">{`${formData.street}, ${formData.street_number} ${formData.apartment}, ${formData.city} ${formData.postal_code}`}</p>
+                  <p className="text-gray-700">{`${formData.street} ${formData.street_number} ${formData.apartment}, ${formData.city} ${formData.postal_code}`}</p>
                 </div>
               )}
               <button

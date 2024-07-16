@@ -24,66 +24,71 @@ const SignupSection = ({ setIsLogin }) => {
     const password = formData.get('password');
     const confirmPassword = formData.get('confirm_password');
 
+    console.log('Password:', password);
+    console.log('Confirm Password:', confirmPassword);
+
     if (password && confirmPassword && password === confirmPassword) {
-      if (!passwordRegex.test(password)) {
+      if (passwordStrength != 5) {
         setError('Le mot de passe doit contenir au moins 8 caractères, une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial.');
         window.scrollTo(0, 0); // Scroll to top
-        return;
-      }
+      } else {
 
-      try {
-        const response = await fetch('http://167.172.38.235:3001/api/users/register', {
-          method: 'POST',
-          body: formData
-        });
-
-        const data = await response.json();
-        if (response.ok) {
-          let username = formData.get('username');
-          let password = formData.get('password');
-
-          setError(''); // Clear any previous error
-          setSuccess("Inscription réussie ! Redirection vers la page d'accueil");
-          window.scrollTo(0, 0); // Scroll to top
-
-          fetch('http://167.172.38.235:3001/api/users/login', {
+        try {
+          const response = await fetch('http://167.172.38.235:3001/api/users/register', {
             method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({username, password})
-          })
-            .then(response => response.json())
-            .then(data => {
-              if (data.token) {
-                localStorage.setItem('authToken', data.token);
-              } else {
-                setSuccess(''); // Clear any previous success message
-                setError('Login failed: ' + (data.message || 'Invalid credentials'));
-                window.scrollTo(0, 0); // Scroll to top
-              }
-            })
-            .catch(error => {
-              console.error('Error:', error);
-              setSuccess(''); // Clear any previous success message
-              setError('An error occurred. Please try again.');
-              window.scrollTo(0, 0); // Scroll to top
-            });
+            body: formData,
+          });
 
-          setTimeout(() => {
-            window.location.assign('/');
-          }, 2000);
-        } else {
+          const data = await response.json();
+          if (response.ok) {
+            let username = formData.get('username');
+            let password = formData.get('password');
+
+            setError(''); // Clear any previous error
+            setSuccess("Inscription réussie ! Redirection vers la page d'accueil");
+            window.scrollTo(0, 0); // Scroll to top
+
+            fetch('http://167.172.38.235:3001/api/users/login', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ username, password }),
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                if (data.token) {
+                  localStorage.setItem('authToken', data.token);
+                } else {
+                  setSuccess(''); // Clear any previous success message
+                  setError('Login failed: ' + (data.message || 'Invalid credentials'));
+                  window.scrollTo(0, 0); // Scroll to top
+                }
+              })
+              .catch((error) => {
+                console.error('Error:', error);
+                setSuccess(''); // Clear any previous success message
+                setError('An error occurred. Please try again.');
+                window.scrollTo(0, 0); // Scroll to top
+              });
+
+            setTimeout(() => {
+              window.location.assign('/');
+            }, 2000);
+          } else {
+            setSuccess(''); // Clear any previous success message
+            setError(data.message || 'Une erreur est survenue, merci de réessayer.');
+            window.scrollTo(0, 0); // Scroll to top
+          }
+        } catch (error) {
+          console.error('Error:', error);
           setSuccess(''); // Clear any previous success message
-          setError(data.message || 'Une erreur est survenue, merci de réessayer.');
+          setError('Une erreur est survenue, merci de réessayer.');
           window.scrollTo(0, 0); // Scroll to top
         }
-      } catch (error) {
-        console.error('Error:', error);
-        setSuccess(''); // Clear any previous success message
-        setError('Une erreur est survenue, merci de réessayer.');
-        window.scrollTo(0, 0); // Scroll to top
       }
+
+      
     } else {
       setSuccess(''); // Clear any previous success message
       setError("Échec de l'inscription : Merci de remplir tous les champs requis et de vérifier que les mots de passe correspondent.");

@@ -203,7 +203,7 @@ const AddArticlePage = () => {
                   className="cursor-pointer text-center text-gray-500 w-full h-full flex items-center justify-center"
                 >
                   <span>Glissez et déposez une image ici ou cliquez pour télécharger</span>
-                  <input type="file" id="image-upload" className="hidden" onChange={handleImageUpload} required/>
+                  <input type="file" id="image-upload" accept="image/png, image/jpeg" className="hidden" onChange={handleImageUpload} required/>
                 </label>
               )}
             </div>
