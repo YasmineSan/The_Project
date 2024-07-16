@@ -129,9 +129,6 @@ exports.addArticle = async (req, res) => {
   }
 };
 
-
-
-
 exports.getAllArticlesByUser = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -143,7 +140,7 @@ exports.getAllArticlesByUser = async (req, res) => {
                 FROM Articles a
                 INNER JOIN User_Article ua ON a.article_id = ua.article_id
                 WHERE ua.user_id = ?`,
-        [userId],
+        [userId]
       );
       res.json(result);
     } finally {
@@ -167,7 +164,7 @@ exports.getArticleById = async (req, res) => {
          INNER JOIN Users u ON ua.user_id = u.user_id
          LEFT JOIN Categories c ON a.category_id = c.category_id
          WHERE a.article_id = ?`,
-        [id],
+        [id]
       );
 
       const article = result[0];
@@ -183,7 +180,6 @@ exports.getArticleById = async (req, res) => {
     res.status(500).send({ message: err.message });
   }
 };
-
 
 exports.getAvailableArticles = async (req, res) => {
   try {
@@ -205,7 +201,6 @@ exports.getAvailableArticles = async (req, res) => {
   }
 };
 
-
 exports.updateArticle = async (req, res) => {
   try {
     const { articleId } = req.params;
@@ -214,7 +209,7 @@ exports.updateArticle = async (req, res) => {
       article_description,
       article_price,
       shipping_cost,
-      category_name,
+      category_name
     } = req.body;
     const article_photo = req.file;
     const userId = req.user.id;
@@ -224,7 +219,7 @@ exports.updateArticle = async (req, res) => {
     try {
       const [articleResult] = await connection.execute(
         "SELECT * FROM Articles a INNER JOIN User_Article ua ON a.article_id = ua.article_id WHERE a.article_id = ? AND ua.user_id = ?",
-        [articleId, userId],
+        [articleId, userId]
       );
 
       if (articleResult.length === 0) {
@@ -240,7 +235,7 @@ exports.updateArticle = async (req, res) => {
           Bucket: process.env.DO_SPACES_BUCKET,
           Key: key,
           Body: article_photo.buffer,
-          ACL: "public-read",
+          ACL: "public-read"
         });
         await s3.send(command);
 
@@ -260,8 +255,8 @@ exports.updateArticle = async (req, res) => {
           shipping_cost,
           category_name,
           article_photo_url,
-          articleId,
-        ],
+          articleId
+        ]
       );
 
       res.send({ message: "Article updated successfully" });
@@ -273,7 +268,6 @@ exports.updateArticle = async (req, res) => {
   }
 };
 
-
 exports.deleteArticle = async (req, res) => {
   try {
     const { id } = req.params;
@@ -284,7 +278,7 @@ exports.deleteArticle = async (req, res) => {
     try {
       const [articleResult] = await connection.execute(
         "SELECT * FROM Articles a INNER JOIN User_Article ua ON a.article_id = ua.article_id WHERE a.article_id = ? AND ua.user_id = ?",
-        [id, userId],
+        [id, userId]
       );
 
       if (articleResult.length === 0) {
@@ -296,12 +290,12 @@ exports.deleteArticle = async (req, res) => {
       // Supprimer les entrées dans User_Article
       await connection.execute(
         "DELETE FROM User_Article WHERE article_id = ?",
-        [id],
+        [id]
       );
 
       // Supprimer l'article de la table Articles
       await connection.execute("DELETE FROM Articles WHERE article_id = ?", [
-        id,
+        id
       ]);
 
       res.send({ message: "Article deleted successfully" });
@@ -312,7 +306,6 @@ exports.deleteArticle = async (req, res) => {
     res.status(500).send({ message: err.message });
   }
 };
-
 
 exports.getArticlesByUserId = async (req, res) => {
   try {
@@ -329,7 +322,7 @@ exports.getArticlesByUserId = async (req, res) => {
          INNER JOIN Users u ON ua.user_id = u.user_id
          LEFT JOIN Categories c ON a.category_id = c.category_id
          WHERE ua.user_id = ? AND (a.sold IS NULL OR a.sold = 0)`,
-        [userId],
+        [userId]
       );
 
       console.log('Query result:', result); // Log the result
@@ -350,7 +343,6 @@ exports.getArticlesByUserId = async (req, res) => {
   }
 };
 
-
 exports.addEvaluation = async (req, res) => {
   try {
     const { id } = req.params;
@@ -363,7 +355,7 @@ exports.addEvaluation = async (req, res) => {
       const result = await connection.execute(
         `INSERT INTO Evaluations (article_id, user_id, evaluation_number, evaluation_description)
                 VALUES (?, ?, ?, ?)`,
-        [id, userId, evaluation_number, evaluation_description],
+        [id, userId, evaluation_number, evaluation_description]
       );
 
       res.status(201).send({ message: "Evaluation added successfully" });
@@ -383,7 +375,7 @@ exports.getEvaluations = async (req, res) => {
     try {
       const [result] = await connection.execute(
         "SELECT * FROM Evaluations WHERE article_id = ?",
-        [id],
+        [id]
       );
 
       res.json(result);
@@ -405,7 +397,7 @@ exports.deleteEvaluation = async (req, res) => {
     try {
       await connection.execute(
         "DELETE FROM Evaluations WHERE article_id = ? AND evaluation_id = ? AND user_id = ?",
-        [articleId, evaluationId, userId],
+        [articleId, evaluationId, userId]
       );
 
       res.send({ message: "Évaluation supprimée avec succès" });
@@ -434,7 +426,7 @@ exports.getArticlePrice = async (req, res) => {
     try {
       const [result] = await connection.execute(
         "SELECT article_price FROM Articles WHERE article_id = ?",
-        [id], // Utilisation correcte du paramètre
+        [id] // Utilisation correcte du paramètre
       );
 
       const article = result[0];
@@ -451,16 +443,13 @@ exports.getArticlePrice = async (req, res) => {
   }
 };
 
-
-
-
 exports.getAllArticlePrices = async (_req, res) => {
   try {
     const connection = await pool.getConnection();
 
     try {
       const [result] = await connection.execute(
-        "SELECT article_id, article_price FROM Articles",
+        "SELECT article_id, article_price FROM Articles"
       );
       res.json(result);
     } finally {
@@ -479,7 +468,7 @@ exports.getCategoryArticlePrices = async (req, res) => {
     try {
       const [result] = await connection.execute(
         "SELECT article_id, article_price FROM Articles WHERE category_id = ?",
-        [categoryId],
+        [categoryId]
       );
 
       res.json(result);
@@ -501,7 +490,7 @@ exports.registerUser = async (req, res) => {
     try {
       const result = await connection.execute(
         "INSERT INTO Users (username, password) VALUES (?, ?)",
-        [username, hashedPassword],
+        [username, hashedPassword]
       );
 
       res.status(201).send({ message: "User registered successfully" });
@@ -522,7 +511,7 @@ exports.loginUser = async (req, res) => {
     try {
       const [result] = await connection.execute(
         "SELECT * FROM Users WHERE username = ?",
-        [username],
+        [username]
       );
 
       const user = result[0];
@@ -536,7 +525,7 @@ exports.loginUser = async (req, res) => {
       }
 
       const token = jwt.sign({ id: user.user_id }, process.env.JWT_SECRET, {
-        expiresIn: "1h",
+        expiresIn: "1h"
       });
       res.json({ token });
     } finally {
@@ -566,7 +555,6 @@ exports.getAllArticles = async (req, res) => {
   }
 };
 
-
 // Get all evaluations by user (example definition, adjust as needed)
 exports.getAllEvaluationsByUser = async (req, res) => {
   try {
@@ -575,7 +563,7 @@ exports.getAllEvaluationsByUser = async (req, res) => {
     try {
       const [result] = await connection.execute(
         "SELECT * FROM Evaluations WHERE user_id = ?",
-        [userId],
+        [userId]
       );
       res.json(result);
     } finally {
