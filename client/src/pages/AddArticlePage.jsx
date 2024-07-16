@@ -52,7 +52,7 @@ const AddArticlePage = () => {
     debugFormData(formData);
 
     try {
-      const response = await fetch('https://167.172.38.235:3001/api/articles', {
+      const response = await fetch('/api/articles', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}` // Ajouter le token dans les en-têtes de la requête

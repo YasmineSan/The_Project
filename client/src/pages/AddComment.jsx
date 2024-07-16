@@ -13,7 +13,7 @@ const AddComment = () => {
     e.preventDefault();
     const id = sellerId[1]
     try {
-      const response = await fetch('https://167.172.38.235:3001/api/evaluations', {
+      const response = await fetch('/api/evaluations', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

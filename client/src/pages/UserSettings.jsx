@@ -27,7 +27,7 @@ const SettingsPage = () => {
       const fetchCurrentUser = async () => {
         try {
            
-          const response = await fetch('https://167.172.38.235:3001/api/users/dashboard', {
+          const response = await fetch('/api/users/dashboard', {
             method: 'GET',
             headers: {
               'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
@@ -79,7 +79,7 @@ const SettingsPage = () => {
       
       // Send data to API
       try {
-          const response = await fetch(`https://167.172.38.235:3001/api/users/update/${user.user_id}`, {
+          const response = await fetch(`/api/users/update/${user.user_id}`, {
             method: 'PUT',
             headers: {
               'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
