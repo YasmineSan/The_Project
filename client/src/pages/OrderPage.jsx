@@ -9,7 +9,7 @@ const OrderPage = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await fetch('http://4.233.138.141:3001/api/orders/user', {
+        const response = await fetch('http://167.172.38.235:3001/api/orders/user', {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${localStorage.getItem('authToken')}`,

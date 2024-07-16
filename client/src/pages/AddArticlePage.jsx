@@ -52,7 +52,7 @@ const AddArticlePage = () => {
     debugFormData(formData);
 
     try {
-      const response = await fetch('http://4.233.138.141:3001/api/articles', {
+      const response = await fetch('http://167.172.38.235:3001/api/articles', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}` // Ajouter le token dans les en-têtes de la requête
@@ -67,21 +67,22 @@ const AddArticlePage = () => {
         setError(''); // Clear any previous error
         setSuccess("Article ajouté! Redirection vers votre profil...");
         window.scrollTo(0, 0); // Scroll to top
+        navigate(`/userProfile`)
 
         // Obtenir l'ID de l'article nouvellement créé
-        const articleId = data.article._id;
+        // const articleId = data.article._id;
 
-        // Redirection vers la page de confirmation avec les données du formulaire
-        navigate(`/editArticle/${articleId}`, {
-          state: {
-            image: URL.createObjectURL(image),
-            title,
-            description,
-            category,
-            price,
-            shippingCost
-          }
-        });
+        // // Redirection vers la page de confirmation avec les données du formulaire
+        // navigate(`/editArticle/${articleId}`, {
+        //   state: {
+        //     image: URL.createObjectURL(image),
+        //     title,
+        //     description,
+        //     category,
+        //     price,
+        //     shippingCost
+        //   }
+        // });
       } else {
         setSuccess(''); // Clear any previous success message
         setError(data.message || 'Une erreur est survenue, merci de réessayer.');
@@ -97,7 +98,7 @@ const AddArticlePage = () => {
 
   return (
     <main className="mx-auto px-10 sm:px-12 py-28 bg-gray-100">
-      <div className='bg-white shadow-lg rounded-lg p-8 mb-12'>
+      <div className='bg-white shadow-lg rounded-lg p-8 mb-12 mx-auto lg:max-w-[80%]'>
         <div className="flex flex-col items-center mb-8">
           <h1 className="text-3xl font-semibold text-center py-6">Mise en vente d'un article</h1>
         </div>
@@ -202,7 +203,7 @@ const AddArticlePage = () => {
                   className="cursor-pointer text-center text-gray-500 w-full h-full flex items-center justify-center"
                 >
                   <span>Glissez et déposez une image ici ou cliquez pour télécharger</span>
-                  <input type="file" id="image-upload" className="hidden" onChange={handleImageUpload} required/>
+                  <input type="file" id="image-upload" accept="image/png, image/jpeg" className="hidden" onChange={handleImageUpload} required/>
                 </label>
               )}
             </div>

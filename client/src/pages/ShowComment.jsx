@@ -11,7 +11,7 @@ const ShowComment = () => {
     const fetchComments = async () => {
       const id = sellerId[1];
       try {
-        const response = await fetch(`http://4.233.138.141:3001/api/evaluations/${id}`, {
+        const response = await fetch(`http://167.172.38.235:3001/api/evaluations/${id}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -33,7 +33,7 @@ const ShowComment = () => {
 
   const handleDeleteComment = async (id) => {
     try {
-      const response = await fetch(`http://4.233.138.141:3001/api/evaluations/${id}`, {
+      const response = await fetch(`http://167.172.38.235:3001/api/evaluations/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

@@ -9,8 +9,11 @@ const SignupSection = ({ setIsLogin }) => {
   const [success, setSuccess] = useState('');
   const [isHovered, setIsHovered] = useState(false);
   const [profileImage, setProfileImage] = useState(null);
+  const [passwordStrength, setPasswordStrength] = useState(0);
 
   const formRef = useRef(null);
+
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
   const handleSignup = async (e) => {
     e.preventDefault();
@@ -21,60 +24,71 @@ const SignupSection = ({ setIsLogin }) => {
     const password = formData.get('password');
     const confirmPassword = formData.get('confirm_password');
 
+    console.log('Password:', password);
+    console.log('Confirm Password:', confirmPassword);
+
     if (password && confirmPassword && password === confirmPassword) {
-      try {
-        const response = await fetch('http://4.233.138.141:3001/api/users/register', {
-          method: 'POST',
-          body: formData
-        });
+      if (passwordStrength != 5) {
+        setError('Le mot de passe doit contenir au moins 8 caractères, une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial.');
+        window.scrollTo(0, 0); // Scroll to top
+      } else {
 
-        const data = await response.json();
-        if (response.ok) {
-          let username = formData.get('username');
-          let password = formData.get('password');
-
-          setError(''); // Clear any previous error
-          setSuccess("Inscription réussie ! Redirection vers la page d'accueil");
-          window.scrollTo(0, 0); // Scroll to top
-
-          fetch('http://4.233.138.141:3001/api/users/login', {
+        try {
+          const response = await fetch('http://167.172.38.235:3001/api/users/register', {
             method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({username, password})
-          })
-            .then(response => response.json())
-            .then(data => {
-              if (data.token) {
-                localStorage.setItem('authToken', data.token);
-              } else {
-                setSuccess(''); // Clear any previous success message
-                setError('Login failed: ' + (data.message || 'Invalid credentials'));
-                window.scrollTo(0, 0); // Scroll to top
-              }
-            })
-            .catch(error => {
-              console.error('Error:', error);
-              setSuccess(''); // Clear any previous success message
-              setError('An error occurred. Please try again.');
-              window.scrollTo(0, 0); // Scroll to top
-            });
+            body: formData,
+          });
 
-          setTimeout(() => {
-            window.location.assign('/');
-          }, 2000);
-        } else {
+          const data = await response.json();
+          if (response.ok) {
+            let username = formData.get('username');
+            let password = formData.get('password');
+
+            setError(''); // Clear any previous error
+            setSuccess("Inscription réussie ! Redirection vers la page d'accueil");
+            window.scrollTo(0, 0); // Scroll to top
+
+            fetch('http://167.172.38.235:3001/api/users/login', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ username, password }),
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                if (data.token) {
+                  localStorage.setItem('authToken', data.token);
+                } else {
+                  setSuccess(''); // Clear any previous success message
+                  setError('Login failed: ' + (data.message || 'Invalid credentials'));
+                  window.scrollTo(0, 0); // Scroll to top
+                }
+              })
+              .catch((error) => {
+                console.error('Error:', error);
+                setSuccess(''); // Clear any previous success message
+                setError('An error occurred. Please try again.');
+                window.scrollTo(0, 0); // Scroll to top
+              });
+
+            setTimeout(() => {
+              window.location.assign('/');
+            }, 2000);
+          } else {
+            setSuccess(''); // Clear any previous success message
+            setError(data.message || 'Une erreur est survenue, merci de réessayer.');
+            window.scrollTo(0, 0); // Scroll to top
+          }
+        } catch (error) {
+          console.error('Error:', error);
           setSuccess(''); // Clear any previous success message
-          setError(data.message || 'Une erreur est survenue, merci de réessayer.');
+          setError('Une erreur est survenue, merci de réessayer.');
           window.scrollTo(0, 0); // Scroll to top
         }
-      } catch (error) {
-        console.error('Error:', error);
-        setSuccess(''); // Clear any previous success message
-        setError('Une erreur est survenue, merci de réessayer.');
-        window.scrollTo(0, 0); // Scroll to top
       }
+
+      
     } else {
       setSuccess(''); // Clear any previous success message
       setError("Échec de l'inscription : Merci de remplir tous les champs requis et de vérifier que les mots de passe correspondent.");
@@ -109,6 +123,22 @@ const SignupSection = ({ setIsLogin }) => {
 
   const handleMouseLeave = () => {
     setIsHovered(false);
+  };
+
+  const handlePasswordChange = (e) => {
+    const password = e.target.value;
+    const strength = calculatePasswordStrength(password);
+    setPasswordStrength(strength);
+  };
+
+  const calculatePasswordStrength = (password) => {
+    let strength = 0;
+    if (password.length >= 8) strength += 1;
+    if (/[A-Z]/.test(password)) strength += 1;
+    if (/[a-z]/.test(password)) strength += 1;
+    if (/\d/.test(password)) strength += 1;
+    if (/[@$!%*?&.\])(\\\[\/]/.test(password)) strength += 1;
+    return strength;
   };
 
   return (
@@ -162,6 +192,7 @@ const SignupSection = ({ setIsLogin }) => {
               name="password"
               className="w-full px-3 py-2 border rounded pr-10"
               required
+              onChange={handlePasswordChange}
             />
             <div
               className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
@@ -169,6 +200,13 @@ const SignupSection = ({ setIsLogin }) => {
             >
               {showPassword ? <FiEyeOff className="text-gray-700" /> : <FiEye className="text-gray-700" />}
             </div>
+          </div>
+          {passwordStrength < 5 && passwordStrength > 0 && <div className="text-red-600 text-sm mt-1">Le mot de passe doit contenir au moins 8 caractères, une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial.</div>}
+          <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+            <div
+              className={`h-2 rounded-full ${passwordStrength >= 5 ? 'bg-green-500' : passwordStrength >= 2 ? 'bg-yellow-500' : 'bg-red-500'}`}
+              style={{ width: `${(passwordStrength / 5) * 100}%` }}
+            ></div>
           </div>
         </div>
         <div className="mb-6 relative">

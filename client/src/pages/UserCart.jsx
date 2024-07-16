@@ -40,7 +40,7 @@ const CheckoutForm = ({ total, cart, setCart, handleRemoveItem }) => {
       // Ajoute une commande
       const handleAddOrder = async () => {
         try {
-          const response = await fetch('http://4.233.138.141:3001/orders', {
+          const response = await fetch('http://167.172.38.235:3001/orders', {
             method: 'POST',
             headers: {
               'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
@@ -84,7 +84,7 @@ export const UserCart = () => {
     window.scrollTo(0, 0); // Scroll to top
     const fetchCart = async () => {
       try {
-        const response = await fetch('http://4.233.138.141:3001/api/cart/user', {
+        const response = await fetch('http://167.172.38.235:3001/api/cart/user', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -110,7 +110,7 @@ export const UserCart = () => {
 
   const handleRemoveItem = async (id) => {
     try {
-      const response = await fetch(`http://4.233.138.141:3001/api/cart/${id}`, {
+      const response = await fetch(`http://167.172.38.235:3001/api/cart/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
