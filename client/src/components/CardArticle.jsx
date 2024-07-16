@@ -17,7 +17,7 @@ const CardArticle = ({ id, image, title, price }) => {
     e.stopPropagation();
     const number = 1;
     try {
-      const response = await fetch('http://167.172.38.235:3001/api/cart', {
+      const response = await fetch('https://167.172.38.235:3001/api/cart', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

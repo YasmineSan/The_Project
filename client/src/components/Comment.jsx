@@ -5,7 +5,7 @@ const generateStars = (rating) => {
   const stars = [];
   for (let i = 0; i < 5; i++) {
     stars.push(
-      <svg key={i} xmlns="http://www.w3.org/2000/svg" className={`h-5 w-5 ${i < rating ? 'text-yellow-500' : 'text-gray-300'}`} viewBox="0 0 20 20" fill="currentColor">
+      <svg key={i} xmlns="https://www.w3.org/2000/svg" className={`h-5 w-5 ${i < rating ? 'text-yellow-500' : 'text-gray-300'}`} viewBox="0 0 20 20" fill="currentColor">
         <path d="M10 15l-5.5 3 1-5.8L0 7.6l5.8-.8L10 2l2.2 4.8 5.8.8-4.3 4.6 1 5.8L10 15z" />
       </svg>
     );
@@ -53,7 +53,7 @@ export default Comment;
 //   const stars = [];
 //   for (let i = 0; i < 5; i++) {
 //     stars.push(
-//       <svg key={i} xmlns="http://www.w3.org/2000/svg" className={`h-5 w-5 ${i < rating ? 'text-yellow-500' : 'text-gray-300'}`} viewBox="0 0 20 20" fill="currentColor">
+//       <svg key={i} xmlns="https://www.w3.org/2000/svg" className={`h-5 w-5 ${i < rating ? 'text-yellow-500' : 'text-gray-300'}`} viewBox="0 0 20 20" fill="currentColor">
 //         <path d="M10 15l-5.5 3 1-5.8L0 7.6l5.8-.8L10 2l2.2 4.8 5.8.8-4.3 4.6 1 5.8L10 15z" />
 //       </svg>
 //     );
