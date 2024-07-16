@@ -1,9 +1,9 @@
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
 const { pool } = require("../utils/db");
 const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
 const path = require("path");
 const { v4: uuidv4 } = require("uuid");
+const { sendConfirmationEmail } = require('./emailController'); // Importez la fonction sendConfirmationEmail
 
 // Configure AWS S3
 const s3 = new S3Client({
@@ -65,7 +65,6 @@ exports.registerUser = async (req, res) => {
       });
       await s3.send(command);
 
-      // Assure-toi que l'URL est correctement formée
       const endpoint = process.env.DO_SPACES_ENDPOINT.replace('https://', '');
       profile_image_url = `https://${process.env.DO_SPACES_BUCKET}.${endpoint}/${key}`;
     }
@@ -107,7 +106,15 @@ exports.registerUser = async (req, res) => {
       ],
     );
 
-    res.status(201).send({ message: "User registered successfully" });
+    // Envoyez l'email de confirmation après avoir enregistré l'utilisateur
+    try {
+      await sendConfirmationEmail(email, username);
+      res.status(201).send({ message: "User registered successfully and confirmation email sent." });
+    } catch (emailError) {
+      console.error("Error sending confirmation email:", emailError);
+      res.status(201).send({ message: "User registered successfully but failed to send confirmation email." });
+    }
+
   } catch (err) {
     console.error("Error:", err);
     res.status(500).send({ message: err.message });
@@ -115,7 +122,6 @@ exports.registerUser = async (req, res) => {
     if (connection) connection.release();
   }
 };
-
 
 exports.getAllUsers = async (req, res) => {
   let connection;
