@@ -3,6 +3,7 @@ const { pool } = require("../utils/db");
 const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
 const path = require("path");
 const { v4: uuidv4 } = require("uuid");
+const jwt = require("jsonwebtoken");
 const { sendConfirmationEmail } = require('./emailController'); // Importez la fonction sendConfirmationEmail
 
 // Configure AWS S3
