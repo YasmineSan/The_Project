@@ -11,7 +11,7 @@ app.use(helmet());
 // Middleware pour gérer les CORS
 app.use(
   cors({
-    origin: "http://localhost:5173", // Remplace par l'origine de ton frontend
+    origin: "https://ecommerce-craftify.netlify.app", // Remplace par l'origine de ton frontend déployé
   }),
 );
 
@@ -19,7 +19,7 @@ app.use(
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
-// Middleware to capture raw request body
+// Middleware pour capturer le corps brut des requêtes
 app.use(
   express.json({
     limit: "5mb",
@@ -29,33 +29,42 @@ app.use(
   }),
 );
 
+// Redirection HTTP vers HTTPS
+app.use((req, res, next) => {
+  if (req.secure) {
+    next();
+  } else {
+    res.redirect(`https://${req.headers.host}${req.url}`);
+  }
+});
+
 // Importer et utiliser les routes
-app.use("/api/users", require("./routes/userRoutes"));
-app.use("/api/articles", require("./routes/articleRoutes"));
-app.use("/api/cart", require("./routes/cartRoutes"));
-app.use("/api/categories", require("./routes/categoryRoutes"));
-app.use("/api/email", require("./routes/emailRoutes"));
-app.use("/api/evaluation", require("./routes/evaluationRoutes"));
-app.use("/api/favorite", require("./routes/favoriteRoutes"));
-app.use("/api/order", require("./routes/orderRoutes"));
-app.use("/api/payment", require("./routes/paymentRoutes"));
-app.use("/api/webhook", require("./routes/webhookRoutes"));
+app.use("/api/users", require("./src/routes/userRoutes"));
+app.use("/api/articles", require("./src/routes/articleRoutes"));
+app.use("/api/cart", require("./src/routes/cartRoutes"));
+app.use("/api/categories", require("./src/routes/categoryRoutes"));
+app.use("/api/email", require("./src/routes/emailRoutes"));
+app.use("/api/evaluation", require("./src/routes/evaluationRoutes"));
+app.use("/api/favorite", require("./src/routes/favoriteRoutes"));
+app.use("/api/order", require("./src/routes/orderRoutes"));
+app.use("/api/payment", require("./src/routes/paymentRoutes"));
+app.use("/api/webhook", require("./src/routes/webhookRoutes"));
 
 // Serve HTML files
 app.get("/login", (req, res) => {
-  res.sendFile(path.join(__dirname, "views", "login.html"));
+  res.sendFile(path.join(__dirname, "src/views", "login.html"));
 });
 
 app.get("/register", (req, res) => {
-  res.sendFile(path.join(__dirname, "views", "register.html"));
+  res.sendFile(path.join(__dirname, "src/views", "register.html"));
 });
 
 app.get("/dashboard", (req, res) => {
-  res.sendFile(path.join(__dirname, "views", "dashboard.html"));
+  res.sendFile(path.join(__dirname, "src/views", "dashboard.html"));
 });
 
 app.get("/profile", (req, res) => {
-  res.sendFile(path.join(__dirname, "views", "profile.html"));
+  res.sendFile(path.join(__dirname, "src/views", "profile.html"));
 });
 
 app.get("/", (req, res) => {
