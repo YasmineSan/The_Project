@@ -34,7 +34,7 @@ const SignupSection = ({ setIsLogin }) => {
       } else {
 
         try {
-          const response = await fetch('http://167.172.38.235:3001/api/users/register', {
+          const response = await fetch('https://167.172.38.235:3001/api/users/register', {
             method: 'POST',
             body: formData,
           });
@@ -48,7 +48,7 @@ const SignupSection = ({ setIsLogin }) => {
             setSuccess("Inscription réussie ! Redirection vers la page d'accueil");
             window.scrollTo(0, 0); // Scroll to top
 
-            fetch('http://167.172.38.235:3001/api/users/login', {
+            fetch('https://167.172.38.235:3001/api/users/login', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',

@@ -11,7 +11,7 @@ const ShowComment = () => {
     const fetchComments = async () => {
       const id = sellerId[1];
       try {
-        const response = await fetch(`http://167.172.38.235:3001/api/evaluations/${id}`, {
+        const response = await fetch(`https://167.172.38.235:3001/api/evaluations/${id}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -33,7 +33,7 @@ const ShowComment = () => {
 
   const handleDeleteComment = async (id) => {
     try {
-      const response = await fetch(`http://167.172.38.235:3001/api/evaluations/${id}`, {
+      const response = await fetch(`https://167.172.38.235:3001/api/evaluations/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -65,7 +65,7 @@ const ShowComment = () => {
         <div className="flex items-center">
           <div className="flex">
             {/* {[...Array(Math.round(averageRating))].map((_, index) => (
-              <svg key={index} xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-yellow-500 fill-current" viewBox="0 0 20 20">
+              <svg key={index} xmlns="https://www.w3.org/2000/svg" className="h-5 w-5 text-yellow-500 fill-current" viewBox="0 0 20 20">
                 <path d="M10 1l2.1 6.4H18l-5.3 3.9 2.1 6.4-5.5-4-5.5 4 2.1-6.4L2 7.4h5.9L10 1z" />
               </svg>
             ))} */}
@@ -148,7 +148,7 @@ export default ShowComment;
 //           {/* Affichage des étoiles (à adapter selon le besoin) */}
 //           <div className="flex">
 //             {[...Array(Math.round(averageRating))].map((_, index) => (
-//               <svg key={index} xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-yellow-500 fill-current" viewBox="0 0 20 20">
+//               <svg key={index} xmlns="https://www.w3.org/2000/svg" className="h-5 w-5 text-yellow-500 fill-current" viewBox="0 0 20 20">
 //                 <path d="M10 1l2.1 6.4H18l-5.3 3.9 2.1 6.4-5.5-4-5.5 4 2.1-6.4L2 7.4h5.9L10 1z" />
 //               </svg>
 //             ))}
