@@ -11,7 +11,7 @@ app.use(helmet());
 // Middleware pour gérer les CORS
 app.use(
   cors({
-    origin: "https://ecommerce-craftify.netlify.app", // Remplace par l'origine de ton frontend déployé
+    origin: "https://main--ecommerce-craftify.netlify.app", // Remplace par l'origine de ton frontend déployé
   }),
 );
 
