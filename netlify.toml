@@ -13,3 +13,10 @@
   to = "https://167.172.38.235:3001/api/:splat"
   status = 200
   force = true
+
+  [[headers]]
+  for = "/api/"
+  [headers.values]
+    Access-Control-Allow-Origin = ""
+    Access-Control-Allow-Methods = "GET, POST, OPTIONS"
+    Access-Control-Allow-Headers = "Content-Type
