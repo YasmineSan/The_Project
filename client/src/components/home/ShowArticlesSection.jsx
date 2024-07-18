@@ -18,7 +18,9 @@ export const ShowArticlesSection = () => {
           throw new Error('Network response was not ok');
         }
 
+        console.log(response)
         const data = await response.json();
+        
         setArticles(data);
         
       } catch (error) {
