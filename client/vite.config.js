@@ -9,7 +9,7 @@ export default defineConfig(({ command }) => {
     server: {
       port: 5173,
       strictPort: true,
-      host: '0.0.0.0', // Allow access from any network
+      host: '0.0.0.0',
       proxy: {
         '/api': {
           target: 'https://craftify-ekc4.onrender.com',

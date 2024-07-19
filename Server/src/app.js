@@ -5,10 +5,10 @@ const cors = require("cors");
 
 const app = express();
 
-// Middleware pour sécuriser les en-têtes HTTP
+// Middleware to secure HTTP headers
 app.use(helmet());
 
-// Middleware pour gérer les CORS
+// CORS Middleware
 const allowedOrigins = [
   "https://ecommerce-craftify.netlify.app",
   "https://669a9a2052b089781bc885d7--ecommerce-craftify.netlify.app"
@@ -28,11 +28,11 @@ app.use(cors({
   credentials: true
 }));
 
-// Middleware pour parser les requêtes JSON et URL-encoded
+// Middleware to parse JSON and URL-encoded requests
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
-// Middleware pour capturer le corps brut des requêtes
+// Middleware to capture raw body of requests
 app.use(express.json({
   limit: "5mb",
   verify: (req, _res, buf) => {
@@ -40,7 +40,7 @@ app.use(express.json({
   }
 }));
 
-// Ajout des en-têtes de contrôle d'accès pour toutes les réponses
+// Add Access-Control headers to all responses
 app.use((req, res, next) => {
   const origin = req.headers.origin;
   if (allowedOrigins.includes(origin)) {
@@ -51,7 +51,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// Gérer explicitement les requêtes preflight OPTIONS
+// Explicitly handle preflight OPTIONS requests
 app.options('*', (req, res) => {
   res.setHeader("Access-Control-Allow-Origin", req.headers.origin);
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
@@ -59,7 +59,7 @@ app.options('*', (req, res) => {
   res.sendStatus(200);
 });
 
-// Importer et utiliser les routes
+// Import and use routes
 app.use("/api/users", require("./routes/userRoutes"));
 app.use("/api/articles", require("./routes/articleRoutes"));
 app.use("/api/cart", require("./routes/cartRoutes"));
