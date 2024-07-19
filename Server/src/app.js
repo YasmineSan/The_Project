@@ -9,11 +9,20 @@ const app = express();
 app.use(helmet());
 
 // Middleware pour gérer les CORS
+const allowedOrigins = [
+  "https://ecommerce-craftify.netlify.app",
+  "https://669a9a2052b089781bc885d7--ecommerce-craftify.netlify.app"
+];
+
 app.use(cors({
-  origin: [
-    "https://ecommerce-craftify.netlify.app",
-    "https://669a9a2052b089781bc885d7--ecommerce-craftify.netlify.app"
-  ],
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
@@ -33,10 +42,6 @@ app.use(express.json({
 
 // Ajout des en-têtes de contrôle d'accès pour toutes les réponses
 app.use((req, res, next) => {
-  const allowedOrigins = [
-    "https://ecommerce-craftify.netlify.app",
-    "https://669a9a2052b089781bc885d7--ecommerce-craftify.netlify.app"
-  ];
   const origin = req.headers.origin;
   if (allowedOrigins.includes(origin)) {
     res.setHeader("Access-Control-Allow-Origin", origin);
@@ -44,6 +49,11 @@ app.use((req, res, next) => {
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
   next();
+});
+
+// Gérer explicitement les requêtes preflight OPTIONS
+app.options('*', (req, res) => {
+  res.sendStatus(200);
 });
 
 // Importer et utiliser les routes
@@ -80,5 +90,4 @@ app.get("/", (req, res) => {
 });
 
 module.exports = app;
-
 
