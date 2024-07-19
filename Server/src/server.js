@@ -1,11 +1,11 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const dotenv = require("dotenv");
-const { pool } = require("./utils/db"); // Chemin mis à jour
+const express = require('express');
+const bodyParser = require('body-parser');
+const dotenv = require('dotenv');
+const { pool } = require('./utils/db'); // Ensure correct path to db.js
 
 dotenv.config();
 
-const app = require("./app"); // Chemin mis à jour
+const app = require('./app'); // Ensure correct path to app.js
 
 // Middlewares
 app.use(bodyParser.json());
@@ -16,16 +16,19 @@ const PORT = process.env.PORT || 3001;
 // Test database connection and start server
 const startServer = async () => {
   try {
-    const connection = await pool.getConnection(); // Utilisation correcte de pool pour MySQL
-    console.log(`Successfully connected to the database`);
-    connection.release(); // Libération de la connexion après le test
+    const connection = await pool.getConnection(); // Ensure correct usage of pool for MySQL
+    console.log('Successfully connected to the database');
+    connection.release(); // Release connection after test
 
-    // Démarrer le serveur après avoir vérifié la connexion à la base de données
-    app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
+    // Start the server after verifying database connection
+    https.createServer({
+      key: fs.readFileSync(path.join(__dirname, 'selfsigned.key')),
+      cert: fs.readFileSync(path.join(__dirname, 'selfsigned.crt')),
+    }, app).listen(PORT, '0.0.0.0', () => {
+      console.log(`HTTPS Server is running on https://0.0.0.0:${PORT}`);
     });
   } catch (err) {
-    console.error("Failed to connect to the database:", err);
+    console.error('Failed to connect to the database:', err);
     process.exit(1);
   }
 };

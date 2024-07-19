@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
-const app = require('./src/app'); // Correct path to app.js
+const app = require('./src/app'); // Ensure correct path to app.js
 
 // HTTPS options
 const httpsOptions = {
