@@ -52,7 +52,7 @@ const AddArticlePage = () => {
     debugFormData(formData);
 
     try {
-      const response = await fetch('https://craftify-ekc4.onrender.com/api/articles', {
+      const response = await fetch('/api/articles', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}` // Ajouter le token dans les en-têtes de la requête

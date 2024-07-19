@@ -34,7 +34,7 @@ const SignupSection = ({ setIsLogin }) => {
       } else {
 
         try {
-          const response = await fetch('https://craftify-ekc4.onrender.com/api/users/register', {
+          const response = await fetch('/api/users/register', {
             method: 'POST',
             body: formData,
           });

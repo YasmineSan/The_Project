@@ -9,7 +9,7 @@ const OrderPage = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await fetch('https://craftify-ekc4.onrender.com/api/orders/user', {
+        const response = await fetch('/api/orders/user', {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${localStorage.getItem('authToken')}`,

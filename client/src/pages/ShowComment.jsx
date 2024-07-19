@@ -11,7 +11,7 @@ const ShowComment = () => {
     const fetchComments = async () => {
       const id = sellerId[1];
       try {
-        const response = await fetch(`https://craftify-ekc4.onrender.com/api/evaluations/${id}`, {
+        const response = await fetch(`/api/evaluations/${id}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -33,7 +33,7 @@ const ShowComment = () => {
 
   const handleDeleteComment = async (id) => {
     try {
-      const response = await fetch(`https://craftify-ekc4.onrender.com/api/evaluations/${id}`, {
+      const response = await fetch(`/api/evaluations/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

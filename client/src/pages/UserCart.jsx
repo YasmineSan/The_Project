@@ -40,7 +40,7 @@ const CheckoutForm = ({ total, cart, setCart, handleRemoveItem }) => {
       // Ajoute une commande
       const handleAddOrder = async () => {
         try {
-          const response = await fetch('https://craftify-ekc4.onrender.com/orders', {
+          const response = await fetch('/orders', {
             method: 'POST',
             headers: {
               'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
@@ -84,7 +84,7 @@ export const UserCart = () => {
     window.scrollTo(0, 0); // Scroll to top
     const fetchCart = async () => {
       try {
-        const response = await fetch('https://craftify-ekc4.onrender.com/api/cart/user', {
+        const response = await fetch('/api/cart/user', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -110,7 +110,7 @@ export const UserCart = () => {
 
   const handleRemoveItem = async (id) => {
     try {
-      const response = await fetch(`https://craftify-ekc4.onrender.com/api/cart/${id}`, {
+      const response = await fetch(`/api/cart/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
