@@ -1,12 +1,12 @@
 import { defineConfig } from 'vite';
- // Si tu utilises Vue.js, sinon ajuste pour React ou autre
+import react from '@vitejs/plugin-react';
 
 export default defineConfig({
-    plugins: [],
+    plugins: [react()],
     server: {
-        port: 5173, // Définit le port à 3000
-        strictPort: true, // Si le port est déjà utilisé, Vite échouera au lieu d'utiliser un autre port
-        host: '0.0.0.0', // Si tu veux que le serveur soit accessible sur ton réseau local
+        port: 5173, // 
+        strictPort: true, // Vite will fail if the port is already in use
+        host: true, // Server will be accessible on your local network
     },
-    // Autres configurations possibles
+    // Other possible configurations
 });
