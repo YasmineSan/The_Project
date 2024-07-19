@@ -10,7 +10,7 @@
 
 [[redirects]]
   from = "/api/*"
-  to = "https://craftify-ekc4.onrender.com/api/:splat"
+  to = "http://craftify-ekc4.onrender.com/api/:splat"
   status = 200
   force = true
 
