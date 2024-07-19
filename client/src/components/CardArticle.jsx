@@ -21,7 +21,8 @@ const CardArticle = ({ id, image, title, price }) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+          'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+          
         },
         body: JSON.stringify({ "articleId": id, "quantity": number })
       });

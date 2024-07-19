@@ -9,28 +9,24 @@ const app = express();
 app.use(helmet());
 
 // Middleware pour gérer les CORS
-app.use(
-  cors({
-    origin: ["https://ecommerce-craftify.netlify.app"], // Origins
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true,
-  }),
-);
+app.use(cors({
+  origin: ["https://ecommerce-craftify.netlify.app"], // Corrected origin
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
 
 // Middleware pour parser les requêtes JSON et URL-encoded
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
 // Middleware pour capturer le corps brut des requêtes
-app.use(
-  express.json({
-    limit: "5mb",
-    verify: (req, _res, buf) => {
-      req.rawBody = buf.toString();
-    },
-  }),
-);
+app.use(express.json({
+  limit: "5mb",
+  verify: (req, _res, buf) => {
+    req.rawBody = buf.toString();
+  }
+}));
 
 // Ajout des en-têtes de contrôle d'accès pour toutes les réponses
 app.use((req, res, next) => {
@@ -41,16 +37,16 @@ app.use((req, res, next) => {
 });
 
 // Importer et utiliser les routes
-app.use("/api/users", require("./routes/userRoutes")); // Chemin mis à jour
-app.use("/api/articles", require("./routes/articleRoutes")); // Chemin mis à jour
-app.use("/api/cart", require("./routes/cartRoutes")); // Chemin mis à jour
-app.use("/api/categories", require("./routes/categoryRoutes")); // Chemin mis à jour
-app.use("/api/email", require("./routes/emailRoutes")); // Chemin mis à jour
-app.use("/api/evaluation", require("./routes/evaluationRoutes")); // Chemin mis à jour
-app.use("/api/favorite", require("./routes/favoriteRoutes")); // Chemin mis à jour
-app.use("/api/order", require("./routes/orderRoutes")); // Chemin mis à jour
-app.use("/api/payment", require("./routes/paymentRoutes")); // Chemin mis à jour
-app.use("/api/webhook", require("./routes/webhookRoutes")); // Chemin mis à jour
+app.use("/api/users", require("./routes/userRoutes"));
+app.use("/api/articles", require("./routes/articleRoutes"));
+app.use("/api/cart", require("./routes/cartRoutes"));
+app.use("/api/categories", require("./routes/categoryRoutes"));
+app.use("/api/email", require("./routes/emailRoutes"));
+app.use("/api/evaluation", require("./routes/evaluationRoutes"));
+app.use("/api/favorite", require("./routes/favoriteRoutes"));
+app.use("/api/order", require("./routes/orderRoutes"));
+app.use("/api/payment", require("./routes/paymentRoutes"));
+app.use("/api/webhook", require("./routes/webhookRoutes"));
 
 // Serve HTML files
 app.get("/login", (req, res) => {
@@ -70,9 +66,8 @@ app.get("/profile", (req, res) => {
 });
 
 app.get("/", (req, res) => {
-  res.send(
-    '<h1>Welcome</h1><a href="/login">Login</a> or <a href="/register">Register</a>',
-  );
+  res.send('<h1>Welcome</h1><a href="/login">Login</a> or <a href="/register">Register</a>');
 });
 
 module.exports = app;
+
