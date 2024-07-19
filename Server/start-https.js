@@ -1,16 +1,18 @@
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
-const app = require('./src/app'); // Chemin correct vers app.js
+const app = require('./src/app'); // Correct path to app.js
 
-// Options pour HTTPS
+// HTTPS options
 const httpsOptions = {
   key: fs.readFileSync(path.join(__dirname, 'selfsigned.key')),
   cert: fs.readFileSync(path.join(__dirname, 'selfsigned.crt')),
 };
 
-// Démarrer le serveur HTTPS
+// Start the HTTPS server
 const PORT = process.env.PORT || 3001;
-https.createServer(httpsOptions, app).listen(PORT, () => {
-  console.log(`HTTPS Server is running on port ${PORT}`);
+const HOST = '0.0.0.0'; // Ensure the server listens on all network interfaces
+
+https.createServer(httpsOptions, app).listen(PORT, HOST, () => {
+  console.log(`HTTPS Server is running on https://${HOST}:${PORT}`);
 });
