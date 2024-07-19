@@ -13,14 +13,17 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 const PORT = process.env.PORT || 3001;
 
-// Test database connection
+// Test database connection and start server
 const startServer = async () => {
   try {
     const connection = await pool.getConnection(); // Utilisation correcte de pool pour MySQL
     console.log(`Successfully connected to the database`);
     connection.release(); // Libération de la connexion après le test
 
-    // Serveur HTTPS démarré via start-https.js
+    // Démarrer le serveur après avoir vérifié la connexion à la base de données
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
   } catch (err) {
     console.error("Failed to connect to the database:", err);
     process.exit(1);
@@ -28,5 +31,3 @@ const startServer = async () => {
 };
 
 startServer();
-
-module.exports = app;
