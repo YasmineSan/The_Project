@@ -1,0 +1,2 @@
+# Redirect all API requests to the backend server
+/api/*  https://craftify-ekc4.onrender.com/:splat 200
