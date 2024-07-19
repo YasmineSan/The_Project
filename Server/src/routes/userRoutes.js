@@ -40,4 +40,5 @@ router.put(
   upload.single("profile_image"),
   userController.updateUser,
 );
+
 module.exports = router;
