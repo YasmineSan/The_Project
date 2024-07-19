@@ -11,7 +11,10 @@ app.use(helmet());
 // Middleware pour gérer les CORS
 app.use(
   cors({
-    origin: ["https://ecommerce-craftify.netlify.app/"], // Origins
+    origin: ["https://ecommerce-craftify.netlify.app"], // Origins
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
   }),
 );
 
@@ -28,6 +31,14 @@ app.use(
     },
   }),
 );
+
+// Ajout des en-têtes de contrôle d'accès pour toutes les réponses
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "https://ecommerce-craftify.netlify.app");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  next();
+});
 
 // Importer et utiliser les routes
 app.use("/api/users", require("./routes/userRoutes")); // Chemin mis à jour
