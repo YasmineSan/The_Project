@@ -1,5 +1,5 @@
 # Redirect all API requests to the backend server
-/api/*  http://craftify-ekc4.onrender.com/:splat 200
+/api/*  http://craftify-ekc4.onrender.com/api/:splat 200
 
 # Catch-all fallback to index.html for single-page applications
 /* /index.html 200
