@@ -19,7 +19,7 @@ export const UserProfile = () => {
 
       const fetchOtherUserProfile = async () => { // Récupérer le profil de l'autre utilisateur
         try {
-          const response = await fetch(`/api/users/${id}`, {
+          const response = await fetch(`https://craftify-ekc4.onrender.com/api/users/${id}`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -41,7 +41,7 @@ export const UserProfile = () => {
 
       const fetchOtherUserArticles = async () => { // Récupérer les articles d'un autre utilisateur
         try {
-          const response = await fetch(`/api/articles/user/${id}/articles`, {
+          const response = await fetch(`https://craftify-ekc4.onrender.com/api/articles/user/${id}/articles`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -66,7 +66,7 @@ export const UserProfile = () => {
 
       const fetchCurrentUser = async () => { // Récupérer le profil de l'utilisateur en cours
         try {
-          const response = await fetch(`/api/users/dashboard`, {
+          const response = await fetch(`https://craftify-ekc4.onrender.com/api/users/dashboard`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -89,7 +89,7 @@ export const UserProfile = () => {
 
       const fetchUserArticles = async () => { // Récupérer les articles de l'utilisateur en cours
         try {
-          const response = await fetch(`/api/articles/user/articles`, {
+          const response = await fetch(`https://craftify-ekc4.onrender.com/api/articles/user/articles`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',

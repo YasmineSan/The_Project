@@ -8,7 +8,7 @@ const FavoriteCard = ({ id, image, title, price, onRemoveFromFavorites }) => {
 
   const handleRemoveClick = async () => {
     try {
-      const response = await fetch(`/api/favorite/${id}`, {
+      const response = await fetch(`https://craftify-ekc4.onrender.com/api/favorite/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

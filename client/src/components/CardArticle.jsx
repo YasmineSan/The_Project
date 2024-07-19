@@ -17,7 +17,7 @@ const CardArticle = ({ id, image, title, price }) => {
     e.stopPropagation();
     const number = 1;
     try {
-      const response = await fetch('/api/cart', {
+      const response = await fetch('https://craftify-ekc4.onrender.com/api/cart', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -10,7 +10,7 @@ const FavoritePage = () => {
     window.scrollTo(0, 0); // Scroll to top
     const fetchFavoriteArticles = async () => {
       try {
-        const response = await fetch('/api/favorite/user', {
+        const response = await fetch('https://craftify-ekc4.onrender.com/api/favorite/user', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

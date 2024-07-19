@@ -24,7 +24,7 @@ const EditArticle = () => {
 
   const fetchArticle = async (id) => {
     try {
-      const response = await fetch(`/api/articles/article/${id}`, {
+      const response = await fetch(`https://craftify-ekc4.onrender.com/api/articles/article/${id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -102,7 +102,7 @@ const EditArticle = () => {
     }
 
     try {
-      const response = await fetch(`/api/articles/${articleId}`, {
+      const response = await fetch(`https://craftify-ekc4.onrender.com/api/articles/${articleId}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('authToken')}`,

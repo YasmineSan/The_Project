@@ -50,7 +50,7 @@ const AllArticles = () => {
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const response = await fetch('/api/articles/available-articles', {
+        const response = await fetch('https://craftify-ekc4.onrender.com/api/articles/available-articles', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json'

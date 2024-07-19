@@ -37,7 +37,7 @@ const ContactUser = () => {
 
   const fetchOtherUserProfile = async () => {//Récupérer le profil de l'autre utilisateur
     try {
-      const response = await fetch(`/api/users/${userId}`, {
+      const response = await fetch(`https://craftify-ekc4.onrender.com/api/users/${userId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

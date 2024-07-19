@@ -13,7 +13,7 @@ const AddComment = () => {
     e.preventDefault();
     const id = sellerId[1]
     try {
-      const response = await fetch('/api/evaluations', {
+      const response = await fetch('https://craftify-ekc4.onrender.com/api/evaluations', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
