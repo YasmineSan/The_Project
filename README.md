@@ -8,6 +8,12 @@ Bienvenue dans le repository de Craftify, une plateforme dédiée aux artisans p
 - **Front-end** : Auréliane Gagliardi, Thomas Thonnard
 - **Back-end** : Yasmine Sanchez, Samuel Sanchez
 
+## Lien vers le Site
+
+Voici le lien qui vous permettra d'accéder à notre site déployé. Il est fonctionnel pour l'instant, mais ne le sera plus une fois que nous auront arrêté le serveur de la base de donnée (c'est un projet fictif donc difficile de garder un serveur juste pour cela).
+
+https://ecommerce-craftify.netlify.app/
+
 ## 🌐 Portfolio du Site
 
 Découvrez notre portfolio pour une présentation visuelle des pages du site: [Craftify Portfolio](https://craftify-project.myportfolio.com)
